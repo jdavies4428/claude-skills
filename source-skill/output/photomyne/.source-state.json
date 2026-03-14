@@ -1,20 +1,26 @@
 {
-  "skillName": "Photomyne",
+  "skillName": "Photomyne Competitive Intel",
   "skillSlug": "photomyne",
-  "sourceType": "detect-only",
+  "sourceType": "product-page",
   "sourceUrl": "https://photomyne.com/",
   "monitorConfig": {
-    "strategy": "http-head",
+    "strategy": "smart-diff",
     "lastKnownLinks": [],
     "lastETag": null,
-    "lastModified": null
+    "lastModified": null,
+    "trackedPages": [
+      "https://photomyne.com/",
+      "https://photomyne.com/pricing",
+      "https://photomyne.com/apps",
+      "https://photomyne.com/features"
+    ]
   },
   "userContext": {
-    "purpose": "Understand and use the data from Photomyne",
-    "features": [],
-    "outputFormat": "markdown"
+    "purpose": "Competitive intelligence for building a competing photo scanning product",
+    "features": ["pricing", "feature-matrix", "swot", "positioning", "app-portfolio"],
+    "outputFormat": "skill-md+dashboard"
   },
-  "lastCheckTime": "2026-03-14T22:08:37.417Z",
-  "lastRefreshTime": "2026-03-14T22:08:37.417Z",
+  "lastCheckTime": "2026-03-14T22:33:49.334Z",
+  "lastRefreshTime": "2026-03-14T22:45:00.000Z",
   "contentHash": "4c803d102de8547e"
 }

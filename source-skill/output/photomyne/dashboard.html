@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Photomyne — Competitive Intelligence Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --border: #2a2d3a;
+    --text: #e4e4e7;
+    --muted: #9ca3af;
+    --accent: #6366f1;
+    --accent2: #8b5cf6;
+    --green: #22c55e;
+    --red: #ef4444;
+    --yellow: #eab308;
+    --blue: #3b82f6;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 24px;
+    min-height: 100vh;
+  }
+  h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: 4px; }
+  .subtitle { color: var(--muted); font-size: 0.875rem; margin-bottom: 24px; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .card h2 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .stat-row:last-child { border-bottom: none; }
+  .stat-label { color: var(--muted); font-size: 0.875rem; }
+  .stat-value { font-weight: 600; font-size: 1rem; }
+  .stat-value.green { color: var(--green); }
+  .stat-value.red { color: var(--red); }
+  .stat-value.yellow { color: var(--yellow); }
+  .stat-value.blue { color: var(--blue); }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .badge.strength { background: rgba(34,197,94,0.15); color: var(--green); }
+  .badge.weakness { background: rgba(239,68,68,0.15); color: var(--red); }
+  .badge.opportunity { background: rgba(59,130,246,0.15); color: var(--blue); }
+  .badge.threat { background: rgba(234,179,8,0.15); color: var(--yellow); }
+  .swot-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .swot-item {
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    line-height: 1.4;
+  }
+  .swot-item.s { background: rgba(34,197,94,0.08); border-left: 3px solid var(--green); }
+  .swot-item.w { background: rgba(239,68,68,0.08); border-left: 3px solid var(--red); }
+  .swot-item.o { background: rgba(59,130,246,0.08); border-left: 3px solid var(--blue); }
+  .swot-item.t { background: rgba(234,179,8,0.08); border-left: 3px solid var(--yellow); }
+  .swot-label { font-weight: 700; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+  .swot-label.s { color: var(--green); }
+  .swot-label.w { color: var(--red); }
+  .swot-label.o { color: var(--blue); }
+  .swot-label.t { color: var(--yellow); }
+  ul { list-style: none; padding: 0; }
+  ul li { padding: 3px 0; font-size: 0.8rem; color: var(--text); }
+  ul li::before { content: "→ "; color: var(--muted); }
+  .chart-container { position: relative; height: 280px; }
+  .feature-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+  .feature-table th {
+    text-align: left;
+    padding: 8px 6px;
+    border-bottom: 2px solid var(--border);
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+  }
+  .feature-table td {
+    padding: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  .feature-table tr:hover { background: rgba(99,102,241,0.05); }
+  .check { color: var(--green); }
+  .cross { color: var(--red); }
+  .partial { color: var(--yellow); }
+  .toolbar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .toolbar button {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.15s;
+  }
+  .toolbar button:hover { border-color: var(--accent); color: var(--accent); }
+  .toolbar button.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .wide { grid-column: 1 / -1; }
+  @media (max-width: 720px) {
+    .grid { grid-template-columns: 1fr; }
+    .swot-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Photomyne — Competitive Intel</h1>
+<p class="subtitle">Photo scanning & digitization market · Last updated 2026-03-14</p>
+
+<div class="toolbar">
+  <button class="active" onclick="showView('overview')">Overview</button>
+  <button onclick="showView('pricing')">Pricing</button>
+  <button onclick="showView('features')">Features</button>
+  <button onclick="showView('swot')">SWOT</button>
+  <button onclick="exportPNG()" title="Export dashboard as PNG">⬇ Export PNG</button>
+</div>
+
+<!-- OVERVIEW -->
+<div id="view-overview">
+  <div class="grid">
+    <div class="card">
+      <h2>Key Metrics</h2>
+      <div class="stat-row">
+        <span class="stat-label">Annual Price</span>
+        <span class="stat-value">$59.99/yr</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Monthly Price</span>
+        <span class="stat-value">$14.99/mo</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Effective Monthly (Annual)</span>
+        <span class="stat-value green">~$5.00/mo</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Free Trial</span>
+        <span class="stat-value yellow">3 days</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Total Apps</span>
+        <span class="stat-value blue">7</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Bundled Apps</span>
+        <span class="stat-value">4 (Scanning Suite)</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Platforms</span>
+        <span class="stat-value">iOS, Android</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Free Tier</span>
+        <span class="stat-value red">None</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>App Portfolio</h2>
+      <div class="chart-container">
+        <canvas id="appChart"></canvas>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Positioning</h2>
+      <div class="stat-row">
+        <span class="stat-label">Primary angle</span>
+        <span class="stat-value">Speed & simplicity</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Target audience</span>
+        <span class="stat-value">Family/boomers</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Key tagline</span>
+        <span class="stat-value" style="font-size:0.85rem">"Dozens of photos in minutes"</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Differentiator</span>
+        <span class="stat-value">AI colorization</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Press coverage</span>
+        <span class="stat-value green">NYT, WSJ, TC</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Auth method</span>
+        <span class="stat-value yellow">Phone # (SMS)</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Feature Categories</h2>
+      <div class="chart-container">
+        <canvas id="featureRadar"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PRICING -->
+<div id="view-pricing" style="display:none">
+  <div class="grid">
+    <div class="card wide">
+      <h2>Pricing Comparison — Photo Scanning Apps</h2>
+      <div class="chart-container" style="height:320px">
+        <canvas id="pricingChart"></canvas>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Photomyne Pricing Details</h2>
+      <div class="stat-row">
+        <span class="stat-label">Monthly</span>
+        <span class="stat-value">$14.99/mo ($179.88/yr)</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Annual</span>
+        <span class="stat-value green">$59.99/yr ($5.00/mo)</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Annual savings</span>
+        <span class="stat-value green">67% vs monthly</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Free trial</span>
+        <span class="stat-value">3 days (full access)</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Promotions</span>
+        <span class="stat-value yellow">30-40% off (rotating)</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Bundle included</span>
+        <span class="stat-value">Photo Scan + SlideScan + FilmBox + Colorize</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Competitor Pricing</h2>
+      <div class="stat-row">
+        <span class="stat-label">Google PhotoScan</span>
+        <span class="stat-value green">Free</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Microsoft Lens</span>
+        <span class="stat-value green">Free</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Pic Scanner Gold</span>
+        <span class="stat-value blue">$7.99 one-time</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">iScanner</span>
+        <span class="stat-value">$19.99/yr</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Remini</span>
+        <span class="stat-value red">$9.99/week</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<div id="view-features" style="display:none">
+  <div class="grid">
+    <div class="card wide">
+      <h2>Feature Comparison Matrix</h2>
+      <table class="feature-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Photomyne</th>
+            <th>Google PhotoScan</th>
+            <th>Microsoft Lens</th>
+            <th>Remini</th>
+            <th>Pic Scanner Gold</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Photo scanning</td>
+            <td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td class="cross">✗</td><td class="check">✓</td>
+          </tr>
+          <tr>
+            <td>Batch/multi-scan</td>
+            <td class="check">✓</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td><td class="check">✓</td>
+          </tr>
+          <tr>
+            <td>Slide scanning</td>
+            <td class="check">✓</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td>
+          </tr>
+          <tr>
+            <td>Negative scanning</td>
+            <td class="check">✓</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td>
+          </tr>
+          <tr>
+            <td>AI colorization</td>
+            <td class="check">✓</td><td class="cross">✗</td><td class="cross">✗</td><td class="check">✓</td><td class="cross">✗</td>
+          </tr>
+          <tr>
+            <td>AI enhancement</td>
+            <td class="check">✓</td><td class="cross">✗</td><td class="cross">✗</td><td class="check">✓</td><td class="cross">✗</td>
+          </tr>
+          <tr>
+            <td>Auto-crop</td>
+            <td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td class="cross">✗</td><td class="check">✓</td>
+          </tr>
+          <tr>
+            <td>Color restoration</td>
+            <td class="check">✓</td><td class="partial">~</td><td class="cross">✗</td><td class="check">✓</td><td class="cross">✗</td>
+          </tr>
+          <tr>
+            <td>Album organization</td>
+            <td class="check">✓</td><td class="partial">~ (Google Photos)</td><td class="cross">✗</td><td class="cross">✗</td><td class="check">✓</td>
+          </tr>
+          <tr>
+            <td>People tagging</td>
+            <td class="check">✓</td><td class="partial">~ (Google Photos)</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td>
+          </tr>
+          <tr>
+            <td>Family tree</td>
+            <td class="check">✓</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td>
+          </tr>
+          <tr>
+            <td>Web access</td>
+            <td class="check">✓</td><td class="check">✓ (Google Photos)</td><td class="partial">~ (OneDrive)</td><td class="cross">✗</td><td class="cross">✗</td>
+          </tr>
+          <tr>
+            <td>Voice control</td>
+            <td class="partial">iOS only</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td>
+          </tr>
+          <tr>
+            <td>OCR/text recognition</td>
+            <td class="cross">✗</td><td class="cross">✗</td><td class="check">✓</td><td class="cross">✗</td><td class="cross">✗</td>
+          </tr>
+          <tr>
+            <td>Free tier</td>
+            <td class="cross">✗ (3-day trial)</td><td class="check">✓</td><td class="check">✓</td><td class="partial">~ (limited)</td><td class="check">✓ (one-time buy)</td>
+          </tr>
+          <tr>
+            <td>Desktop app</td>
+            <td class="cross">✗</td><td class="cross">✗</td><td class="check">✓</td><td class="cross">✗</td><td class="cross">✗</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- SWOT -->
+<div id="view-swot" style="display:none">
+  <div class="grid">
+    <div class="card wide">
+      <h2>SWOT Analysis</h2>
+      <div class="swot-grid">
+        <div class="swot-item s">
+          <div class="swot-label s">Strengths</div>
+          <ul>
+            <li>7-app ecosystem covers full scanning workflow</li>
+            <li>AI colorization & sharpening as differentiators</li>
+            <li>Major press coverage (NYT, WSJ, TechCrunch)</li>
+            <li>$5/mo bundle pricing is competitive for 4 apps</li>
+            <li>Multi-format: photos + slides + negatives</li>
+          </ul>
+        </div>
+        <div class="swot-item w">
+          <div class="swot-label w">Weaknesses</div>
+          <ul>
+            <li>No free tier — only 3-day trial</li>
+            <li>Phone-number auth may deter privacy-conscious users</li>
+            <li>No API or developer ecosystem</li>
+            <li>7 separate apps fragments the experience</li>
+            <li>Mobile-only — no desktop scanning option</li>
+          </ul>
+        </div>
+        <div class="swot-item o">
+          <div class="swot-label o">Opportunities</div>
+          <ul>
+            <li>Enterprise/business tier for archivists</li>
+            <li>Desktop scanning with flatbed integration</li>
+            <li>Video digitization (VHS, film reels)</li>
+            <li>Social features beyond public photo feed</li>
+            <li>API for third-party integrations</li>
+          </ul>
+        </div>
+        <div class="swot-item t">
+          <div class="swot-label t">Threats</div>
+          <ul>
+            <li>Google PhotoScan — free, good enough</li>
+            <li>Apple's built-in scanner improving each iOS release</li>
+            <li>AI upscaling commoditizing enhancement features</li>
+            <li>Smartphone cameras reducing need for scanning apps</li>
+            <li>Remini's aggressive pricing in AI enhancement space</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// --- View switching ---
+function showView(view) {
+  ['overview','pricing','features','swot'].forEach(v => {
+    document.getElementById('view-' + v).style.display = v === view ? 'block' : 'none';
+  });
+  document.querySelectorAll('.toolbar button').forEach(btn => {
+    btn.classList.toggle('active', btn.textContent.trim().toLowerCase() === view);
+  });
+}
+
+// --- Export PNG ---
+function exportPNG() {
+  const el = document.body;
+  // Use html2canvas if available, otherwise fallback alert
+  if (typeof html2canvas !== 'undefined') {
+    html2canvas(el).then(canvas => {
+      const a = document.createElement('a');
+      a.download = 'photomyne-intel.png';
+      a.href = canvas.toDataURL();
+      a.click();
+    });
+  } else {
+    window.print();
+  }
+}
+
+// --- Charts ---
+const chartDefaults = {
+  color: '#9ca3af',
+  borderColor: '#2a2d3a',
+};
+Chart.defaults.color = chartDefaults.color;
+
+// App Portfolio (doughnut)
+new Chart(document.getElementById('appChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Photo Scan', 'SlideScan', 'FilmBox', 'Colorize', 'Sharpen', 'Family Tree', 'FridgeArt'],
+    datasets: [{
+      data: [1, 1, 1, 1, 1, 1, 1],
+      backgroundColor: [
+        '#6366f1', '#8b5cf6', '#a78bfa',
+        '#22c55e', '#34d399',
+        '#3b82f6', '#60a5fa'
+      ],
+      borderColor: '#1a1d27',
+      borderWidth: 2,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'right', labels: { padding: 12, font: { size: 11 } } },
+      tooltip: {
+        callbacks: {
+          label: function(ctx) {
+            const categories = ['Scanning (core)', 'Scanning', 'Scanning', 'Enhancement', 'Enhancement', 'Organization', 'Niche'];
+            return ctx.label + ' — ' + categories[ctx.dataIndex];
+          }
+        }
+      }
+    }
+  }
+});
+
+// Feature Radar
+new Chart(document.getElementById('featureRadar'), {
+  type: 'radar',
+  data: {
+    labels: ['Scanning', 'AI/Enhancement', 'Organization', 'Sharing', 'Multi-format', 'Accessibility'],
+    datasets: [
+      {
+        label: 'Photomyne',
+        data: [9, 8, 7, 6, 9, 5],
+        borderColor: '#6366f1',
+        backgroundColor: 'rgba(99,102,241,0.15)',
+        pointBackgroundColor: '#6366f1',
+      },
+      {
+        label: 'Google PhotoScan',
+        data: [7, 3, 8, 9, 2, 9],
+        borderColor: '#22c55e',
+        backgroundColor: 'rgba(34,197,94,0.1)',
+        pointBackgroundColor: '#22c55e',
+      },
+      {
+        label: 'Remini',
+        data: [2, 9, 3, 4, 1, 5],
+        borderColor: '#eab308',
+        backgroundColor: 'rgba(234,179,8,0.1)',
+        pointBackgroundColor: '#eab308',
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      r: {
+        beginAtZero: true,
+        max: 10,
+        grid: { color: '#2a2d3a' },
+        angleLines: { color: '#2a2d3a' },
+        pointLabels: { font: { size: 10 } },
+        ticks: { display: false }
+      }
+    },
+    plugins: {
+      legend: { position: 'bottom', labels: { padding: 10, font: { size: 11 } } }
+    }
+  }
+});
+
+// Pricing comparison (bar)
+const pricingCtx = document.getElementById('pricingChart');
+if (pricingCtx) {
+  new Chart(pricingCtx, {
+    type: 'bar',
+    data: {
+      labels: ['Google PhotoScan', 'Microsoft Lens', 'Pic Scanner Gold', 'iScanner', 'Photomyne', 'Remini'],
+      datasets: [{
+        label: 'Annual cost ($)',
+        data: [0, 0, 7.99, 19.99, 59.99, 519.48],
+        backgroundColor: ['#22c55e', '#22c55e', '#3b82f6', '#6366f1', '#8b5cf6', '#ef4444'],
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      indexAxis: 'y',
+      scales: {
+        x: {
+          grid: { color: '#2a2d3a' },
+          title: { display: true, text: 'Annual cost (USD)', color: '#9ca3af' },
+          ticks: { callback: v => '$' + v }
+        },
+        y: { grid: { display: false } }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              const notes = ['Free', 'Free', 'One-time purchase', '$19.99/yr', '$59.99/yr ($5/mo)', '$9.99/week'];
+              return notes[ctx.dataIndex];
+            }
+          }
+        }
+      }
+    }
+  });
+}
+</script>
+</body>
+</html>

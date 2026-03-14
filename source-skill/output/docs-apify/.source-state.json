@@ -1,0 +1,20 @@
+{
+  "skillName": "Docs.Apify",
+  "skillSlug": "docs-apify",
+  "sourceType": "detect-only",
+  "sourceUrl": "https://docs.apify.com/",
+  "monitorConfig": {
+    "strategy": "http-head",
+    "lastKnownLinks": [],
+    "lastETag": null,
+    "lastModified": null
+  },
+  "userContext": {
+    "purpose": "Understand and use the data from Docs.Apify",
+    "features": [],
+    "outputFormat": "markdown"
+  },
+  "lastCheckTime": "2026-03-14T23:30:17.223Z",
+  "lastRefreshTime": "2026-03-14T23:30:17.223Z",
+  "contentHash": "f602772c0bf03aac"
+}
