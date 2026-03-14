@@ -402,8 +402,8 @@ After generation, insert a "This project's setup" section at the top of the skil
 ## This project's setup
 
 Language: iOS Swift 5.9, SDK: RevenueCat iOS v5.x
-App: PastPix (photo restoration)
-Packages: `pastpix_monthly` ($4.99/mo), `pastpix_annual` ($39.99/yr)
+App: FitTrack (fitness tracking)
+Packages: `fittrack_monthly` ($4.99/mo), `fittrack_annual` ($39.99/yr)
 Entitlement: `pro_access`
 Paywall: V2 remote config (managed in RevenueCat dashboard)
 Init location: AppDelegate.application(_:didFinishLaunchingWithOptions:)
@@ -417,7 +417,7 @@ addendum specific to this library — no re-explanation required.
 
 ## Worked examples
 
-### Example 1 — RevenueCat for PastPix (iOS Swift)
+### Example 1 — RevenueCat for FitTrack (iOS Swift)
 
 **Crawl config:**
 ```json
@@ -432,9 +432,9 @@ addendum specific to this library — no re-explanation required.
 
 **Context block for skill-creator:**
 ```
-User builds PastPix — an iOS photo restoration app (Swift 5.9).
+User builds FitTrack — an iOS fitness tracking app (Swift 5.9).
 RevenueCat SDK v5+. Single pro tier with monthly ($4.99) and annual ($39.99) packages.
-Package IDs: pastpix_monthly, pastpix_annual.
+Package IDs: fittrack_monthly, fittrack_annual.
 Entitlement identifier: pro_access.
 Uses Paywall V2 with remote config.
 Initializes in AppDelegate. API key stored in Info.plist as RC_API_KEY.

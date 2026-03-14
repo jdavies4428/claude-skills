@@ -75,12 +75,12 @@ This section loads every time the skill triggers. Zero re-explanation needed.
 
 ## Worked examples
 
-### RevenueCat for PastPix (iOS Swift)
+### RevenueCat for FitTrack (iOS Swift)
 
 **Context gathered:**
 - Language: iOS Swift 5.9, RevenueCat SDK v5.x
-- App: PastPix (photo restoration app)
-- Packages: `pastpix_monthly` ($4.99/mo), `pastpix_annual` ($39.99/yr)
+- App: FitTrack (fitness tracking app)
+- Packages: `fittrack_monthly` ($4.99/mo), `fittrack_annual` ($39.99/yr)
 - Entitlement: `pro_access`
 - Uses: Paywall V2 remote config
 - Does NOT use: server-side purchases, webhooks, Stripe integration
@@ -93,10 +93,10 @@ This section loads every time the skill triggers. Zero re-explanation needed.
 ## This project's setup
 
 RevenueCat: iOS SDK v5.x
-App: PastPix — AI photo restoration iOS app
+App: FitTrack — iOS fitness tracking app
 Language: Swift 5.9
 
-Package IDs: `pastpix_monthly`, `pastpix_annual`
+Package IDs: `fittrack_monthly`, `fittrack_annual`
 Entitlement: `pro_access`
 Paywall: V2 remote config (managed in RC dashboard, no code changes for paywall updates)
 Init: AppDelegate → `Purchases.configure(withAPIKey: Bundle.main.infoDictionary?["RC_API_KEY"])`
@@ -112,7 +112,7 @@ if customerInfo.entitlements["premium"]?.isActive == true {
 // Personalized skill shows:
 let customerInfo = try await Purchases.shared.customerInfo()
 if customerInfo.entitlements["pro_access"]?.isActive == true {
-    // User has PastPix Pro
+    // User has FitTrack Pro
 }
 ```
 

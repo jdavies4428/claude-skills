@@ -66,7 +66,7 @@ node scripts/build.js \
   --exclude "*/changelog/*" \
   --language "iOS Swift 5.9" \
   --architecture "Configured in AppDelegate via Info.plist API key" \
-  --config "Packages: pastpix_monthly, pastpix_annual; entitlement: pro_access" \
+  --config "Packages: fittrack_monthly, fittrack_annual; entitlement: pro_access" \
   --use "Paywall V2, entitlement checks" \
   --avoid "webhooks, server-side purchases"
 ```
@@ -86,7 +86,7 @@ Useful discovery/profile commands:
 node scripts/build.js --discover --url https://example.com
 node scripts/build.js --preview --url https://docs.example.com
 node scripts/build.js --list-profiles
-node scripts/build.js --profile pastpix --wizard
+node scripts/build.js --profile fittrack --wizard
 ```
 
 ---

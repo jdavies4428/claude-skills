@@ -12,20 +12,20 @@ test('saveProfile and loadProfile round-trip profile data', async () => {
   process.env.DOC_TO_SKILL_PROFILES_DIR = root;
 
   try {
-    await saveProfile('PastPix', {
+    await saveProfile('FitTrack', {
       skillType: { id: 'api-sdk', promptLabel: 'API / SDK' },
-      userContext: { appName: 'PastPix', language: 'Swift' },
+      userContext: { appName: 'FitTrack', language: 'Swift' },
       lastDocsUrl: 'https://docs.revenuecat.com',
     });
 
-    const loaded = await loadProfile('PastPix');
-    assert.equal(loaded.profileName, 'PastPix');
-    assert.equal(loaded.userContext.appName, 'PastPix');
+    const loaded = await loadProfile('FitTrack');
+    assert.equal(loaded.profileName, 'FitTrack');
+    assert.equal(loaded.userContext.appName, 'FitTrack');
     assert.equal(loaded.lastDocsUrl, 'https://docs.revenuecat.com');
 
     const listed = await listProfiles({ loadData: true });
     assert.equal(listed.length, 1);
-    assert.equal(listed[0].name, 'PastPix');
+    assert.equal(listed[0].name, 'FitTrack');
   } finally {
     if (previous === undefined) {
       delete process.env.DOC_TO_SKILL_PROFILES_DIR;
