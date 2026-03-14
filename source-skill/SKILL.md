@@ -38,14 +38,26 @@ sets up change detection so the skill auto-refreshes when the source updates.
 When this skill is invoked, immediately determine the user's intent:
 
 - **User provides a URL** → Start the Guided Build Flow at Step 0.
-- **User says "new", "build", "create", "make"** → AskUserQuestion: "What URL do you want
-  to build a skill from?" Then start Step 0 with that URL.
+- **User provides multiple URLs** → Start multi-URL build (see Multi-URL Support below).
 - **User says "check", "status", "monitor"** → Run `node scripts/monitor.js --status`
 - **User says "refresh", "update"** → Run the refresh flow.
+- **No URL provided** → Ask for one using the format below.
 
-Do NOT ask open-ended questions. Do NOT list options conversationally. Go directly to
-the appropriate action. If the intent is unclear, ask for the URL — that's always the
-starting point.
+### Asking for a URL
+
+When no URL is provided, use `AskUserQuestion` with a free-text prompt.
+Do NOT show example URLs — they are useless placeholders. Just ask directly:
+
+```
+Question: "Paste the URL you want to build a skill from. You can enter multiple URLs separated by spaces for comparison/competitive analysis."
+Header: "Source URL"
+Options:
+  A) Single URL — one data source, docs site, or product page
+  B) Multiple URLs — compare products or combine sources
+```
+
+The user will select an option and type their URL(s) in the text field.
+Once you have the URL(s), start Step 0 immediately.
 
 ---
 
