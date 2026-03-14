@@ -1,0 +1,7 @@
+interface:
+  display_name: "Doc to Skill"
+  short_description: "Guided docs-to-skill builder"
+  default_prompt: "Use $doc-to-skill to launch the guided wizard, ask for the docs URL and skill type, preview the docs, and build or refresh the skill."
+
+policy:
+  allow_implicit_invocation: true

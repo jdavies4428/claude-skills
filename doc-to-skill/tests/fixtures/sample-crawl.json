@@ -1,0 +1,76 @@
+{
+  "pages": [
+    {
+      "url": "https://docs.example.dev/quickstart",
+      "markdown": "# Quickstart\n\n## Install\n\nInstall the SDK and configure it.\n\n```ts\nimport { ExampleClient } from 'example-sdk';\n\nconst client = new ExampleClient({ apiKey: process.env.EXAMPLE_API_KEY });\n```\n\n## First request\n\n```ts\nawait client.widgets.list();\n```",
+      "json": {
+        "codeBlockCount": 2,
+        "headingCount": 3,
+        "wordCount": 42
+      },
+      "metadata": {
+        "title": "Quickstart"
+      }
+    },
+    {
+      "url": "https://docs.example.dev/guides/authentication",
+      "markdown": "# Authentication\n\n## API keys\n\nStore the key in an env var.\n\n```ts\nconst client = new ExampleClient({ apiKey: process.env.EXAMPLE_API_KEY });\n```\n\n## Server usage\n\nUse a server-side secret.\n",
+      "json": {
+        "codeBlockCount": 1,
+        "headingCount": 3,
+        "wordCount": 31
+      },
+      "metadata": {
+        "title": "Authentication"
+      }
+    },
+    {
+      "url": "https://docs.example.dev/reference/widgets",
+      "markdown": "# Widgets\n\n## Create widget\n\nCreate a widget with a stable ID.\n\n```ts\nawait client.widgets.create({ id: 'widget_123', name: 'Example' });\n```\n\n## Update widget\n\n```ts\nawait client.widgets.update('widget_123', { name: 'Renamed' });\n```",
+      "json": {
+        "codeBlockCount": 2,
+        "headingCount": 3,
+        "wordCount": 37
+      },
+      "metadata": {
+        "title": "Widgets reference"
+      }
+    },
+    {
+      "url": "https://docs.example.dev/reference/errors",
+      "markdown": "# Errors\n\n## Rate limits\n\nHandle rate limits by retrying.\n\n```ts\nif (error.status === 429) {\n  await sleep(1000);\n}\n```",
+      "json": {
+        "codeBlockCount": 1,
+        "headingCount": 2,
+        "wordCount": 18
+      },
+      "metadata": {
+        "title": "Errors"
+      }
+    },
+    {
+      "url": "https://docs.example.dev/guides/webhooks",
+      "markdown": "# Webhooks\n\n## Verify signatures\n\n```ts\nverifySignature(payload, signature);\n```\n\n## Events\n\nListen for widget.updated.",
+      "json": {
+        "codeBlockCount": 1,
+        "headingCount": 3,
+        "wordCount": 17
+      },
+      "metadata": {
+        "title": "Webhooks"
+      }
+    },
+    {
+      "url": "https://docs.example.dev/changelog/2026-01-01",
+      "markdown": "# Changelog\n\nBug fixes and release notes.",
+      "json": {
+        "codeBlockCount": 0,
+        "headingCount": 1,
+        "wordCount": 7
+      },
+      "metadata": {
+        "title": "Changelog"
+      }
+    }
+  ]
+}

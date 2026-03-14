@@ -1,0 +1,60 @@
+# EIA API Routes — Single Source of Truth
+# Edit here to update routes across the entire skill
+# Base URL: https://api.eia.gov
+
+base_url: "https://api.eia.gov"
+api_version: "v2"
+
+electricity:
+  retail_prices:        /v2/electricity/retail-sales
+  generation:           /v2/electricity/electric-power-operational
+  capacity:             /v2/electricity/capacity
+  rto_hourly:           /v2/electricity/rto/region-data
+  rto_daily:            /v2/electricity/rto/daily-region-data
+
+natural_gas:
+  prices_summary:       /v2/natural-gas/pri/sum
+  prices_residential:   /v2/natural-gas/pri/res
+  prices_commercial:    /v2/natural-gas/pri/com
+  prices_industrial:    /v2/natural-gas/pri/ind
+  prices_futures:       /v2/natural-gas/pri/fut
+  storage_weekly:       /v2/natural-gas/stor/wkly
+  production:           /v2/natural-gas/prod/sum
+  consumption:          /v2/natural-gas/cons/sum
+  imports:              /v2/natural-gas/move/impc
+  exports:              /v2/natural-gas/move/expc
+  lng_exports:          /v2/natural-gas/move/lngc
+  pipeline:             /v2/natural-gas/move/poe1
+
+petroleum:
+  spot_prices:          /v2/petroleum/pri/spt
+  gasoline_retail:      /v2/petroleum/pri/gnd
+  diesel_retail:        /v2/petroleum/pri/wdf
+  jet_fuel:             /v2/petroleum/pri/isp
+  propane:              /v2/petroleum/pri/prop
+  crude_production:     /v2/petroleum/crd/crpdn
+  weekly_stocks:        /v2/petroleum/stoc/wstk
+  spr:                  /v2/petroleum/stoc/p1
+  refinery_util:        /v2/petroleum/pnp/wiup
+  imports:              /v2/petroleum/move/imp
+  exports:              /v2/petroleum/move/exp
+  ethanol:              /v2/petroleum/pnp/epoor
+  biodiesel:            /v2/petroleum/pnp/epobob
+
+coal:
+  production:           /v2/coal/production/quarterly
+  consumption:          /v2/coal/consumption/quarterly
+  prices:               /v2/coal/shipments/receipts/quarterly
+  stocks:               /v2/coal/stocks/quarterly
+  exports:              /v2/coal/exports
+
+nuclear:
+  generation:           /v2/electricity/electric-power-operational
+  capacity:             /v2/electricity/capacity
+  outages:              /v2/nuclear-outages/us-nuclear-outages
+
+total_energy:
+  production:           /v2/total-energy/data
+  consumption:          /v2/total-energy/data
+  state_energy:         /v2/seds
+  co2_emissions:        /v2/co2-emissions/co2-emissions-aggregates

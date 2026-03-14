@@ -1,0 +1,30 @@
+{
+  "dashboard": "Energy Overview",
+  "output": "~/eia-dashboards/energy-overview.html",
+  "charts": [
+    {
+      "name": "Brent Crude Oil Spot Price",
+      "endpoint": "/v2/petroleum/pri/spt",
+      "params": "frequency=weekly&data[]=value&facets[product][]=EPCBRENT",
+      "color": "#EF4444",
+      "y_label": "$/barrel",
+      "units": "$"
+    },
+    {
+      "name": "Retail Electricity Prices (Residential)",
+      "endpoint": "/v2/electricity/retail-sales",
+      "params": "frequency=monthly&data[]=price&facets[sectorid][]=RES&facets[stateid][]=US",
+      "color": "#3B82F6",
+      "y_label": "cents/kWh",
+      "units": ""
+    },
+    {
+      "name": "Natural Gas Weekly Storage",
+      "endpoint": "/v2/natural-gas/stor/wkly",
+      "params": "frequency=weekly&data[]=value",
+      "color": "#F97316",
+      "y_label": "Bcf",
+      "units": ""
+    }
+  ]
+}

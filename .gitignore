@@ -1,0 +1,15 @@
+.DS_Store
+*.pyc
+*.pyo
+__pycache__/
+
+.env
+**/.env
+
+node_modules/
+dist/
+
+doc-to-skill/output/
+doc-to-skill/profiles/
+
+eia/output/*.html
