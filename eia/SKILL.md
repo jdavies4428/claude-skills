@@ -9,87 +9,171 @@ description: >
   "oil production", "utility rates", or "energy mix". Automatically builds interactive
   charts and visualizations inline. Always use this skill even if the request seems
   simple — it handles aliasing, routing, fetching, and charting end-to-end.
+allowed-tools:
+  - Read
+  - Bash
+  - Glob
+  - Grep
+  - Write
+  - Edit
+  - AskUserQuestion
 ---
 
 # EIA Energy Data Skill
 
-Fetch live U.S. energy data from the EIA API and render interactive visualizations
-inline. Handles plain-language requests, maps them to the correct API routes, fetches
-the data, and builds charts with user-controlled interactivity.
+Fetch live U.S. energy data from the EIA API and render interactive visualizations.
+**Always use the guided flow below** — walk the user through selections step by step
+using `AskUserQuestion`. Never guess. Never skip steps.
 
 ---
 
-## Step 1 — Resolve the Request
+## Step 1 — What data?
 
-Translate the user's plain-language request into an API call using the alias tables
-in `references/`. Load only the relevant reference file — not all of them.
+Use `AskUserQuestion` to ask what energy data the user wants to see.
+If the user's request already specifies a dataset (e.g., "show me oil prices"),
+skip this step and proceed with their choice.
 
-| Topic mentioned            | Load this file                    |
-|----------------------------|-----------------------------------|
-| electricity, power, grid   | references/electricity.md         |
-| natural gas, gas storage   | references/natural-gas.md         |
-| oil, crude, petroleum      | references/petroleum.md           |
-| coal, renewables, solar    | references/other.md               |
-| unsure / multiple topics   | load all, pick best match         |
-
----
-
-## Step 2 — Apply User Preferences
-
-Read the **User Preferences** block below before building any visualization.
-These are the defaults — apply them unless the user overrides in conversation.
-
-```yaml
-# ── USER PREFERENCES ──────────────────────────────────────────
-theme:            dark          # dark | light | auto
-chart_type:       auto          # auto | line | bar | area | pie
-default_range:    5y            # 1y | 3y | 5y | 10y | max
-scope:            national      # national | state | both
-favorite_states:  []            # e.g. [TX, CA, FL] — pre-filters comparisons
-units:            imperial      # imperial | metric
-show_data_table:  false         # show raw numbers below chart
-show_source:      true          # always label "Source: EIA API"
-export_format:    svg           # svg | html | png
-interactive:      true          # embed controls in chart (sliders, dropdowns)
-# ──────────────────────────────────────────────────────────────
+```
+Question: "What energy data do you want to visualize?"
+Header: "Dataset"
+Options:
+  A) Electricity — retail prices, generation, capacity
+  B) Natural Gas — prices, storage, production
+  C) Petroleum — crude oil, gasoline, diesel, stocks
+  D) Coal & Other — coal, renewables, nuclear, CO2 emissions
 ```
 
-> To change defaults: edit the values above, or just say it in conversation
-> ("use light theme", "always show Texas", "give me bar charts by default").
+Based on their selection, use `AskUserQuestion` again with specific datasets:
+
+**If Electricity:**
+```
+Question: "Which electricity dataset?"
+Header: "Electricity"
+Options:
+  A) Retail Prices (residential) — monthly, cents/kWh
+  B) Generation by Source — monthly, GWh
+  C) Capacity — annual, MW
+```
+
+**If Natural Gas:**
+```
+Question: "Which natural gas dataset?"
+Header: "Natural Gas"
+Options:
+  A) Prices (summary) — monthly, $/Mcf
+  B) Weekly Storage — weekly, Bcf
+  C) Production — monthly, Mcf
+```
+
+**If Petroleum:**
+```
+Question: "Which petroleum dataset?"
+Header: "Petroleum"
+Options:
+  A) Brent Crude Spot Price — weekly, $/barrel
+  B) WTI Crude Spot Price — weekly, $/barrel
+  C) Gasoline Retail — weekly, $/gal
+  D) Crude Production — monthly, bbl/day
+```
+
+**If Coal & Other:**
+```
+Question: "Which dataset?"
+Header: "Category"
+Options:
+  A) Coal Production — quarterly
+  B) Coal Prices — quarterly
+  C) CO2 Emissions — annual
+```
+
+### Dataset → Endpoint Map
+
+| Dataset | Endpoint | Params | Color | Y Label | Units |
+|---------|----------|--------|-------|---------|-------|
+| Electricity Retail Prices | /v2/electricity/retail-sales | frequency=monthly&data[]=price&facets[sectorid][]=RES&facets[stateid][]=US | #3B82F6 | cents/kWh | |
+| Electricity Generation | /v2/electricity/electric-power-operational | frequency=monthly&data[]=generation | #3B82F6 | GWh | |
+| Electricity Capacity | /v2/electricity/capacity | frequency=annual&data[]=nameplate-capacity-mw | #3B82F6 | MW | |
+| Natural Gas Prices | /v2/natural-gas/pri/sum | frequency=monthly&data[]=value | #F97316 | $/Mcf | $ |
+| Natural Gas Storage | /v2/natural-gas/stor/wkly | frequency=weekly&data[]=value | #F97316 | Bcf | |
+| Natural Gas Production | /v2/natural-gas/prod/sum | frequency=monthly&data[]=value | #F97316 | Mcf | |
+| Brent Crude Spot | /v2/petroleum/pri/spt | frequency=weekly&data[]=value&facets[product][]=EPCBRENT | #EF4444 | $/barrel | $ |
+| WTI Crude Spot | /v2/petroleum/pri/spt | frequency=weekly&data[]=value&facets[product][]=EPCWTI | #EF4444 | $/barrel | $ |
+| Gasoline Retail | /v2/petroleum/pri/gnd | frequency=weekly&data[]=value | #EF4444 | $/gal | $ |
+| Crude Production | /v2/petroleum/crd/crpdn | frequency=monthly&data[]=value | #EF4444 | bbl/day | |
+| Coal Production | /v2/coal/production/quarterly | frequency=quarterly&data[]=value | #6B7280 | short tons | |
+| Coal Prices | /v2/coal/shipments/receipts/quarterly | frequency=quarterly&data[]=value | #6B7280 | $/short ton | $ |
+| CO2 Emissions | /v2/co2-emissions/co2-emissions-aggregates | frequency=annual&data[]=value | #22C55E | MMT CO2 | |
+
+For datasets not in this table, load the appropriate reference file:
+
+| Topic | Reference file |
+|-------|---------------|
+| electricity, power, grid | references/electricity.md |
+| natural gas, gas storage | references/natural-gas.md |
+| oil, crude, petroleum | references/petroleum.md |
+| coal, renewables, solar | references/other.md |
 
 ---
 
-## Step 3 — Fetch the Data
+## Step 2 — Frequency
 
-Use `scripts/fetch.py` to retrieve data. The script handles auth, pagination,
-and response normalization automatically.
+Use `AskUserQuestion` to ask for the data frequency.
+Only show frequencies that make sense for the chosen dataset.
+If the dataset only supports one frequency, skip this step.
 
-```bash
-python3 scripts/fetch.py \
-  --endpoint "/v2/electricity/retail-sales" \
-  --params "frequency=monthly&data[]=price&facets[]=stateid[]&start=2019-01"
+```
+Question: "What time frequency?"
+Header: "Frequency"
+Options:
+  A) Weekly (Recommended) — most granular for this dataset
+  B) Monthly — smoother trend
+  C) Annual — long-term view
 ```
 
-The script outputs clean JSON:
-```json
-{
-  "series": "Electricity Retail Prices",
-  "unit": "cents/kWh",
-  "frequency": "monthly",
-  "data": [["2019-01", 10.54], ["2019-02", 10.61], ...]
-}
-```
-
-If `EIA_API_KEY` is not set in the environment, print a clear error:
-> "EIA API key not found. Set it with: export EIA_API_KEY=your_key_here"
-> Get a free key at: https://www.eia.gov/opendata/
+Update the `frequency=` parameter in the params string to match.
 
 ---
 
-## Step 4 — Build the Visualization
+## Step 3 — Date range
 
-Use the **chart template engine** (`scripts/render_chart.py`) instead of generating
-HTML from scratch. This ensures consistent, polished output every time.
+Use `AskUserQuestion` to ask how far back the data should go.
+
+```
+Question: "How far back should the data go?"
+Header: "Date range"
+Options:
+  A) 5 years (Recommended)
+  B) 1 year
+  C) 10 years
+  D) Max (all available data)
+```
+
+Map the selection to a `start=` param (calculate from today's date) and a
+`default_range` for the chart controls.
+
+---
+
+## Step 4 — Single chart or dashboard?
+
+Use `AskUserQuestion` to ask if they want a single chart or a multi-chart dashboard.
+
+```
+Question: "Single chart or add more datasets to a dashboard?"
+Header: "Output"
+Options:
+  A) Single chart — just this one dataset
+  B) Dashboard — I'll pick additional charts to compare
+```
+
+**If Dashboard:** Repeat Step 1's dataset selection (multi-select this time)
+to let the user pick additional charts. Then use `build_dashboard.py` with a
+JSON config. Ask for a dashboard name.
+
+**If Single chart:** Proceed to Step 5.
+
+---
+
+## Step 5 — Fetch and Render
 
 ### Single Chart
 
@@ -97,64 +181,84 @@ Pipe fetch output into the renderer:
 
 ```bash
 python3 scripts/fetch.py \
-  --endpoint "/v2/petroleum/pri/spt" \
-  --params "frequency=weekly&data[]=value&facets[product][]=EPCBRENT" \
+  --endpoint "{endpoint}" \
+  --params "{params}" \
   | python3 scripts/render_chart.py \
-    --title "Brent Crude Oil Spot Price" \
-    --color "#EF4444" \
-    --y-label "$/barrel" \
-    --units "$" \
-    --output output/oil-prices.html
+    --title "{title}" \
+    --color "{color}" \
+    --y-label "{y_label}" \
+    --units "{units}" \
+    --range "{default_range}" \
+    --output ~/eia-dashboards/{slug}.html
 ```
 
-### Dashboard (Multiple Charts)
+### Dashboard
 
-When the user asks for a dashboard, comparison, or multiple charts at once,
-use the **dashboard builder**:
+Write a JSON config file to `dashboards/{slug}.json`, then run:
 
 ```bash
-python3 scripts/build_dashboard.py dashboards/energy-overview.json --open
+python3 scripts/build_dashboard.py dashboards/{slug}.json --open
 ```
 
-The dashboard config is a JSON file listing charts to include. Create or edit
-the config to match the user's request, then run the builder. Example config:
+---
 
-```json
-{
-  "dashboard": "Energy Overview",
-  "output": "output/energy-overview.html",
-  "charts": [
-    {
-      "name": "Brent Crude Oil Spot Price",
-      "endpoint": "/v2/petroleum/pri/spt",
-      "params": "frequency=weekly&data[]=value&facets[product][]=EPCBRENT",
-      "color": "#EF4444",
-      "y_label": "$/barrel",
-      "units": "$"
-    }
-  ]
-}
+## Step 5.5 — Validate the Output
+
+After rendering, **always** validate before opening in the browser:
+
+```bash
+python3 scripts/validate_chart.py ~/eia-dashboards/{filename}.html
 ```
 
-Multi-series overlays (e.g., Brent vs WTI on one chart) use a `series` array:
+If validation **fails**, fix the issue and re-render. Never open a chart
+that fails validation.
 
-```json
-{
-  "name": "Crude Oil: Brent vs WTI",
-  "series": [
-    { "label": "Brent", "endpoint": "/v2/petroleum/pri/spt",
-      "params": "frequency=weekly&data[]=value&facets[product][]=EPCBRENT",
-      "color": "#EF4444" },
-    { "label": "WTI", "endpoint": "/v2/petroleum/pri/spt",
-      "params": "frequency=weekly&data[]=value&facets[product][]=EPCWTI",
-      "color": "#F97316" }
-  ],
-  "y_label": "$/barrel",
-  "units": "$"
-}
+---
+
+## Step 6 — Open and Follow Up
+
+Open the chart in the browser:
+
+```bash
+open ~/eia-dashboards/{filename}.html
 ```
 
-### Color Palette by Energy Type
+Then use `AskUserQuestion` to offer follow-ups:
+
+```
+Question: "What next?"
+Header: "Follow up"
+Options:
+  A) Compare across states
+  B) Overlay another dataset on this chart
+  C) Switch to a different chart type or range
+  D) Build a dashboard with multiple charts
+```
+
+---
+
+## Conversation Controls
+
+After the initial chart is built, the user can adjust it by just saying it.
+No need for `AskUserQuestion` on follow-up tweaks — just rebuild:
+
+```
+"switch to bar chart"          → rebuild as bar
+"zoom into last 2 years"       → filter date range
+"compare to national average"  → fetch national series, overlay
+"show top 5 states"            → filter + rank by value
+"dark mode"                    → toggle theme
+"export this"                  → download as SVG/HTML
+"refresh this"                 → re-fetch latest data
+```
+
+Always rebuild the full visual when the user requests a change — never
+describe changes in text when you can just show them.
+
+---
+
+## Color Palette by Energy Type
+
 ```
 Electricity:  #3B82F6  (blue)
 Natural Gas:  #F97316  (orange)
@@ -163,48 +267,6 @@ Coal:         #6B7280  (gray)
 Renewable:    #22C55E  (green)
 Nuclear:      #8B5CF6  (purple)
 ```
-
-### What the Template Handles Automatically
-- Chart type toggle (Line / Bar / Area)
-- Date range selector (1Y / 3Y / 5Y / 10Y / Max)
-- Dark/Light theme toggle
-- Copy to clipboard button
-- Download as SVG button
-- Stats bar (Current, High, Low, Avg, Change)
-- Labeled axes with units
-- "Source: EIA API" footer
-- 300ms load animation
-- Tooltip on hover
-- Responsive layout
-
----
-
-## Step 5 — Offer Follow-Ups
-
-After every visualization, offer 2–3 natural next steps:
-
-> "Want me to compare this across states? Break it down by fuel type?
-> Export this as a file?"
-
----
-
-## Conversation Controls
-
-The user can adjust any visualization by just saying it:
-
-```
-"switch to bar chart"          → rebuild as bar
-"zoom into last 2 years"       → filter date range
-"add a trend line"             → overlay linear regression
-"compare to national average"  → fetch national series, overlay
-"show top 5 states"            → filter + rank by value
-"dark mode"                    → toggle theme
-"show the raw numbers"         → toggle data table
-"export this"                  → download as SVG/HTML
-```
-
-Always rebuild the full visual when the user requests a change — never
-describe changes in text when you can just show them.
 
 ---
 
@@ -216,6 +278,7 @@ describe changes in text when you can just show them.
 - `references/other.md`       — Coal, renewables, nuclear endpoints
 - `scripts/fetch.py`          — API fetch script (handles auth + pagination)
 - `scripts/render_chart.py`   — Chart template engine (data + config → HTML)
+- `scripts/validate_chart.py` — HTML validator (run after every render)
 - `scripts/build_dashboard.py` — Dashboard builder (JSON config → multi-chart HTML)
 - `scripts/eia-routes.yaml`   — Master route config (single source of truth)
 - `dashboards/*.json`         — Saved dashboard configs
