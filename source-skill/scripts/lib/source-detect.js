@@ -4,6 +4,7 @@ import http from 'http';
 export const SOURCE_TYPES = {
   DOCS_SITE: 'docs-site',
   PAGE_WITH_LINKS: 'page-with-links',
+  PRODUCT_PAGE: 'product-page',
   DIRECT_FILE: 'direct-file',
   API_ENDPOINT: 'api-endpoint',
   UNKNOWN: 'unknown',

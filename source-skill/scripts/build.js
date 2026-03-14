@@ -180,11 +180,35 @@ async function main() {
     console.log(`Detected source type: ${sourceType}`);
   }
 
-  // -- Handle docs-site: delegate to doc-to-skill
+  // -- Handle docs-site: delegate to doc-to-skill pipeline
   if (sourceType === SOURCE_TYPES.DOCS_SITE) {
-    console.log(`\nThis URL appears to be a documentation site.`);
-    console.log(`Please use the doc-to-skill script instead:`);
-    console.log(`\n  node ../doc-to-skill/scripts/build.js --url "${url}"\n`);
+    console.log(`\nDocs site detected. Delegating to doc-to-skill pipeline...`);
+
+    const docToSkillBuild = resolvePathFromCwd(path.join('..', 'doc-to-skill', 'scripts', 'build.js'));
+    try {
+      await fs.access(docToSkillBuild);
+    } catch {
+      console.error(`Error: doc-to-skill not found at ${docToSkillBuild}`);
+      console.error(`Install doc-to-skill alongside source-skill, or use --type to override.`);
+      process.exit(1);
+    }
+
+    // Forward to doc-to-skill with matching args
+    const { execFileSync } = await import('child_process');
+    const forwardArgs = ['--url', url];
+    if (nameArg) forwardArgs.push('--name', nameArg);
+    if (slugArg) forwardArgs.push('--slug', slugArg);
+
+    try {
+      execFileSync('node', [docToSkillBuild, ...forwardArgs], {
+        stdio: 'inherit',
+        cwd: resolvePathFromCwd('../doc-to-skill'),
+      });
+    } catch (err) {
+      console.error(`doc-to-skill exited with error.`);
+      process.exit(1);
+    }
+
     process.exit(0);
   }
 
