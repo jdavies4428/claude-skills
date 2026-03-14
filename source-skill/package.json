@@ -1,0 +1,19 @@
+{
+  "name": "source-skill",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "build": "node scripts/build.js",
+    "monitor": "node scripts/monitor.js",
+    "refresh": "node scripts/refresh.js",
+    "status": "node scripts/monitor.js --status",
+    "validate": "node scripts/validate.js",
+    "test": "node --experimental-test-module-mocks --test tests/*.test.js"
+  },
+  "dependencies": {
+    "xlsx": "^0.18.5"
+  }
+}

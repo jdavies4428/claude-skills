@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EIA 860M — Planned Electric Generation Inventory</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0F172A;
+      --surface:  #1E293B;
+      --surface2: #273549;
+      --border:   #334155;
+      --text:     #F1F5F9;
+      --muted:    #94A3B8;
+      --accent:   #3B82F6;
+      --radius:   10px;
+      --font: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 14px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── Layout ── */
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 24px 64px;
+    }
+
+    /* ── Header ── */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+
+    .header-left h1 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: var(--text);
+    }
+
+    .header-left .subtitle {
+      margin-top: 4px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .source-tag {
+      font-size: 11px;
+      color: var(--muted);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 5px 10px;
+    }
+
+    .btn-export {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    .btn-export:hover { opacity: 0.85; }
+
+    /* ── Summary Cards ── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 22px;
+    }
+
+    .card-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .card-value {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+    }
+
+    .card-sub {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .card-accent-line {
+      height: 3px;
+      border-radius: 2px;
+      margin-bottom: 14px;
+    }
+
+    /* ── Chart sections ── */
+    .section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .section-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .section-meta {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* Toggle */
+    .toggle-group {
+      display: flex;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      overflow: hidden;
+    }
+
+    .toggle-btn {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 6px 14px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
+
+    .toggle-btn.active {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .toggle-btn:hover:not(.active) {
+      background: var(--surface2);
+      color: var(--text);
+    }
+
+    /* Chart wrapper */
+    .chart-wrap {
+      position: relative;
+    }
+
+    .chart-wrap canvas {
+      display: block;
+    }
+
+    /* ── Divider ── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0 0 24px;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    @media print {
+      body { background: #fff; color: #000; }
+      .btn-export { display: none; }
+      .page { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ── Header ── -->
+  <header class="header">
+    <div class="header-left">
+      <h1>EIA 860M &mdash; Planned Electric Generation Inventory</h1>
+      <p class="subtitle">January 2026 &nbsp;|&nbsp; 1,974 generators &nbsp;|&nbsp; 266 GW total planned capacity</p>
+    </div>
+    <div class="header-right">
+      <span class="source-tag">Source: EIA Form 860M &nbsp;|&nbsp; Release Date: February 24, 2026</span>
+      <button class="btn-export" onclick="exportDashboard()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Export / Print
+      </button>
+    </div>
+  </header>
+
+  <!-- ── Summary Cards ── -->
+  <div class="cards">
+    <div class="card">
+      <div class="card-accent-line" style="background: #3B82F6;"></div>
+      <div class="card-label">Total Planned Capacity</div>
+      <div class="card-value">266 GW</div>
+      <div class="card-sub">266,154 MW across all technologies</div>
+    </div>
+    <div class="card">
+      <div class="card-accent-line" style="background: #22C55E;"></div>
+      <div class="card-label">Total Generators</div>
+      <div class="card-value">1,974</div>
+      <div class="card-sub">Units in planned status</div>
+    </div>
+    <div class="card">
+      <div class="card-accent-line" style="background: #F59E0B;"></div>
+      <div class="card-label">Top Technology</div>
+      <div class="card-value">Solar PV</div>
+      <div class="card-sub">121,060 MW &nbsp;|&nbsp; 980 units &nbsp;|&nbsp; 45.5% of total</div>
+    </div>
+    <div class="card">
+      <div class="card-accent-line" style="background: #EF4444;"></div>
+      <div class="card-label">Top State</div>
+      <div class="card-value">Texas</div>
+      <div class="card-sub">82,724 MW planned &nbsp;|&nbsp; 31.1% of total</div>
+    </div>
+  </div>
+
+  <!-- ── Chart 1: By Technology ── -->
+  <div class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Planned Capacity by Technology</div>
+        <div class="section-meta">Top 10 technologies by MW capacity</div>
+      </div>
+      <div class="toggle-group" id="tech-toggle">
+        <button class="toggle-btn active" data-mode="mw" onclick="setTechMode('mw', this)">MW Capacity</button>
+        <button class="toggle-btn" data-mode="units" onclick="setTechMode('units', this)">Unit Count</button>
+      </div>
+    </div>
+    <div class="chart-wrap" style="height: 380px;">
+      <canvas id="chartTech"></canvas>
+    </div>
+  </div>
+
+  <!-- ── Chart 2: By Year ── -->
+  <div class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Planned Capacity by Operation Year</div>
+        <div class="section-meta">Projected MW additions 2026 &ndash; 2031</div>
+      </div>
+    </div>
+    <div class="chart-wrap" style="height: 300px;">
+      <canvas id="chartYear"></canvas>
+    </div>
+  </div>
+
+  <!-- ── Chart 3: By State ── -->
+  <div class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Top 10 States by Planned MW</div>
+        <div class="section-meta">Leading states for new generation additions</div>
+      </div>
+    </div>
+    <div class="chart-wrap" style="height: 340px;">
+      <canvas id="chartState"></canvas>
+    </div>
+  </div>
+
+  <!-- ── Footer ── -->
+  <footer class="footer">
+    Source: U.S. Energy Information Administration (EIA) Form 860M &mdash; Monthly Update to Annual Electric Generator Report
+    &nbsp;|&nbsp; Release Date: February 24, 2026 &nbsp;|&nbsp; Data reflects January 2026 snapshot
+  </footer>
+
+</div><!-- /page -->
+
+<script>
+// ── Data ──────────────────────────────────────────────────────────────────────
+
+const TECH_DATA = [
+  { label: 'Solar Photovoltaic',              mw: 121060, units: 980,  color: '#F59E0B' },
+  { label: 'Batteries',                        mw:  65005, units: 476,  color: '#8B5CF6' },
+  { label: 'Gas Combined Cycle',              mw:  31538, units:  78,  color: '#EF4444' },
+  { label: 'Onshore Wind',                    mw:  21637, units:  82,  color: '#22C55E' },
+  { label: 'Gas Combustion Turbine',          mw:  16109, units: 140,  color: '#F97316' },
+  { label: 'Offshore Wind',                   mw:   5889, units:   5,  color: '#06B6D4' },
+  { label: 'Hydro Pumped Storage',            mw:   2600, units:  11,  color: '#3B82F6' },
+  { label: 'Gas Internal Combustion Engine',  mw:    548, units:  53,  color: '#FB923C' },
+  { label: 'Nuclear',                          mw:    500, units:   1,  color: '#A855F7' },
+  { label: 'Conventional Hydro',              mw:    307, units:  74,  color: '#60A5FA' },
+];
+
+const YEAR_DATA = {
+  labels: ['2026', '2027', '2028', '2029', '2030', '2031'],
+  values: [80476, 84760, 62300, 21985, 14320, 2294],
+};
+
+const STATE_DATA = {
+  labels: ['TX', 'CA', 'AZ', 'LA', 'OR', 'GA', 'NY', 'NM', 'VA', 'WY'],
+  values: [82724, 16203, 15873, 8965, 8142, 8079, 7869, 7541, 7391, 7087],
+};
+
+// ── Chart defaults ────────────────────────────────────────────────────────────
+
+Chart.defaults.color = '#94A3B8';
+Chart.defaults.font.family = "'Inter', system-ui, sans-serif";
+Chart.defaults.font.size = 12;
+
+const GRID_COLOR = 'rgba(51,65,85,0.7)';
+
+function commaFormat(n) {
+  return n.toLocaleString('en-US');
+}
+
+function tooltipCallbacks(unit) {
+  return {
+    callbacks: {
+      label(ctx) {
+        return ` ${commaFormat(ctx.parsed.x ?? ctx.parsed.y)} ${unit}`;
+      },
+    },
+  };
+}
+
+const BASE_TOOLTIP = {
+  backgroundColor: '#1E293B',
+  borderColor: '#334155',
+  borderWidth: 1,
+  titleColor: '#F1F5F9',
+  bodyColor: '#CBD5E1',
+  padding: 10,
+  cornerRadius: 7,
+  displayColors: true,
+  boxWidth: 10,
+  boxHeight: 10,
+};
+
+// ── Technology Chart ──────────────────────────────────────────────────────────
+
+const techCtx = document.getElementById('chartTech').getContext('2d');
+
+const techChartData = {
+  mw: {
+    data: TECH_DATA.map(d => d.mw),
+    label: 'MW Capacity',
+    unit: 'MW',
+  },
+  units: {
+    data: TECH_DATA.map(d => d.units),
+    label: 'Unit Count',
+    unit: 'units',
+  },
+};
+
+let currentTechMode = 'mw';
+
+const techChart = new Chart(techCtx, {
+  type: 'bar',
+  data: {
+    labels: TECH_DATA.map(d => d.label),
+    datasets: [{
+      label: 'MW Capacity',
+      data: TECH_DATA.map(d => d.mw),
+      backgroundColor: TECH_DATA.map(d => d.color),
+      borderColor: TECH_DATA.map(d => d.color),
+      borderWidth: 0,
+      borderRadius: 4,
+      borderSkipped: false,
+    }],
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: { duration: 400, easing: 'easeOutQuart' },
+    layout: { padding: { right: 8 } },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        ...BASE_TOOLTIP,
+        callbacks: {
+          label(ctx) {
+            const mode = currentTechMode;
+            const item = TECH_DATA[ctx.dataIndex];
+            if (mode === 'mw') {
+              return `  ${commaFormat(item.mw)} MW  (${commaFormat(item.units)} units)`;
+            } else {
+              return `  ${commaFormat(item.units)} units  (${commaFormat(item.mw)} MW)`;
+            }
+          },
+        },
+      },
+    },
+    scales: {
+      x: {
+        grid: { color: GRID_COLOR },
+        border: { color: GRID_COLOR },
+        ticks: {
+          callback(val) { return val >= 1000 ? (val / 1000).toFixed(0) + 'k' : val; },
+        },
+      },
+      y: {
+        grid: { display: false },
+        border: { display: false },
+        ticks: { color: '#CBD5E1', padding: 4 },
+      },
+    },
+  },
+});
+
+function setTechMode(mode, btn) {
+  currentTechMode = mode;
+
+  // Update toggle button states
+  document.querySelectorAll('#tech-toggle .toggle-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const d = techChartData[mode];
+  techChart.data.datasets[0].data = d.data;
+  techChart.data.datasets[0].label = d.label;
+  techChart.options.scales.x.ticks.callback = function(val) {
+    if (mode === 'mw') {
+      return val >= 1000 ? (val / 1000).toFixed(0) + 'k' : val;
+    }
+    return commaFormat(val);
+  };
+  techChart.update();
+}
+
+// ── Year Chart ────────────────────────────────────────────────────────────────
+
+const yearCtx = document.getElementById('chartYear').getContext('2d');
+
+new Chart(yearCtx, {
+  type: 'bar',
+  data: {
+    labels: YEAR_DATA.labels,
+    datasets: [{
+      label: 'Planned MW',
+      data: YEAR_DATA.values,
+      backgroundColor: 'rgba(59,130,246,0.85)',
+      borderColor: '#3B82F6',
+      borderWidth: 0,
+      borderRadius: 6,
+      borderSkipped: false,
+    }],
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: { duration: 400, easing: 'easeOutQuart' },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        ...BASE_TOOLTIP,
+        callbacks: {
+          label(ctx) {
+            return `  ${commaFormat(ctx.parsed.y)} MW`;
+          },
+          title(items) {
+            return `Year ${items[0].label}`;
+          },
+        },
+      },
+    },
+    scales: {
+      x: {
+        grid: { display: false },
+        border: { display: false },
+        ticks: { color: '#CBD5E1' },
+      },
+      y: {
+        grid: { color: GRID_COLOR },
+        border: { color: GRID_COLOR },
+        ticks: {
+          callback(val) {
+            return val >= 1000 ? (val / 1000).toFixed(0) + 'k' : val;
+          },
+        },
+      },
+    },
+  },
+});
+
+// ── State Chart ───────────────────────────────────────────────────────────────
+
+const stateCtx = document.getElementById('chartState').getContext('2d');
+
+const stateGradientColors = STATE_DATA.values.map((_, i) => {
+  // Interpolate from bright green to a cooler teal as rank increases
+  const stops = [
+    '#22C55E', '#28C360', '#2EC162', '#34BF64', '#3ABD66',
+    '#40BB68', '#46B96A', '#4CB76C', '#52B56E', '#58B370',
+  ];
+  return stops[i] || '#22C55E';
+});
+
+new Chart(stateCtx, {
+  type: 'bar',
+  data: {
+    labels: STATE_DATA.labels,
+    datasets: [{
+      label: 'Planned MW',
+      data: STATE_DATA.values,
+      backgroundColor: stateGradientColors,
+      borderColor: stateGradientColors,
+      borderWidth: 0,
+      borderRadius: 4,
+      borderSkipped: false,
+    }],
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: { duration: 400, easing: 'easeOutQuart' },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        ...BASE_TOOLTIP,
+        callbacks: {
+          label(ctx) {
+            const pct = ((ctx.parsed.x / 266154) * 100).toFixed(1);
+            return `  ${commaFormat(ctx.parsed.x)} MW  (${pct}% of total)`;
+          },
+        },
+      },
+    },
+    scales: {
+      x: {
+        grid: { color: GRID_COLOR },
+        border: { color: GRID_COLOR },
+        ticks: {
+          callback(val) { return val >= 1000 ? (val / 1000).toFixed(0) + 'k' : val; },
+        },
+      },
+      y: {
+        grid: { display: false },
+        border: { display: false },
+        ticks: { color: '#CBD5E1', font: { weight: '600' }, padding: 4 },
+      },
+    },
+  },
+});
+
+// ── Export ────────────────────────────────────────────────────────────────────
+
+function exportDashboard() {
+  window.print();
+}
+</script>
+</body>
+</html>

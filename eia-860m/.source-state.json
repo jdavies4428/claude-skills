@@ -1,0 +1,20 @@
+{
+  "skillName": "EIA 860M",
+  "skillSlug": "eia-860m",
+  "sourceType": "unknown",
+  "sourceUrl": "https://www.eia.gov/electricity/data/eia860m/",
+  "monitorConfig": {
+    "strategy": "http-head",
+    "lastKnownLinks": [],
+    "lastETag": null,
+    "lastModified": null
+  },
+  "userContext": {
+    "purpose": "Track planned electric generation capacity by technology, state, and year",
+    "features": [],
+    "outputFormat": "interactive dashboard"
+  },
+  "lastCheckTime": "2026-03-14T21:56:32.653Z",
+  "lastRefreshTime": "2026-03-14T21:56:32.653Z",
+  "contentHash": "d508ebee0999de55"
+}
