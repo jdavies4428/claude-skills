@@ -191,6 +191,33 @@ When the user provides multiple URLs or wants competitive analysis:
 
 **STOP.** Wait for user response before proceeding.
 
+### Step 2.5: Interactive Guided Flow
+
+**AskUserQuestion**: "Should this skill walk users through selections step by step?"
+
+```
+Question: "Should this skill use an interactive guided flow (like the EIA skill) where users pick options step by step? Or just be a static reference?"
+Header: "Skill style"
+Options:
+  A) Interactive (Recommended) — AskUserQuestion prompts guide the user through dataset selection, output options, etc. Best for skills with multiple datasets or configurable queries.
+  B) Static reference — Just a SKILL.md with docs, examples, and code blocks. User reads and acts on their own. Best for simple single-purpose skills.
+```
+
+If **Interactive** is selected, the generated SKILL.md must include:
+- `allowed-tools` in frontmatter with `AskUserQuestion` listed
+- A step-by-step guided flow using `AskUserQuestion` at each decision point
+- Dataset/endpoint selection as clickable options (not free text)
+- Frequency/granularity selection if applicable
+- Output format selection (chart, table, JSON, etc.)
+- Follow-up suggestions after the first result
+
+Pass `interactive: true` to the generator so it produces the guided flow pattern.
+See the EIA skill (`eia/SKILL.md`) as the reference implementation for this pattern.
+
+If **Static** is selected, generate a standard SKILL.md with docs and examples (current behavior).
+
+**STOP.** Wait for user response before proceeding.
+
 ### Step 3: Output Format
 
 1. **AskUserQuestion**: What output do you want? (can select multiple)

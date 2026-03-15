@@ -1,14 +1,30 @@
 import { normalizeUserContext, userContextToMarkdown } from './skill-state.js';
 
-function baseRules() {
-  return [
+function baseRules(interactive = false) {
+  const rules = [
     'Return valid SKILL.md content only: YAML frontmatter with name and description, followed by Markdown.',
     'Keep the body under 400 lines.',
     'Make code examples complete and runnable, not pseudocode.',
     'Put the initialization/setup pattern in the first code block.',
     'Include 5-8 practical patterns, gotchas, error handling, and key links.',
     'Do not add marketing copy, history, roadmap content, or features absent from the docs feed.',
-  ].join('\n');
+  ];
+
+  if (interactive) {
+    rules.push(
+      '',
+      'INTERACTIVE SKILL PATTERN — this skill must use AskUserQuestion for a guided flow:',
+      '- Add "allowed-tools" to YAML frontmatter including AskUserQuestion',
+      '- Structure as step-by-step flow: Step 1 = what to do, Step 2 = configuration, Step 3 = execute, Step 4 = follow-up',
+      '- Each step uses AskUserQuestion with 2-4 concrete clickable options',
+      '- Include a lookup table mapping each option to exact API calls/code',
+      '- After initial result, support conversational adjustments without prompts',
+      '- Format each AskUserQuestion as: Question (string), Header (short label), Options (A/B/C with descriptions)',
+      '- Never use placeholder examples in options — every option must be a real, actionable choice',
+    );
+  }
+
+  return rules.join('\n');
 }
 
 function contextPrompt(context) {
@@ -27,15 +43,25 @@ function skillTypePrompt(skillType) {
 }
 
 export async function generateDraftSkill(options) {
+  const interactive = options.interactive === true;
   const system = [
     'You generate concise, high-signal skills for a Claude coding assistant.',
-    baseRules(),
+    baseRules(interactive),
   ].join('\n\n');
+
+  const interactiveInstructions = interactive
+    ? [
+        '- A step-by-step guided flow using AskUserQuestion at each decision point',
+        '- Dataset/action selection as clickable options mapped to specific API calls',
+        '- Follow-up options after the first result',
+      ]
+    : [];
 
   const user = [
     `Library: ${options.libraryName}`,
     `Docs URL: ${options.docsUrl}`,
     skillTypePrompt(options.skillType),
+    interactive ? '\nInteractive: YES — generate a guided AskUserQuestion flow' : '',
     '',
     'Generate a draft SKILL.md with:',
     '- A trigger-rich description that names the library and common user requests',
@@ -44,6 +70,7 @@ export async function generateDraftSkill(options) {
     '- The highest-value patterns from the docs feed',
     '- A troubleshooting or error handling section',
     '- Official reference links only',
+    ...interactiveInstructions,
     '',
     'Documentation feed:',
     options.feed,
