@@ -260,6 +260,36 @@ If **Static** is selected, generate a standard SKILL.md with docs and examples (
 
 4. Report any issues and fix them before proceeding.
 
+### Step 4.1: Final Requests
+
+Before validating and saving, ask the user if they have any additional requests.
+This is the last chance to adjust before the skill is finalized.
+
+**AskUserQuestion**:
+```
+Question: "The skill is built. Any changes or additions before I finalize it?"
+Header: "Final check"
+Options:
+  A) Looks good — proceed to validation
+  B) Add custom instructions — I have specific behaviors or rules to add
+  C) Change something — adjust the output, data, or format
+```
+
+If **B (custom instructions)**:
+- Ask the user to describe what they want (free text via "Other")
+- Incorporate their instructions into the SKILL.md — add as a dedicated section
+  or weave into existing steps as appropriate
+- Rebuild the affected artifacts
+- Show the updated preview
+- Ask this question again (loop until they select A)
+
+If **C (change something)**:
+- Ask what to change (free text via "Other")
+- Make the adjustment, rebuild, show preview
+- Ask this question again (loop until they select A)
+
+**STOP.** Wait for user response. Only proceed to 4.5 when they select A.
+
 ### Step 4.5: Validate & Test
 
 Before presenting the skill as complete, run a thorough review. Do NOT skip this step.

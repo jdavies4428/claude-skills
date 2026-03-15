@@ -44,7 +44,19 @@ Use the bundled scripts instead of manually repeating crawl, filtering, generati
 4. Use a saved project profile when possible, or save one at the end of the wizard for the next run.
 5. Run the dedicated review stage to catch SKILL.md quality issues before validation.
 6. Write the generated skill into `./output/{library-slug}/`.
-7. Validate the result with `scripts/validate.js ./output/{library-slug}` before presenting it as final.
+7. **Final requests gate** — Before validating, ask the user if they have additional
+   requests. Use `AskUserQuestion`:
+   ```
+   Question: "The skill is built. Any changes or additions before I finalize it?"
+   Header: "Final check"
+   Options:
+     A) Looks good — proceed to validation
+     B) Add custom instructions — I have specific behaviors or rules to add
+     C) Change something — adjust the output, patterns, or structure
+   ```
+   If B or C: incorporate changes, rebuild affected sections, show preview, ask again.
+   Loop until the user selects A.
+8. Validate the result with `scripts/validate.js ./output/{library-slug}` before presenting it as final.
 
 ## Quickstart
 
