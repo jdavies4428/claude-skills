@@ -13,3 +13,4 @@ doc-to-skill/output/
 doc-to-skill/profiles/
 
 eia/output/*.html
+.gstack/
