@@ -1,0 +1,23 @@
+{
+  "name": "remotion-ad-studio",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "studio": "remotion studio",
+    "render": "remotion render",
+    "render-all": "for t in PolaroidDrop SliderReveal KineticType MagazineCover TheGlitch PeelAway VenetianBlinds TheOrbit Filmstrip MosaicAssemble; do remotion render $t out/$t.mp4; done"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.0",
+    "@remotion/transitions": "^4.0.0",
+    "@remotion/zod-types": "^4.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "^4.0.0",
+    "zod": "4.3.6"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.0",
+    "typescript": "^5.5.0"
+  }
+}

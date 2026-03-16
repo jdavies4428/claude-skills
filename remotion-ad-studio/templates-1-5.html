@@ -1,0 +1,2203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Remotion Ad Studio — Template Gallery</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a1a;
+    --panel: #111127;
+    --panel-alt: #0d0d20;
+    --border: #1e1e3a;
+    --accent: #7c3aed;
+    --accent-bright: #a855f7;
+    --text: #e8e8f0;
+    --text-muted: #6666aa;
+    --text-dim: #3a3a66;
+    --radius: 8px;
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    overflow: hidden;
+  }
+
+  #app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+
+  /* ─── Header ─────────────────────────────────────────────── */
+  #header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 0 24px;
+    height: 52px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    z-index: 20;
+  }
+
+  #header .logo {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    white-space: nowrap;
+  }
+  #header .logo span { color: var(--accent-bright); }
+
+  .template-tabs {
+    display: flex;
+    gap: 4px;
+    margin-left: 8px;
+  }
+
+  .tmpl-tab {
+    padding: 5px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+  }
+  .tmpl-tab:hover { border-color: var(--accent); color: var(--text); }
+  .tmpl-tab.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    font-weight: 600;
+  }
+
+  /* ─── Main Layout ─────────────────────────────────────────── */
+  #main {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* ─── Center Stage ────────────────────────────────────────── */
+  #stage {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 24px 0 0;
+    overflow: hidden;
+  }
+
+  /* Phone frame */
+  #phone-wrap {
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  #phone-frame {
+    position: relative;
+    width: 260px;
+    height: 564px;
+    border-radius: 36px;
+    background: #050510;
+    box-shadow:
+      0 0 0 2px #1a1a3a,
+      0 0 0 4px #0a0a1a,
+      0 30px 80px rgba(0,0,0,0.7),
+      inset 0 0 0 1px rgba(255,255,255,0.04);
+    overflow: hidden;
+  }
+
+  /* Notch */
+  #phone-frame::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 22px;
+    background: #050510;
+    border-radius: 0 0 12px 12px;
+    z-index: 100;
+    box-shadow: 0 0 0 1px #1a1a3a;
+  }
+
+  #canvas {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border-radius: 36px;
+  }
+
+  /* Controls */
+  #controls {
+    margin-top: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 320px;
+  }
+
+  .control-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .ctrl-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--panel);
+    color: var(--text);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.12s ease;
+    flex-shrink: 0;
+  }
+  .ctrl-btn:hover { border-color: var(--accent); background: rgba(124,58,237,0.15); }
+  .ctrl-btn svg { width: 14px; height: 14px; fill: currentColor; }
+
+  #timeline {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+  }
+  #timeline-fill {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    background: linear-gradient(90deg, var(--accent), var(--accent-bright));
+    border-radius: 3px;
+    transition: width 0.016s linear;
+  }
+
+  #frame-counter {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+    min-width: 54px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* ─── Right Sidebar ───────────────────────────────────────── */
+  #sidebar {
+    width: 280px;
+    min-width: 280px;
+    background: var(--panel);
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+
+  .sidebar-section {
+    padding: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sidebar-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+
+  .template-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .template-subtitle {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+
+  .template-desc {
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--text-muted);
+  }
+
+  .features-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 2px;
+  }
+
+  .feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+  .feature-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent-bright);
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+
+  .packages-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 2px;
+  }
+
+  .pkg-tag {
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: rgba(124,58,237,0.15);
+    border: 1px solid rgba(124,58,237,0.3);
+    color: var(--accent-bright);
+    font-size: 11px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+  }
+
+  .duration-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 6px;
+  }
+
+  /* ─── Template canvas elements ────────────────────────────── */
+  .tmpl-bg {
+    position: absolute;
+    inset: 0;
+  }
+
+  .tmpl-el {
+    position: absolute;
+    transform-origin: center center;
+  }
+
+  /* ─── Scrollbar ────────────────────────────────────────────── */
+  #sidebar::-webkit-scrollbar { width: 4px; }
+  #sidebar::-webkit-scrollbar-track { background: transparent; }
+  #sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <!-- Header -->
+  <div id="header">
+    <div class="logo">Remotion Ad Studio <span>—</span> Template Gallery</div>
+    <div class="template-tabs" id="templateTabs">
+      <button class="tmpl-tab active" data-tmpl="1">1 · Polaroid Drop</button>
+      <button class="tmpl-tab" data-tmpl="2">2 · Slider Reveal</button>
+      <button class="tmpl-tab" data-tmpl="3">3 · Kinetic Type</button>
+      <button class="tmpl-tab" data-tmpl="4">4 · Magazine Cover</button>
+      <button class="tmpl-tab" data-tmpl="5">5 · The Glitch</button>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div id="main">
+
+    <!-- Stage -->
+    <div id="stage">
+      <div id="phone-wrap">
+        <div id="phone-frame">
+          <div id="canvas"></div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div id="controls">
+        <div class="control-row">
+          <button class="ctrl-btn" id="btnRestart" title="Restart">
+            <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+          </button>
+          <button class="ctrl-btn" id="btnPlay" title="Play/Pause">
+            <svg id="iconPlay" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            <svg id="iconPause" viewBox="0 0 24 24" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+          </button>
+          <div id="timeline">
+            <div id="timeline-fill" style="width:0%"></div>
+          </div>
+          <div id="frame-counter">0 / 240</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div id="sidebar">
+      <div class="sidebar-section" id="infoName">
+        <div class="sidebar-label">Template</div>
+        <div class="template-name" id="sidebarName">The Polaroid Drop</div>
+        <div class="template-subtitle" id="sidebarSubtitle">Physical • Tactile • Bouncy</div>
+        <div class="duration-badge" id="sidebarDuration">
+          <svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>
+          8s · 30fps · 240 frames
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">Description</div>
+        <div class="template-desc" id="sidebarDesc">
+          A physical, tactile feel — things drop and bounce like real objects. The polaroid photo drops from above with authentic spring physics, and a typewriter headline builds tension before the CTA bounces in.
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">Key Features</div>
+        <div class="features-list" id="sidebarFeatures">
+          <div class="feature-item"><div class="feature-dot"></div><span>Bounce spring physics (damping: 8)</span></div>
+          <div class="feature-item"><div class="feature-dot"></div><span>Polaroid photo with white border + rotation</span></div>
+          <div class="feature-item"><div class="feature-dot"></div><span>Character-by-character typewriter effect</span></div>
+          <div class="feature-item"><div class="feature-dot"></div><span>Highlight word gets badge_bg fill on appearance</span></div>
+          <div class="feature-item"><div class="feature-dot"></div><span>Impact ripple on polaroid landing</span></div>
+          <div class="feature-item"><div class="feature-dot"></div><span>Outro scale-down (1 → 0.95)</span></div>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">Remotion Packages</div>
+        <div class="packages-list" id="sidebarPackages">
+          <span class="pkg-tag">@remotion/core</span>
+          <span class="pkg-tag">spring()</span>
+          <span class="pkg-tag">interpolate()</span>
+          <span class="pkg-tag">useCurrentFrame</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── AD JSON ──────────────────────────────────────────────────────────────────
+const AD = {
+  copy: {
+    headline: "My mom's wedding day. Clear enough to share again.",
+    support: "Restore the faces, the fabric, and the feeling in one tap.",
+    cta: "Restore This Photo",
+    highlight: "share again",
+    badge: "Family Story",
+    angle: "family-memory"
+  },
+  designTokens: {
+    primary: "#d26739",
+    ink: "#261d1a",
+    headline_text: "#d26739",
+    support_text: "#d26739",
+    surface: "#42291f",
+    badge_bg: "#d26739",
+    badge_text: "#efe7db",
+    cta_bg: "#d26739",
+    cta_text: "#efe7db",
+    gradient_from: "#261d1a",
+    gradient_to: "#6e3c27"
+  },
+  assets: { logoUrl: "", beforePhotoUrl: "", afterPhotoUrl: "" },
+  brandContext: { brandName: "Memorabil.ai" }
+};
+
+const T = AD.designTokens;
+const C = AD.copy;
+const B = AD.brandContext;
+
+// ─── ANIMATION HELPERS ───────────────────────────────────────────────────────
+
+function interpolate(value, inputRange, outputRange, opts = {}) {
+  const [inMin, inMax] = inputRange;
+  const [outMin, outMax] = outputRange;
+  let t = (value - inMin) / (inMax - inMin);
+  if (opts.clamp !== false) t = Math.max(0, Math.min(1, t));
+  return outMin + t * (outMax - outMin);
+}
+
+function spring(frame, { damping = 10, stiffness = 100, mass = 1, from = 0, to = 1 } = {}) {
+  if (frame <= 0) return from;
+  const w0 = Math.sqrt(stiffness / mass);
+  const zeta = damping / (2 * Math.sqrt(stiffness * mass));
+  const dt = frame / 30;
+  let val;
+  if (zeta < 1) {
+    const wd = w0 * Math.sqrt(1 - zeta * zeta);
+    val = 1 - Math.exp(-zeta * w0 * dt) * (Math.cos(wd * dt) + (zeta / Math.sqrt(1 - zeta * zeta)) * Math.sin(wd * dt));
+  } else {
+    val = 1 - Math.exp(-w0 * dt) * (1 + w0 * dt);
+  }
+  val = Math.max(0, Math.min(1.5, val));
+  return from + val * (to - from);
+}
+
+function easeOut(t) { return 1 - Math.pow(1 - Math.max(0,Math.min(1,t)), 3); }
+function easeInOut(t) { t = Math.max(0,Math.min(1,t)); return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+
+// Seeded pseudo-random (for glitch template consistency)
+function seededRand(seed) {
+  let s = seed;
+  return function() {
+    s = (s * 1664525 + 1013904223) & 0xffffffff;
+    return (s >>> 0) / 0xffffffff;
+  };
+}
+
+// ─── TEMPLATE METADATA ───────────────────────────────────────────────────────
+
+const TEMPLATES = {
+  1: {
+    name: "The Polaroid Drop",
+    subtitle: "Physical \u00b7 Tactile \u00b7 Bouncy",
+    duration: "8s \u00b7 30fps \u00b7 240 frames",
+    totalFrames: 240,
+    desc: "A physical, tactile feel — things drop and bounce like real objects. The polaroid photo drops from above with authentic spring physics, and a typewriter headline builds tension before the CTA bounces in.",
+    features: [
+      "Bounce spring physics (damping: 8)",
+      "Polaroid photo with white border + rotation",
+      "Character-by-character typewriter effect",
+      "Highlight word gets badge_bg fill on appearance",
+      "Impact ripple on polaroid landing",
+      "Outro scale-down (1 \u2192 0.95)"
+    ],
+    packages: ["@remotion/core","spring()","interpolate()","useCurrentFrame"]
+  },
+  2: {
+    name: "The Slider Reveal",
+    subtitle: "Before/After \u00b7 Comparison \u00b7 Signature",
+    duration: "10s \u00b7 30fps \u00b7 300 frames",
+    totalFrames: 300,
+    desc: "A before/after comparison slider — the signature interaction for a photo restoration app. A vertical divider sweeps across the photo revealing the transformed result underneath.",
+    features: [
+      "Animated before/after slider divider",
+      "Sepia filter simulation for old photo",
+      "Circle handle with glow effect",
+      "Self-drawing underline on highlight word",
+      "Logo pulse outro",
+      "Spring-driven CTA entrance"
+    ],
+    packages: ["@remotion/core","spring()","interpolate()","useCurrentFrame"]
+  },
+  3: {
+    name: "Kinetic Typography",
+    subtitle: "Bold \u00b7 Flying \u00b7 Colliding",
+    duration: "9s \u00b7 30fps \u00b7 270 frames",
+    totalFrames: 270,
+    desc: "Words are the star — massive, flying from different edges and colliding into place. The CTA stamps down with a particle burst, and everything floats with a subtle oscillation.",
+    features: [
+      "Words fly in from 4 different edges",
+      "Heavy spring (damping:15, mass:2) collisions",
+      "Highlight word flash with glow text-shadow",
+      "Photo punches up from below",
+      "CTA stamp with radial particle burst",
+      "Floating sin-wave oscillation outro"
+    ],
+    packages: ["@remotion/core","spring()","interpolate()","useCurrentFrame"]
+  },
+  4: {
+    name: "The Magazine Cover",
+    subtitle: "Editorial \u00b7 Bold \u00b7 High-Fashion",
+    duration: "8s \u00b7 30fps \u00b7 240 frames",
+    totalFrames: 240,
+    desc: "Editorial, high-fashion magazine-cover aesthetic. Bold typography overlays dramatic imagery revealed via a center-line clip. A colored bar sweeps in behind the headline for graphic punch.",
+    features: [
+      "Clip-path reveal from center line outward",
+      "Magazine masthead logo in small caps",
+      "Color bar behind headline (editorial style)",
+      "Angled badge sticker with spring pop",
+      "Ken Burns slow photo drift",
+      "White flash transition + vignette outro"
+    ],
+    packages: ["@remotion/core","spring()","interpolate()","useCurrentFrame"]
+  },
+  5: {
+    name: "The Glitch",
+    subtitle: "Digital \u00b7 Cyberpunk \u00b7 Tech",
+    duration: "7s \u00b7 30fps \u00b7 210 frames",
+    totalFrames: 210,
+    desc: "Digital, tech, cyberpunk aesthetic. RGB splitting, scan lines, and data corruption. The text scrambles like a departures board before resolving, and the CTA assembles from pixel blocks.",
+    features: [
+      "RGB split (red/green/blue offset copies)",
+      "Departures-board character scramble",
+      "Static noise from seeded random",
+      "Scan line overlay persists throughout",
+      "Pixel-block CTA assembly",
+      "Digital flash badge reveal"
+    ],
+    packages: ["@remotion/core","spring()","interpolate()","useCurrentFrame"]
+  }
+};
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+
+let currentTemplate = 1;
+let frame = 0;
+let isPlaying = false;
+let rafId = null;
+let lastTime = null;
+let frameRemainder = 0;
+const FPS = 30;
+
+// ─── DOM REFS ─────────────────────────────────────────────────────────────────
+
+const canvas = document.getElementById('canvas');
+const timelineFill = document.getElementById('timeline-fill');
+const frameCounter = document.getElementById('frame-counter');
+const iconPlay = document.getElementById('iconPlay');
+const iconPause = document.getElementById('iconPause');
+
+// ─── PLAYBACK ─────────────────────────────────────────────────────────────────
+
+function getTotalFrames() { return TEMPLATES[currentTemplate].totalFrames; }
+
+function setFrame(f) {
+  const total = getTotalFrames();
+  frame = Math.max(0, Math.min(total, f));
+  renderTemplate(currentTemplate, frame);
+  const pct = (frame / total) * 100;
+  timelineFill.style.width = pct + '%';
+  frameCounter.textContent = frame + ' / ' + total;
+}
+
+function tick(ts) {
+  if (!isPlaying) return;
+  if (lastTime === null) lastTime = ts;
+  const dt = ts - lastTime;
+  lastTime = ts;
+  frameRemainder += dt * (FPS / 1000);
+  const steps = Math.floor(frameRemainder);
+  frameRemainder -= steps;
+  const total = getTotalFrames();
+  let newFrame = frame + steps;
+  if (newFrame >= total) newFrame = 0; // loop
+  setFrame(newFrame);
+  rafId = requestAnimationFrame(tick);
+}
+
+function play() {
+  isPlaying = true;
+  lastTime = null;
+  iconPlay.style.display = 'none';
+  iconPause.style.display = '';
+  rafId = requestAnimationFrame(tick);
+}
+
+function pause() {
+  isPlaying = false;
+  if (rafId) cancelAnimationFrame(rafId);
+  iconPlay.style.display = '';
+  iconPause.style.display = 'none';
+}
+
+function restart() {
+  pause();
+  setFrame(0);
+  play();
+}
+
+document.getElementById('btnPlay').addEventListener('click', () => {
+  if (isPlaying) pause(); else play();
+});
+document.getElementById('btnRestart').addEventListener('click', restart);
+
+document.getElementById('timeline').addEventListener('click', (e) => {
+  const rect = e.currentTarget.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  setFrame(Math.round(pct * getTotalFrames()));
+});
+
+// ─── TEMPLATE TABS ────────────────────────────────────────────────────────────
+
+document.getElementById('templateTabs').addEventListener('click', (e) => {
+  const btn = e.target.closest('.tmpl-tab');
+  if (!btn) return;
+  const id = parseInt(btn.dataset.tmpl);
+  document.querySelectorAll('.tmpl-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  currentTemplate = id;
+  updateSidebar(id);
+  pause();
+  frame = 0;
+  buildTemplate(id);
+  setFrame(0);
+  play();
+});
+
+function updateSidebar(id) {
+  const info = TEMPLATES[id];
+  document.getElementById('sidebarName').textContent = info.name;
+  document.getElementById('sidebarSubtitle').textContent = info.subtitle;
+  document.getElementById('sidebarDuration').innerHTML = `
+    <svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>
+    ${info.duration}`;
+  document.getElementById('sidebarDesc').textContent = info.desc;
+  const feats = document.getElementById('sidebarFeatures');
+  feats.innerHTML = info.features.map(f =>
+    `<div class="feature-item"><div class="feature-dot"></div><span>${f}</span></div>`
+  ).join('');
+  const pkgs = document.getElementById('sidebarPackages');
+  pkgs.innerHTML = info.packages.map(p => `<span class="pkg-tag">${p}</span>`).join('');
+  frameCounter.textContent = '0 / ' + info.totalFrames;
+}
+
+// ─── TEMPLATE RENDERER DISPATCH ───────────────────────────────────────────────
+
+function renderTemplate(id, f) {
+  switch(id) {
+    case 1: renderT1(f); break;
+    case 2: renderT2(f); break;
+    case 3: renderT3(f); break;
+    case 4: renderT4(f); break;
+    case 5: renderT5(f); break;
+  }
+}
+
+// ─── TEMPLATE DOM BUILDERS ────────────────────────────────────────────────────
+// Each template builds its DOM once, then renderTN() updates transforms/styles.
+
+let t1Els = {};
+let t2Els = {};
+let t3Els = {};
+let t4Els = {};
+let t5Els = {};
+
+function el(tag, styles = {}, text = '') {
+  const e = document.createElement(tag);
+  Object.assign(e.style, styles);
+  if (text) e.textContent = text;
+  return e;
+}
+
+function div(styles = {}, text = '') { return el('div', styles, text); }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TEMPLATE 1: THE POLAROID DROP
+// ─────────────────────────────────────────────────────────────────────────────
+
+function buildT1() {
+  canvas.innerHTML = '';
+  t1Els = {};
+
+  // Background gradient
+  const bg = div({
+    position:'absolute', inset:'0',
+    background: `linear-gradient(180deg, ${T.gradient_from} 0%, ${T.gradient_to} 100%)`
+  });
+  canvas.appendChild(bg);
+
+  // Shutter icon
+  const shutter = div({
+    position:'absolute', top:'30px', left:'50%',
+    transform:'translateX(-50%)',
+    fontSize:'22px', opacity:'0',
+    userSelect:'none'
+  }, '📷');
+  canvas.appendChild(shutter);
+  t1Els.shutter = shutter;
+
+  // Logo
+  const logo = div({
+    position:'absolute', top:'22px', left:'50%',
+    transform:'translateX(-50%) translateY(-80px)',
+    fontFamily:'-apple-system, sans-serif',
+    fontSize:'13px', fontWeight:'800',
+    letterSpacing:'0.12em',
+    color: T.badge_text,
+    opacity:'0',
+    whiteSpace:'nowrap',
+    textShadow: `0 2px 12px rgba(0,0,0,0.5)`
+  }, B.brandName.toUpperCase());
+  canvas.appendChild(logo);
+  t1Els.logo = logo;
+
+  // Logo shadow (appears on impact)
+  const logoShadow = div({
+    position:'absolute', top:'36px', left:'50%',
+    transform:'translateX(-50%)',
+    width:'80px', height:'4px',
+    background:'rgba(0,0,0,0.4)',
+    borderRadius:'50%',
+    filter:'blur(4px)',
+    opacity:'0'
+  });
+  canvas.appendChild(logoShadow);
+  t1Els.logoShadow = logoShadow;
+
+  // Polaroid wrapper (for rotation + drop)
+  const polaroidWrap = div({
+    position:'absolute',
+    top:'70px', left:'50%',
+    transform:'translateX(-50%) translateY(-400px) rotate(-3deg)',
+    transformOrigin:'center top',
+    opacity:'0'
+  });
+
+  // Polaroid frame
+  const polaroid = div({
+    background:'#fff',
+    padding:'10px 10px 30px',
+    boxShadow:'0 12px 40px rgba(0,0,0,0.7), 0 2px 8px rgba(0,0,0,0.4)',
+    borderRadius:'2px'
+  });
+
+  // Photo area inside polaroid
+  const photo = div({
+    width:'160px', height:'160px',
+    background: `linear-gradient(135deg, ${T.gradient_from} 0%, ${T.gradient_to} 60%, ${T.primary} 100%)`,
+    display:'flex', alignItems:'center', justifyContent:'center',
+    fontSize:'11px', color:'rgba(255,255,255,0.4)',
+    letterSpacing:'0.05em'
+  }, 'PHOTO');
+  polaroid.appendChild(photo);
+
+  // Polaroid label at bottom
+  const polLabel = div({
+    textAlign:'center', paddingTop:'8px',
+    fontSize:'9px', color:'#aaa',
+    letterSpacing:'0.08em', textTransform:'uppercase'
+  }, B.brandName);
+  polaroid.appendChild(polLabel);
+
+  polaroidWrap.appendChild(polaroid);
+  canvas.appendChild(polaroidWrap);
+  t1Els.polaroidWrap = polaroidWrap;
+
+  // Impact ripple (centered under polaroid)
+  const ripple = div({
+    position:'absolute',
+    top:'248px', left:'50%',
+    transform:'translateX(-50%)',
+    width:'0px', height:'0px',
+    border: `2px solid ${T.primary}`,
+    borderRadius:'50%',
+    opacity:'0'
+  });
+  canvas.appendChild(ripple);
+  t1Els.ripple = ripple;
+
+  // Badge
+  const badge = div({
+    position:'absolute', top:'254px', left:'-100px',
+    background: T.badge_bg,
+    color: T.badge_text,
+    padding:'4px 10px',
+    borderRadius:'4px',
+    fontSize:'10px', fontWeight:'700',
+    letterSpacing:'0.06em',
+    textTransform:'uppercase',
+    boxShadow:`0 2px 8px rgba(0,0,0,0.4)`
+  }, C.badge);
+  canvas.appendChild(badge);
+  t1Els.badge = badge;
+
+  // Headline container
+  const headlineWrap = div({
+    position:'absolute',
+    top:'278px', left:'12px', right:'12px',
+    fontSize:'16px', fontWeight:'800',
+    color: T.headline_text,
+    lineHeight:'1.3',
+    minHeight:'60px'
+  });
+  canvas.appendChild(headlineWrap);
+  t1Els.headlineWrap = headlineWrap;
+
+  // Cursor
+  const cursor = div({
+    display:'inline-block',
+    width:'2px', height:'1em',
+    background: T.primary,
+    marginLeft:'1px',
+    verticalAlign:'middle',
+    opacity:'1'
+  });
+  t1Els.cursor = cursor;
+
+  // Support text
+  const support = div({
+    position:'absolute',
+    top:'366px', left:'12px', right:'12px',
+    fontSize:'11px',
+    color: T.support_text,
+    lineHeight:'1.5',
+    opacity:'0',
+    transform:'translateY(8px)'
+  }, C.support);
+  canvas.appendChild(support);
+  t1Els.support = support;
+
+  // CTA button
+  const cta = div({
+    position:'absolute',
+    bottom:'30px', left:'50%',
+    transform:'translateX(-50%) translateY(80px)',
+    background: T.cta_bg,
+    color: T.cta_text,
+    padding:'12px 28px',
+    borderRadius:'8px',
+    fontSize:'13px', fontWeight:'700',
+    letterSpacing:'0.03em',
+    whiteSpace:'nowrap',
+    boxShadow:`0 4px 20px rgba(0,0,0,0.5), 0 0 0 0px ${T.primary}`,
+    opacity:'0'
+  }, C.cta);
+  canvas.appendChild(cta);
+  t1Els.cta = cta;
+
+  // Outro overlay
+  const outro = div({
+    position:'absolute', inset:'0',
+    transformOrigin:'center center',
+    pointerEvents:'none'
+  });
+  canvas.appendChild(outro);
+  t1Els.outro = outro;
+}
+
+function renderT1(f) {
+  const { shutter, logo, logoShadow, polaroidWrap, ripple, badge, headlineWrap, cursor, support, cta } = t1Els;
+
+  // Shutter pulse (frame 0-30)
+  const shutterOp = interpolate(f, [0, 10], [0, 0.6]) - interpolate(f, [20, 30], [0, 0.6]);
+  const shutterScale = 0.8 + 0.4 * Math.abs(Math.sin(f * 0.3));
+  shutter.style.opacity = Math.max(0, shutterOp);
+  shutter.style.transform = `translateX(-50%) scale(${shutterScale})`;
+
+  // Logo drop (frame 15-45) with heavy bounce
+  const logoProgress = Math.max(0, f - 15);
+  const logoSpring = spring(logoProgress, { damping: 8, stiffness: 120, mass: 1.2 });
+  const logoY = interpolate(logoSpring, [0, 1], [-80, 0]);
+  const logoOp = interpolate(f, [15, 28], [0, 1], { clamp: true });
+  logo.style.transform = `translateX(-50%) translateY(${logoY}px)`;
+  logo.style.opacity = logoOp;
+
+  // Logo shadow on landing
+  const shadowOp = interpolate(logoSpring, [0.8, 1], [0, 0.8], { clamp: true });
+  logoShadow.style.opacity = shadowOp;
+
+  // Polaroid drop (frame 40-70) with bounce
+  const polProgress = Math.max(0, f - 40);
+  const polSpring = spring(polProgress, { damping: 8, stiffness: 100, mass: 1.5 });
+  const polY = interpolate(polSpring, [0, 1], [-400, 0]);
+  const polOp = interpolate(f, [40, 52], [0, 1], { clamp: true });
+  polaroidWrap.style.transform = `translateX(-50%) translateY(${polY}px) rotate(-3deg)`;
+  polaroidWrap.style.opacity = polOp;
+
+  // Impact ripple (peaks when polaroid lands ~frame 68-82)
+  const rippleProg = interpolate(f, [66, 84], [0, 1], { clamp: true });
+  const rippleSize = interpolate(rippleProg, [0, 1], [0, 140]);
+  const rippleOp = interpolate(rippleProg, [0, 0.3, 1], [0, 0.7, 0]);
+  ripple.style.width = rippleSize + 'px';
+  ripple.style.height = rippleSize + 'px';
+  ripple.style.marginLeft = (-rippleSize/2) + 'px';
+  ripple.style.marginTop = (-rippleSize/2) + 'px';
+  ripple.style.opacity = rippleOp;
+
+  // Badge slides in from left (frame 60-90) with snap spring
+  const badgeProg = Math.max(0, f - 60);
+  const badgeSpring = spring(badgeProg, { damping: 10, stiffness: 200, mass: 0.8 });
+  const badgeX = interpolate(badgeSpring, [0, 1], [-100, 14]);
+  badge.style.left = badgeX + 'px';
+
+  // Headline typewriter (frame 80-140)
+  const headline = C.headline;
+  const highlightWords = C.highlight.toLowerCase().split(' ');
+  const charStart = 80, charEnd = 140;
+  const charsToShow = Math.floor(interpolate(f, [charStart, charEnd], [0, headline.length], { clamp: true }));
+  const showCursor = f >= charStart && f < charEnd + 10;
+
+  // Build headline with highlight spans
+  let html = '';
+  let i = 0;
+  const words = headline.split(' ');
+  let charCount = 0;
+  words.forEach((word, wi) => {
+    const wordStart = charCount;
+    const wordEnd = charCount + word.length;
+    const isHighlight = highlightWords.some(hw => word.toLowerCase().includes(hw));
+    if (wordStart < charsToShow) {
+      const visiblePart = word.slice(0, Math.max(0, charsToShow - wordStart));
+      if (isHighlight && charsToShow >= wordEnd) {
+        html += `<span style="background:${T.badge_bg};color:${T.badge_text};padding:1px 4px;border-radius:3px">${visiblePart}</span>`;
+      } else {
+        html += visiblePart;
+      }
+    }
+    if (wi < words.length - 1) {
+      if (charCount + word.length < charsToShow) html += ' ';
+      charCount += word.length + 1;
+    } else {
+      charCount += word.length;
+    }
+  });
+
+  if (showCursor) {
+    const blinkOp = (Math.floor(f / 8) % 2 === 0) ? 1 : 0;
+    html += `<span style="display:inline-block;width:2px;height:0.9em;background:${T.primary};margin-left:1px;vertical-align:middle;opacity:${blinkOp}"></span>`;
+  }
+  headlineWrap.innerHTML = html;
+
+  // Support text fade in (frame 130-170)
+  const supportOp = interpolate(f, [130, 170], [0, 1], { clamp: true });
+  const supportY = interpolate(f, [130, 160], [8, 0], { clamp: true });
+  support.style.opacity = supportOp;
+  support.style.transform = `translateY(${supportY}px)`;
+
+  // CTA spring up (frame 160-200)
+  const ctaProg = Math.max(0, f - 160);
+  const ctaSpring = spring(ctaProg, { damping: 12, stiffness: 150, mass: 1 });
+  const ctaY = interpolate(ctaSpring, [0, 1], [80, 0]);
+  const ctaOp = interpolate(f, [160, 175], [0, 1], { clamp: true });
+  cta.style.transform = `translateX(-50%) translateY(${ctaY}px)`;
+  cta.style.opacity = ctaOp;
+
+  // Outro slow zoom out (frame 200-240)
+  const outroScale = interpolate(f, [200, 240], [1, 0.95], { clamp: true });
+  canvas.style.transform = `scale(${outroScale})`;
+  canvas.style.transformOrigin = 'center center';
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TEMPLATE 2: THE SLIDER REVEAL
+// ─────────────────────────────────────────────────────────────────────────────
+
+function buildT2() {
+  canvas.innerHTML = '';
+  canvas.style.transform = '';
+  t2Els = {};
+
+  // Background
+  const bg = div({
+    position:'absolute', inset:'0',
+    background: `linear-gradient(180deg, ${T.gradient_from} 0%, ${T.gradient_to} 100%)`
+  });
+  canvas.appendChild(bg);
+
+  // Logo
+  const logo = div({
+    position:'absolute', top:'22px', left:'50%',
+    transform:'translateX(-50%)',
+    fontFamily:'-apple-system, sans-serif',
+    fontSize:'13px', fontWeight:'800',
+    letterSpacing:'0.12em',
+    color: T.badge_text,
+    opacity:'0',
+    whiteSpace:'nowrap',
+    zIndex:'10'
+  }, B.brandName.toUpperCase());
+  canvas.appendChild(logo);
+  t2Els.logo = logo;
+
+  // Badge
+  const badge = div({
+    position:'absolute', top:'50px', right:'12px',
+    background: T.badge_bg, color: T.badge_text,
+    padding:'4px 10px', borderRadius:'20px',
+    fontSize:'10px', fontWeight:'700',
+    letterSpacing:'0.06em', textTransform:'uppercase',
+    transform:'scale(0)', transformOrigin:'right center',
+    zIndex:'10', boxShadow:`0 2px 8px rgba(0,0,0,0.4)`
+  }, C.badge);
+  canvas.appendChild(badge);
+  t2Els.badge = badge;
+
+  // Photo container
+  const photoContainer = div({
+    position:'absolute',
+    top:'80px', left:'12px', right:'12px',
+    height:'210px',
+    borderRadius:'8px',
+    overflow:'hidden',
+    boxShadow:'0 8px 30px rgba(0,0,0,0.5)'
+  });
+
+  // Before photo (sepia)
+  const beforePhoto = div({
+    position:'absolute', inset:'0',
+    background: `linear-gradient(135deg, #3a2a1a 0%, #6b4a2a 50%, #4a3018 100%)`,
+    filter:'sepia(0.8) grayscale(0.3)',
+    display:'flex', alignItems:'center', justifyContent:'center',
+    fontSize:'11px', color:'rgba(255,255,255,0.3)',
+    letterSpacing:'0.05em'
+  }, 'BEFORE');
+  photoContainer.appendChild(beforePhoto);
+
+  // After photo (full color, revealed by clip)
+  const afterPhoto = div({
+    position:'absolute', inset:'0',
+    background: `linear-gradient(135deg, ${T.gradient_from} 0%, ${T.gradient_to} 50%, ${T.primary} 100%)`,
+    display:'flex', alignItems:'center', justifyContent:'center',
+    fontSize:'11px', color:'rgba(255,255,255,0.4)',
+    letterSpacing:'0.05em',
+    clipPath:'inset(0 100% 0 0)'
+  }, 'AFTER');
+  photoContainer.appendChild(afterPhoto);
+  t2Els.afterPhoto = afterPhoto;
+
+  // Before label
+  const beforeLabel = div({
+    position:'absolute', top:'8px', left:'10px',
+    fontSize:'9px', fontWeight:'700',
+    color:'rgba(255,255,255,0.7)',
+    letterSpacing:'0.1em', textTransform:'uppercase',
+    background:'rgba(0,0,0,0.4)', padding:'2px 6px', borderRadius:'3px'
+  }, 'BEFORE');
+  photoContainer.appendChild(beforeLabel);
+  t2Els.beforeLabel = beforeLabel;
+
+  // After label
+  const afterLabel = div({
+    position:'absolute', top:'8px', right:'10px',
+    fontSize:'9px', fontWeight:'700',
+    color:'rgba(255,255,255,0.9)',
+    letterSpacing:'0.1em', textTransform:'uppercase',
+    background:`rgba(0,0,0,0.5)`, padding:'2px 6px', borderRadius:'3px',
+    opacity:'0'
+  }, 'AFTER');
+  photoContainer.appendChild(afterLabel);
+  t2Els.afterLabel = afterLabel;
+
+  // Divider line
+  const divider = div({
+    position:'absolute', top:'0', bottom:'0',
+    left:'0%',
+    width:'2px',
+    background:'rgba(255,255,255,0.9)',
+    boxShadow:'0 0 12px rgba(255,255,255,0.8), 0 0 4px rgba(255,255,255,1)',
+    zIndex:'5'
+  });
+
+  // Handle circle
+  const handle = div({
+    position:'absolute', top:'50%', left:'50%',
+    transform:'translate(-50%,-50%)',
+    width:'24px', height:'24px',
+    borderRadius:'50%',
+    background:'white',
+    boxShadow:'0 0 12px rgba(255,255,255,0.8), 0 2px 8px rgba(0,0,0,0.5)',
+    display:'flex', alignItems:'center', justifyContent:'center',
+    fontSize:'8px', color:'#333', fontWeight:'800'
+  }, '⟺');
+  divider.appendChild(handle);
+  photoContainer.appendChild(divider);
+  t2Els.divider = divider;
+
+  canvas.appendChild(photoContainer);
+
+  // Headline
+  const headlineWrap = div({
+    position:'absolute',
+    top:'308px', left:'12px', right:'12px',
+    fontSize:'16px', fontWeight:'800',
+    color: T.headline_text,
+    lineHeight:'1.3',
+    opacity:'0',
+    transform:'translateY(16px)'
+  });
+  canvas.appendChild(headlineWrap);
+  t2Els.headlineWrap = headlineWrap;
+
+  // Underline for highlight
+  const underline = div({
+    display:'inline-block',
+    height:'2px',
+    background: T.primary,
+    position:'absolute',
+    bottom:'-2px', left:'0',
+    width:'0%',
+    borderRadius:'1px'
+  });
+  t2Els.underline = underline;
+
+  // Support text
+  const support = div({
+    position:'absolute',
+    top:'400px', left:'12px', right:'12px',
+    fontSize:'11px', color: T.support_text,
+    lineHeight:'1.5', opacity:'0'
+  }, C.support);
+  canvas.appendChild(support);
+  t2Els.support = support;
+
+  // CTA
+  const cta = div({
+    position:'absolute',
+    bottom:'30px', left:'50%',
+    transform:'translateX(-50%) translateY(60px)',
+    background: T.cta_bg, color: T.cta_text,
+    padding:'12px 28px', borderRadius:'8px',
+    fontSize:'13px', fontWeight:'700',
+    letterSpacing:'0.03em', whiteSpace:'nowrap',
+    boxShadow:`0 4px 20px rgba(0,0,0,0.5)`,
+    opacity:'0'
+  }, C.cta);
+  canvas.appendChild(cta);
+  t2Els.cta = cta;
+}
+
+function renderT2(f) {
+  const { logo, badge, afterPhoto, afterLabel, divider, headlineWrap, support, cta } = t2Els;
+
+  // Logo fade in (0-30)
+  const logoSpring = spring(Math.max(0, f), { damping: 12, stiffness: 100 });
+  logo.style.opacity = interpolate(f, [0, 20], [0, 1], { clamp: true });
+  const logoScale = interpolate(logoSpring, [0, 1], [0.8, 1]);
+  logo.style.transform = `translateX(-50%) scale(${logoScale})`;
+
+  // Badge pop (20-50)
+  const badgeProg = Math.max(0, f - 20);
+  const badgeSpring = spring(badgeProg, { damping: 10, stiffness: 250, mass: 0.7 });
+  const badgeScale = interpolate(badgeSpring, [0, 1], [0, 1]);
+  badge.style.transform = `scale(${badgeScale})`;
+
+  // Slider sweep (60-150)
+  const sliderPct = interpolate(f, [60, 150], [0, 100], { clamp: true });
+  divider.style.left = sliderPct + '%';
+  afterPhoto.style.clipPath = `inset(0 ${100 - sliderPct}% 0 0)`;
+
+  // After label appears when slider passes 50%
+  afterLabel.style.opacity = interpolate(f, [100, 120], [0, 1], { clamp: true });
+
+  // Headline spring in (140-180)
+  const hlProg = Math.max(0, f - 140);
+  const hlSpring = spring(hlProg, { damping: 12, stiffness: 120 });
+  const hlY = interpolate(hlSpring, [0, 1], [16, 0]);
+  const hlOp = interpolate(f, [140, 160], [0, 1], { clamp: true });
+  headlineWrap.style.transform = `translateY(${hlY}px)`;
+  headlineWrap.style.opacity = hlOp;
+
+  // Headline with highlight underline
+  const highlightWords = C.highlight.toLowerCase().split(' ');
+  const words = C.headline.split(' ');
+  let html = '';
+  words.forEach((word, wi) => {
+    const isHl = highlightWords.some(hw => word.toLowerCase().includes(hw));
+    if (isHl) {
+      const underlinePct = interpolate(f, [165, 185], [0, 100], { clamp: true });
+      html += `<span style="position:relative;display:inline-block">${word}<span style="position:absolute;bottom:-2px;left:0;height:2px;background:${T.primary};width:${underlinePct}%;border-radius:1px"></span></span>`;
+    } else {
+      html += word;
+    }
+    if (wi < words.length - 1) html += ' ';
+  });
+  headlineWrap.innerHTML = html;
+
+  // Support fade (170-210)
+  support.style.opacity = interpolate(f, [170, 210], [0, 1], { clamp: true });
+
+  // CTA slide up (200-260)
+  const ctaProg = Math.max(0, f - 200);
+  const ctaSpring = spring(ctaProg, { damping: 14, stiffness: 120 });
+  const ctaY = interpolate(ctaSpring, [0, 1], [60, 0]);
+  cta.style.transform = `translateX(-50%) translateY(${ctaY}px)`;
+  cta.style.opacity = interpolate(f, [200, 220], [0, 1], { clamp: true });
+
+  // Logo pulse outro (260-300)
+  const pulseProg = interpolate(f, [260, 280], [0, 1], { clamp: true }) - interpolate(f, [280, 300], [0, 0.3], { clamp: true });
+  const logoGlow = pulseProg * 10;
+  logo.style.textShadow = `0 0 ${logoGlow}px ${T.primary}`;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TEMPLATE 3: KINETIC TYPOGRAPHY
+// ─────────────────────────────────────────────────────────────────────────────
+
+function buildT3() {
+  canvas.innerHTML = '';
+  canvas.style.transform = '';
+  t3Els = {};
+
+  // Background
+  const bg = div({
+    position:'absolute', inset:'0',
+    background: `linear-gradient(180deg, ${T.gradient_from} 0%, ${T.gradient_to} 100%)`
+  });
+  canvas.appendChild(bg);
+  t3Els.bg = bg;
+
+  // Headline words
+  const words = C.headline.split(' ');
+  const highlightWords = C.highlight.toLowerCase().split(' ');
+  const wordEls = [];
+  const wordContainer = div({
+    position:'absolute', top:'50px', left:'12px', right:'12px',
+    fontSize:'22px', fontWeight:'900',
+    color: T.headline_text,
+    lineHeight:'1.2'
+  });
+
+  words.forEach((word, i) => {
+    const isHl = highlightWords.some(hw => word.toLowerCase().includes(hw));
+    const startOffsets = [
+      '0px,-300px',   // top
+      '300px,0px',    // right
+      '0px,300px',    // bottom
+      '-300px,0px'    // left
+    ];
+    const dir = i % 4;
+    const [ox, oy] = startOffsets[dir].split(',').map(Number);
+    const wordEl = div({
+      display:'inline-block',
+      marginRight:'6px',
+      marginBottom:'4px',
+      transform:`translate(${ox}px,${oy}px) scale(2)`,
+      opacity:'0',
+      transition:'none',
+      color: isHl ? T.primary : T.headline_text
+    }, word);
+    wordEl.dataset.ox = ox;
+    wordEl.dataset.oy = oy;
+    wordEl.dataset.highlight = isHl ? '1' : '0';
+    wordContainer.appendChild(wordEl);
+    wordEls.push(wordEl);
+  });
+
+  canvas.appendChild(wordContainer);
+  t3Els.wordContainer = wordContainer;
+  t3Els.wordEls = wordEls;
+
+  // Photo
+  const photo = div({
+    position:'absolute',
+    top:'210px', left:'12px', right:'12px',
+    height:'180px',
+    background: `linear-gradient(135deg, ${T.gradient_from} 0%, ${T.gradient_to} 50%, ${T.primary} 100%)`,
+    borderRadius:'8px',
+    display:'flex', alignItems:'center', justifyContent:'center',
+    fontSize:'12px', color:'rgba(255,255,255,0.4)',
+    letterSpacing:'0.05em',
+    transform:'translateY(300px) scale(0.3)',
+    opacity:'0',
+    boxShadow:'0 8px 30px rgba(0,0,0,0.5)'
+  }, 'PHOTO');
+  canvas.appendChild(photo);
+  t3Els.photo = photo;
+
+  // Badge
+  const badge = div({
+    position:'absolute',
+    top:'195px', left:'50%',
+    transform:'translateX(-50%) rotate(-180deg)',
+    background: T.badge_bg, color: T.badge_text,
+    padding:'4px 12px', borderRadius:'4px',
+    fontSize:'10px', fontWeight:'700',
+    letterSpacing:'0.06em', textTransform:'uppercase',
+    opacity:'0', zIndex:'10',
+    boxShadow:`0 2px 8px rgba(0,0,0,0.5)`
+  }, C.badge);
+  canvas.appendChild(badge);
+  t3Els.badge = badge;
+
+  // Support words
+  const supportWords = C.support.split(' ');
+  const supportContainer = div({
+    position:'absolute',
+    top:'408px', left:'12px', right:'12px',
+    fontSize:'11px', color: T.support_text,
+    lineHeight:'1.5'
+  });
+  const supportWordEls = [];
+  supportWords.forEach((word, i) => {
+    const sw = div({
+      display:'inline-block',
+      marginRight:'4px',
+      marginBottom:'3px',
+      opacity:'0',
+      transform:'translateY(12px)'
+    }, word);
+    supportContainer.appendChild(sw);
+    supportWordEls.push(sw);
+  });
+  canvas.appendChild(supportContainer);
+  t3Els.supportWordEls = supportWordEls;
+
+  // CTA
+  const cta = div({
+    position:'absolute',
+    top:'480px', left:'50%',
+    transform:'translateX(-50%) translateY(-100px) scale(2)',
+    background: T.cta_bg, color: T.cta_text,
+    padding:'12px 28px', borderRadius:'8px',
+    fontSize:'13px', fontWeight:'700',
+    letterSpacing:'0.03em', whiteSpace:'nowrap',
+    boxShadow:`0 4px 20px rgba(0,0,0,0.5)`,
+    opacity:'0'
+  }, C.cta);
+  canvas.appendChild(cta);
+  t3Els.cta = cta;
+
+  // Particles container
+  const particlesContainer = div({ position:'absolute', top:'480px', left:'50%', pointerEvents:'none', zIndex:'5' });
+  const particles = [];
+  for (let i = 0; i < 16; i++) {
+    const angle = (i / 16) * Math.PI * 2;
+    const p = div({
+      position:'absolute',
+      width:'4px', height:'4px',
+      borderRadius:'50%',
+      background: T.primary,
+      opacity:'0',
+      transform:'translate(-50%,-50%)'
+    });
+    p.dataset.angle = angle;
+    particlesContainer.appendChild(p);
+    particles.push(p);
+  }
+  canvas.appendChild(particlesContainer);
+  t3Els.particles = particles;
+
+  // Logo
+  const logo = div({
+    position:'absolute', bottom:'20px', left:'50%',
+    transform:'translateX(-50%) translateY(0px)',
+    fontFamily:'-apple-system, sans-serif',
+    fontSize:'11px', fontWeight:'800',
+    letterSpacing:'0.12em',
+    color: T.badge_text,
+    opacity:'0',
+    whiteSpace:'nowrap'
+  }, B.brandName.toUpperCase());
+  canvas.appendChild(logo);
+  t3Els.logo = logo;
+}
+
+function renderT3(f) {
+  const { bg, wordEls, wordContainer, photo, badge, supportWordEls, cta, particles, logo } = t3Els;
+
+  // Background hue pulse (0-20)
+  const hueShift = Math.sin(f * 0.1) * 5;
+  bg.style.filter = `hue-rotate(${hueShift}deg)`;
+
+  // Words fly in (10-60, stagger 8 frames each)
+  wordEls.forEach((wordEl, i) => {
+    const wStart = 10 + i * 8;
+    const wProg = Math.max(0, f - wStart);
+    const wSpring = spring(wProg, { damping: 15, stiffness: 120, mass: 2 });
+    const ox = parseFloat(wordEl.dataset.ox);
+    const oy = parseFloat(wordEl.dataset.oy);
+    const wx = interpolate(wSpring, [0, 1], [ox, 0]);
+    const wy = interpolate(wSpring, [0, 1], [oy, 0]);
+    const scale = interpolate(wSpring, [0, 1], [2, 1]);
+    const op = interpolate(f, [wStart, wStart + 10], [0, 1], { clamp: true });
+    wordEl.style.transform = `translate(${wx}px,${wy}px) scale(${scale})`;
+    wordEl.style.opacity = op;
+  });
+
+  // Highlight word flash (50-70)
+  wordEls.forEach((wordEl) => {
+    if (wordEl.dataset.highlight === '1') {
+      const flashProg = interpolate(f, [50, 60], [0, 1], { clamp: true });
+      const flashScale = interpolate(f, [50, 58, 70], [1, 1.2, 1]);
+      const glowAmt = flashProg * 12;
+      wordEl.style.transform = wordEl.style.transform.replace(/scale\([^)]+\)/, `scale(${flashScale})`);
+      wordEl.style.textShadow = `0 0 ${glowAmt}px ${T.primary}`;
+    }
+  });
+
+  // Photo punches up (70-100)
+  const photoProg = Math.max(0, f - 70);
+  const photoSpring = spring(photoProg, { damping: 10, stiffness: 200, mass: 0.8 });
+  const photoY = interpolate(photoSpring, [0, 1], [300, 0]);
+  const photoScale = interpolate(photoSpring, [0, 1], [0.3, 1]);
+  photo.style.transform = `translateY(${photoY}px) scale(${photoScale})`;
+  photo.style.opacity = interpolate(f, [70, 82], [0, 1], { clamp: true });
+
+  // Push headline up as photo enters
+  const headlinePush = interpolate(f, [70, 100], [0, -20], { clamp: true });
+  wordContainer.style.transform = `translateY(${headlinePush}px)`;
+
+  // Badge rotates in (90-110)
+  const badgeProg = Math.max(0, f - 90);
+  const badgeSpring = spring(badgeProg, { damping: 12, stiffness: 150 });
+  const badgeRot = interpolate(badgeSpring, [0, 1], [-180, 0]);
+  const badgeOp = interpolate(f, [90, 102], [0, 1], { clamp: true });
+  badge.style.transform = `translateX(-50%) rotate(${badgeRot}deg)`;
+  badge.style.opacity = badgeOp;
+
+  // Support words cascade in (110-150)
+  supportWordEls.forEach((sw, i) => {
+    const swStart = 110 + i * 4;
+    const swProg = Math.max(0, f - swStart);
+    const swSpring = spring(swProg, { damping: 12, stiffness: 200, mass: 0.7 });
+    const swY = interpolate(swSpring, [0, 1], [12, 0]);
+    sw.style.transform = `translateY(${swY}px)`;
+    sw.style.opacity = interpolate(f, [swStart, swStart + 8], [0, 1], { clamp: true });
+  });
+
+  // CTA stamp (150-190)
+  const ctaProg = Math.max(0, f - 150);
+  const ctaSpring = spring(ctaProg, { damping: 8, stiffness: 300, mass: 0.5 });
+  const ctaScale = interpolate(ctaSpring, [0, 1], [2, 1]);
+  const ctaY2 = interpolate(ctaSpring, [0, 1], [-80, 0]);
+  cta.style.transform = `translateX(-50%) translateY(${ctaY2}px) scale(${ctaScale})`;
+  cta.style.opacity = interpolate(f, [150, 162], [0, 1], { clamp: true });
+
+  // Particles burst (155-185)
+  particles.forEach((p, i) => {
+    const pProg = interpolate(f, [155, 185], [0, 1], { clamp: true });
+    const angle = parseFloat(p.dataset.angle);
+    const dist = pProg * 60;
+    const px2 = Math.cos(angle) * dist;
+    const py2 = Math.sin(angle) * dist;
+    const pOp = interpolate(pProg, [0, 0.2, 1], [0, 1, 0]);
+    p.style.transform = `translate(calc(-50% + ${px2}px), calc(-50% + ${py2}px))`;
+    p.style.opacity = pOp;
+  });
+
+  // Logo fade (190-230)
+  const logoDrift = interpolate(f, [190, 220], [10, 0], { clamp: true });
+  logo.style.opacity = interpolate(f, [190, 220], [0, 1], { clamp: true });
+  logo.style.transform = `translateX(-50%) translateY(${logoDrift}px)`;
+
+  // Floating oscillation (230-270)
+  const floatY = f >= 230 ? Math.sin((f - 230) * 0.15) * 3 : 0;
+  if (f >= 230) {
+    canvas.style.transform = `translateY(${floatY}px)`;
+  } else {
+    canvas.style.transform = '';
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TEMPLATE 4: THE MAGAZINE COVER
+// ─────────────────────────────────────────────────────────────────────────────
+
+function buildT4() {
+  canvas.innerHTML = '';
+  canvas.style.transform = '';
+  t4Els = {};
+
+  // Background (solid dark)
+  const bg = div({
+    position:'absolute', inset:'0',
+    background: T.gradient_from
+  });
+  canvas.appendChild(bg);
+  t4Els.bg = bg;
+
+  // Opening line
+  const openLine = div({
+    position:'absolute', top:'50%', left:'50%',
+    transform:'translate(-50%,-50%)',
+    height:'2px',
+    background: T.primary,
+    width:'0px',
+    zIndex:'5',
+    boxShadow:`0 0 8px ${T.primary}`
+  });
+  canvas.appendChild(openLine);
+  t4Els.openLine = openLine;
+
+  // Photo (revealed by clip-path)
+  const photo = div({
+    position:'absolute', inset:'0',
+    background: `linear-gradient(160deg, ${T.gradient_from} 0%, ${T.gradient_to} 40%, ${T.primary} 100%)`,
+    clipPath:'inset(50% 0 50% 0)',
+    transform:'scale(1.1)',
+    transformOrigin:'center center'
+  });
+  canvas.appendChild(photo);
+  t4Els.photo = photo;
+
+  // Dark overlay on photo for text legibility
+  const overlay = div({
+    position:'absolute', inset:'0',
+    background:'linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.6) 60%, rgba(0,0,0,0.85) 100%)',
+    opacity:'0'
+  });
+  canvas.appendChild(overlay);
+  t4Els.overlay = overlay;
+
+  // Masthead logo
+  const masthead = div({
+    position:'absolute', top:'16px', left:'0', right:'0',
+    textAlign:'center',
+    fontFamily:'-apple-system, sans-serif',
+    fontSize:'11px', fontWeight:'700',
+    letterSpacing:'0.3em',
+    textTransform:'uppercase',
+    color:'rgba(255,255,255,0.9)',
+    opacity:'0',
+    transform:'translateY(-8px)',
+    zIndex:'10'
+  }, B.brandName.toUpperCase());
+  canvas.appendChild(masthead);
+  t4Els.masthead = masthead;
+
+  // Color bar behind headline
+  const colorBar = div({
+    position:'absolute',
+    top:'290px', left:'-100%',
+    right:'0',
+    height:'70px',
+    background: T.badge_bg,
+    zIndex:'4'
+  });
+  canvas.appendChild(colorBar);
+  t4Els.colorBar = colorBar;
+
+  // Headline (slides in from right, on top of bar)
+  const headline = div({
+    position:'absolute',
+    top:'294px', left:'0', right:'0',
+    padding:'0 14px',
+    fontSize:'20px', fontWeight:'900',
+    color: T.badge_text,
+    lineHeight:'1.15',
+    letterSpacing:'-0.01em',
+    transform:'translateX(300px)',
+    zIndex:'5',
+    textTransform:'uppercase'
+  });
+  // First ~3 words of headline for magazine feel
+  const hlWords = C.headline.split(' ').slice(0,5).join(' ');
+  headline.textContent = hlWords;
+  canvas.appendChild(headline);
+  t4Els.headline = headline;
+
+  // Badge sticker (angled)
+  const badgeSticker = div({
+    position:'absolute', top:'52px', right:'14px',
+    background: T.badge_bg, color: T.badge_text,
+    padding:'6px 10px', borderRadius:'4px',
+    fontSize:'10px', fontWeight:'800',
+    letterSpacing:'0.08em', textTransform:'uppercase',
+    transform:'rotate(-12deg) scale(0)',
+    transformOrigin:'right top',
+    zIndex:'10',
+    boxShadow:`0 3px 12px rgba(0,0,0,0.6)`
+  }, C.badge);
+  canvas.appendChild(badgeSticker);
+  t4Els.badgeSticker = badgeSticker;
+
+  // Support text (2 lines)
+  const supportLines = C.support.split(', ');
+  const supportContainer = div({
+    position:'absolute',
+    top:'376px', left:'14px', right:'14px',
+    zIndex:'6'
+  });
+  const supportEls = [];
+  C.support.split('.').filter(s => s.trim()).forEach((line, i) => {
+    const se = div({
+      fontSize:'11px',
+      color: 'rgba(239,231,219,0.85)',
+      lineHeight:'1.5',
+      marginBottom:'4px',
+      opacity:'0',
+      transform:'translateY(6px)'
+    }, line.trim() + (i === 0 ? '.' : ''));
+    supportContainer.appendChild(se);
+    supportEls.push(se);
+  });
+  if (supportEls.length === 0) {
+    const se = div({
+      fontSize:'11px',
+      color: 'rgba(239,231,219,0.85)',
+      lineHeight:'1.5',
+      opacity:'0', transform:'translateY(6px)'
+    }, C.support);
+    supportContainer.appendChild(se);
+    supportEls.push(se);
+  }
+  canvas.appendChild(supportContainer);
+  t4Els.supportEls = supportEls;
+
+  // CTA pill with arrow
+  const cta = div({
+    position:'absolute',
+    bottom:'36px', right:'-200px',
+    background: T.cta_bg, color: T.cta_text,
+    padding:'11px 20px',
+    borderRadius:'999px',
+    fontSize:'12px', fontWeight:'700',
+    letterSpacing:'0.02em', whiteSpace:'nowrap',
+    boxShadow:`0 4px 20px rgba(0,0,0,0.5)`,
+    display:'flex', alignItems:'center', gap:'6px',
+    zIndex:'10'
+  });
+  cta.innerHTML = `${C.cta} <span id="t4Arrow" style="display:inline-block;opacity:0;transform:translateX(-8px)">→</span>`;
+  canvas.appendChild(cta);
+  t4Els.cta = cta;
+
+  // Flash overlay
+  const flash = div({
+    position:'absolute', inset:'0',
+    background:'white',
+    opacity:'0',
+    zIndex:'20',
+    pointerEvents:'none'
+  });
+  canvas.appendChild(flash);
+  t4Els.flash = flash;
+
+  // Vignette
+  const vignette = div({
+    position:'absolute', inset:'0',
+    background:'radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.7) 100%)',
+    opacity:'0',
+    zIndex:'15',
+    pointerEvents:'none'
+  });
+  canvas.appendChild(vignette);
+  t4Els.vignette = vignette;
+
+  // Outro bottom logo
+  const bottomLogo = div({
+    position:'absolute', bottom:'14px', left:'50%',
+    transform:'translateX(-50%)',
+    fontFamily:'-apple-system, sans-serif',
+    fontSize:'14px', fontWeight:'900',
+    letterSpacing:'0.15em', textTransform:'uppercase',
+    color: T.badge_text,
+    opacity:'0', zIndex:'16',
+    whiteSpace:'nowrap'
+  }, B.brandName.toUpperCase());
+  canvas.appendChild(bottomLogo);
+  t4Els.bottomLogo = bottomLogo;
+}
+
+function renderT4(f) {
+  const { bg, openLine, photo, overlay, masthead, colorBar, headline, badgeSticker, supportEls, cta, flash, vignette, bottomLogo } = t4Els;
+
+  // Opening line draw (0-15)
+  const lineWidth = interpolate(f, [0, 15], [0, 260], { clamp: true });
+  openLine.style.width = lineWidth + 'px';
+  openLine.style.marginLeft = (-lineWidth/2) + 'px';
+
+  // Photo reveal from clip (15-45)
+  const revealPct = interpolate(f, [15, 45], [0, 100], { clamp: true });
+  const topClip = Math.max(0, 50 - revealPct/2);
+  const bottomClip = Math.max(0, 50 - revealPct/2);
+  photo.style.clipPath = `inset(${topClip}% 0 ${bottomClip}% 0)`;
+  overlay.style.opacity = interpolate(f, [30, 55], [0, 1], { clamp: true });
+
+  // Ken Burns (170-200 and beyond)
+  const kbScale = interpolate(f, [170, 240], [1.1, 1.15], { clamp: true });
+  const kbX = interpolate(f, [170, 240], [0, 2], { clamp: true });
+  photo.style.transform = `scale(${kbScale}) translateX(${kbX}px)`;
+
+  // Masthead (35-65)
+  const mastheadProg = Math.max(0, f - 35);
+  const mastheadSpring = spring(mastheadProg, { damping: 14, stiffness: 100 });
+  const mastheadY = interpolate(mastheadSpring, [0, 1], [-8, 0]);
+  masthead.style.opacity = interpolate(f, [35, 55], [0, 1], { clamp: true });
+  masthead.style.transform = `translateY(${mastheadY}px)`;
+
+  // Color bar slides in (55-85)
+  const barX = interpolate(f, [55, 85], [-100, 0], { clamp: true });
+  colorBar.style.left = barX + '%';
+
+  // Headline slides in from right (65-95)
+  const hlProg = Math.max(0, f - 65);
+  const hlSpring = spring(hlProg, { damping: 12, stiffness: 150 });
+  const hlX = interpolate(hlSpring, [0, 1], [300, 0]);
+  headline.style.transform = `translateX(${hlX}px)`;
+
+  // Badge sticker pop (80-110)
+  const badgeProg = Math.max(0, f - 80);
+  const badgeSpring = spring(badgeProg, { damping: 10, stiffness: 250, mass: 0.7 });
+  const badgeScale = interpolate(badgeSpring, [0, 1], [0, 1]);
+  badgeSticker.style.transform = `rotate(-12deg) scale(${badgeScale})`;
+
+  // Support text (100-140)
+  supportEls.forEach((se, i) => {
+    const seStart = 100 + i * 10;
+    const seProg = Math.max(0, f - seStart);
+    const seSpring = spring(seProg, { damping: 14, stiffness: 120 });
+    const seY = interpolate(seSpring, [0, 1], [6, 0]);
+    se.style.opacity = interpolate(f, [seStart, seStart + 10], [0, 1], { clamp: true });
+    se.style.transform = `translateY(${seY}px)`;
+  });
+
+  // CTA slides in from right (130-170)
+  const ctaProg = Math.max(0, f - 130);
+  const ctaSpring = spring(ctaProg, { damping: 12, stiffness: 120 });
+  const ctaX = interpolate(ctaSpring, [0, 1], [200, -14]);
+  cta.style.right = 'auto';
+  cta.style.left = 'auto';
+  cta.style.transform = `translateX(${ctaX}px) translateX(100%)`;
+  // Simpler: just animate right
+  const ctaRight = interpolate(f, [130, 165], [-200, 14], { clamp: true });
+  cta.style.right = ctaRight + 'px';
+  cta.style.left = 'auto';
+  cta.style.transform = '';
+
+  // Arrow animate
+  const arrowEl = document.getElementById('t4Arrow');
+  if (arrowEl) {
+    const arrowOp = interpolate(f, [160, 175], [0, 1], { clamp: true });
+    const arrowX = interpolate(f, [160, 175], [-8, 0], { clamp: true });
+    arrowEl.style.opacity = arrowOp;
+    arrowEl.style.transform = `translateX(${arrowX}px)`;
+  }
+
+  // White flash (200-202)
+  const flashOp = f >= 200 && f <= 202 ? interpolate(f, [200, 201, 202], [0, 0.8, 0]) : 0;
+  flash.style.opacity = flashOp;
+
+  // Vignette darkening (203+)
+  vignette.style.opacity = interpolate(f, [203, 218], [0, 1], { clamp: true });
+
+  // Bottom logo (205+)
+  bottomLogo.style.opacity = interpolate(f, [205, 225], [0, 1], { clamp: true });
+  // But hide cta in outro if overlapping
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TEMPLATE 5: THE GLITCH
+// ─────────────────────────────────────────────────────────────────────────────
+
+function buildT5() {
+  canvas.innerHTML = '';
+  canvas.style.transform = '';
+  t5Els = {};
+
+  // Dark background
+  const bg = div({ position:'absolute', inset:'0', background:'#050510' });
+  canvas.appendChild(bg);
+
+  // Static noise container
+  const noiseContainer = div({ position:'absolute', inset:'0', overflow:'hidden', zIndex:'1' });
+  const noiseBlocks = [];
+  for (let i = 0; i < 80; i++) {
+    const nb = div({
+      position:'absolute',
+      width: (Math.random() * 20 + 4) + 'px',
+      height: (Math.random() * 4 + 2) + 'px',
+      left: (Math.random() * 260) + 'px',
+      top: (Math.random() * 564) + 'px',
+      opacity:'0'
+    });
+    noiseContainer.appendChild(nb);
+    noiseBlocks.push(nb);
+  }
+  canvas.appendChild(noiseContainer);
+  t5Els.noiseBlocks = noiseBlocks;
+
+  // Logo (RGB split: 3 layers)
+  const logoContainer = div({
+    position:'absolute', top:'24px', left:'50%',
+    transform:'translateX(-50%)',
+    zIndex:'8',
+    whiteSpace:'nowrap'
+  });
+
+  const logoRed = div({
+    position:'absolute', top:'0',
+    fontFamily:'"SF Mono","Fira Code",monospace',
+    fontSize:'13px', fontWeight:'800',
+    letterSpacing:'0.12em',
+    color: T.primary, opacity:'0.6',
+    transform:'translateX(-52px) translateX(2px)',
+    mixBlendMode:'screen',
+    whiteSpace:'nowrap'
+  }, B.brandName.toUpperCase());
+
+  const logoGreen = div({
+    position:'absolute', top:'0',
+    fontFamily:'"SF Mono","Fira Code",monospace',
+    fontSize:'13px', fontWeight:'800',
+    letterSpacing:'0.12em',
+    color: T.gradient_to, opacity:'0.6',
+    transform:'translateX(-52px) translateX(-2px)',
+    mixBlendMode:'screen',
+    whiteSpace:'nowrap'
+  }, B.brandName.toUpperCase());
+
+  const logoMain = div({
+    position:'relative',
+    fontFamily:'"SF Mono","Fira Code",monospace',
+    fontSize:'13px', fontWeight:'800',
+    letterSpacing:'0.12em',
+    color: T.badge_text,
+    whiteSpace:'nowrap'
+  }, B.brandName.toUpperCase());
+
+  logoContainer.appendChild(logoRed);
+  logoContainer.appendChild(logoGreen);
+  logoContainer.appendChild(logoMain);
+  canvas.appendChild(logoContainer);
+  t5Els.logoContainer = logoContainer;
+  t5Els.logoRed = logoRed;
+  t5Els.logoGreen = logoGreen;
+  t5Els.logoMain = logoMain;
+
+  // Photo strips container
+  const photoContainer = div({
+    position:'absolute',
+    top:'72px', left:'12px', right:'12px',
+    height:'180px',
+    overflow:'hidden',
+    borderRadius:'6px',
+    boxShadow:'0 6px 24px rgba(0,0,0,0.7)'
+  });
+
+  const stripCount = 12;
+  const strips = [];
+  for (let i = 0; i < stripCount; i++) {
+    const stripH = 180 / stripCount;
+    const fromLeft = i % 2 === 0;
+    const strip = div({
+      position:'absolute',
+      left:'0', right:'0',
+      top: (i * stripH) + 'px',
+      height: stripH + 'px',
+      background: `linear-gradient(90deg, ${T.gradient_from}, ${T.gradient_to}, ${T.primary})`,
+      transform: fromLeft ? 'translateX(-100%)' : 'translateX(100%)',
+      overflow:'hidden'
+    });
+    photoContainer.appendChild(strip);
+    strips.push({ el: strip, fromLeft });
+  }
+  canvas.appendChild(photoContainer);
+  t5Els.strips = strips;
+
+  // "PHOTO" label
+  const photoLabel = div({
+    position:'absolute',
+    top:'72px', left:'12px', right:'12px',
+    height:'180px',
+    display:'flex', alignItems:'center', justifyContent:'center',
+    fontSize:'11px', color:'rgba(255,255,255,0.3)',
+    letterSpacing:'0.1em', fontFamily:'monospace',
+    zIndex:'3', pointerEvents:'none'
+  }, 'PHOTO');
+  canvas.appendChild(photoLabel);
+
+  // Badge (digital flash)
+  const badgeFlash = div({
+    position:'absolute', top:'264px', left:'12px',
+    background: T.badge_text,
+    width:'120px', height:'26px',
+    borderRadius:'4px',
+    opacity:'0'
+  });
+  canvas.appendChild(badgeFlash);
+  t5Els.badgeFlash = badgeFlash;
+
+  const badge = div({
+    position:'absolute', top:'264px', left:'12px',
+    background: T.badge_bg, color: T.badge_text,
+    padding:'4px 10px', borderRadius:'4px',
+    fontFamily:'monospace',
+    fontSize:'10px', fontWeight:'700',
+    letterSpacing:'0.08em', textTransform:'uppercase',
+    opacity:'0', zIndex:'6'
+  }, C.badge);
+  canvas.appendChild(badge);
+  t5Els.badge = badge;
+
+  // Headline (character scramble)
+  const headlineEl = div({
+    position:'absolute',
+    top:'300px', left:'12px', right:'12px',
+    fontFamily:'"SF Mono","Fira Code",monospace',
+    fontSize:'15px', fontWeight:'800',
+    color: T.headline_text,
+    lineHeight:'1.35',
+    zIndex:'6'
+  });
+  canvas.appendChild(headlineEl);
+  t5Els.headlineEl = headlineEl;
+
+  // RGB split overlay on highlight word
+  const hlRgbRed = div({
+    position:'absolute',
+    top:'300px', left:'12px', right:'12px',
+    fontFamily:'"SF Mono","Fira Code",monospace',
+    fontSize:'15px', fontWeight:'800',
+    color: T.primary, opacity:'0',
+    lineHeight:'1.35',
+    zIndex:'5',
+    pointerEvents:'none',
+    mixBlendMode:'screen',
+    transform:'translateX(3px)'
+  });
+  canvas.appendChild(hlRgbRed);
+  t5Els.hlRgbRed = hlRgbRed;
+
+  // Support text (terminal style)
+  const support = div({
+    position:'absolute',
+    top:'420px', left:'12px', right:'12px',
+    fontFamily:'"SF Mono","Fira Code",monospace',
+    fontSize:'10px', color: T.primary,
+    lineHeight:'1.5', opacity:'0'
+  });
+  canvas.appendChild(support);
+  t5Els.support = support;
+
+  // CTA pixel blocks
+  const ctaContainer = div({
+    position:'absolute',
+    bottom:'36px', left:'50%',
+    transform:'translateX(-50%)',
+    zIndex:'8'
+  });
+  const ctaBtn = div({
+    background: T.cta_bg, color: T.cta_text,
+    padding:'12px 28px', borderRadius:'8px',
+    fontFamily:'"SF Mono","Fira Code",monospace',
+    fontSize:'12px', fontWeight:'700',
+    letterSpacing:'0.05em', whiteSpace:'nowrap',
+    boxShadow:`0 4px 20px rgba(0,0,0,0.7)`,
+    opacity:'0',
+    position:'relative',
+    overflow:'hidden'
+  }, C.cta);
+  ctaContainer.appendChild(ctaBtn);
+  canvas.appendChild(ctaContainer);
+  t5Els.ctaBtn = ctaBtn;
+
+  // Pixel blocks for CTA assembly
+  const pixelBlocks = [];
+  for (let i = 0; i < 20; i++) {
+    const pb = div({
+      position:'absolute',
+      width:'8px', height:'8px',
+      background: T.cta_bg,
+      opacity:'0',
+      borderRadius:'1px'
+    });
+    ctaContainer.appendChild(pb);
+    pixelBlocks.push(pb);
+  }
+  t5Els.pixelBlocks = pixelBlocks;
+
+  // Scan lines (persistent overlay)
+  const scanLines = div({
+    position:'absolute', inset:'0',
+    backgroundImage:'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.15) 3px, rgba(0,0,0,0.15) 4px)',
+    zIndex:'20',
+    pointerEvents:'none',
+    opacity:'0.6'
+  });
+  canvas.appendChild(scanLines);
+
+  // Outro glitch burst
+  const glitchBurst = div({ position:'absolute', inset:'0', zIndex:'19', pointerEvents:'none', opacity:'0' });
+  canvas.appendChild(glitchBurst);
+  t5Els.glitchBurst = glitchBurst;
+}
+
+// Glitch character set
+const GLITCH_CHARS = '!@#$%^&*<>?/\\|[]{}0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+function scrambleText(target, progress, frame) {
+  // progress: 0 = all random, 1 = all correct
+  const rand = seededRand(frame * 7 + 13);
+  let result = '';
+  for (let i = 0; i < target.length; i++) {
+    if (target[i] === ' ') { result += ' '; continue; }
+    const charProgress = Math.max(0, Math.min(1, (progress * target.length - i) / 3));
+    if (charProgress >= 1) {
+      result += target[i];
+    } else if (charProgress > 0) {
+      result += Math.random() < charProgress ? target[i] : GLITCH_CHARS[Math.floor(rand() * GLITCH_CHARS.length)];
+    } else {
+      result += GLITCH_CHARS[Math.floor(rand() * GLITCH_CHARS.length)];
+    }
+  }
+  return result;
+}
+
+function renderT5(f) {
+  const { noiseBlocks, logoContainer, logoRed, logoGreen, logoMain, strips, badgeFlash, badge, headlineEl, hlRgbRed, support, ctaBtn, pixelBlocks, glitchBurst } = t5Els;
+
+  // Static noise (0-20)
+  const noiseOp = interpolate(f, [0, 5, 18, 22], [0, 1, 0.8, 0], { clamp: true });
+  const rand0 = seededRand(f * 31 + 7);
+  noiseBlocks.forEach((nb) => {
+    if (noiseOp > 0) {
+      const r = rand0();
+      nb.style.opacity = (r * noiseOp * 0.8).toString();
+      const colors = [T.primary, T.gradient_to, T.badge_bg, T.badge_text, T.surface];
+      nb.style.background = colors[Math.floor(r * colors.length)];
+      nb.style.left = (rand0() * 260) + 'px';
+    } else {
+      nb.style.opacity = '0';
+    }
+  });
+
+  // Logo glitch (15-45)
+  const logoInRange = f >= 15 && f <= 45;
+  const logoResolved = f > 45;
+  if (logoResolved) {
+    logoMain.style.opacity = '1';
+    logoRed.style.opacity = '0';
+    logoGreen.style.opacity = '0';
+    logoContainer.style.opacity = '1';
+    logoContainer.style.transform = 'translateX(-50%)';
+  } else if (logoInRange) {
+    const flickerSeed = seededRand(f * 17);
+    const flicker = flickerSeed();
+    const showLogo = flicker > 0.3;
+    logoContainer.style.opacity = showLogo ? '1' : '0';
+    // Slice offset glitch
+    const sliceOffset = (flickerSeed() - 0.5) * 20;
+    const rgbActive = flickerSeed() > 0.4;
+    if (rgbActive) {
+      logoRed.style.opacity = '0.5';
+      logoGreen.style.opacity = '0.5';
+      logoRed.style.transform = `translateX(calc(-50% + 2px)) translateX(0)`;
+      logoGreen.style.transform = `translateX(calc(-50% - 2px)) translateX(0)`;
+    } else {
+      logoRed.style.opacity = '0';
+      logoGreen.style.opacity = '0';
+    }
+    logoContainer.style.transform = `translateX(-50%) translateX(${sliceOffset}px)`;
+  } else {
+    logoContainer.style.opacity = '0';
+  }
+
+  // Scan lines sweep + photo strips (40-70)
+  strips.forEach(({ el, fromLeft }, i) => {
+    const stripStart = 40 + i * 2.5;
+    const stripProg = interpolate(f, [stripStart, stripStart + 18], [0, 1], { clamp: true });
+    const tx = fromLeft
+      ? interpolate(stripProg, [0, 1], [-100, 0])
+      : interpolate(stripProg, [0, 1], [100, 0]);
+    el.style.transform = `translateX(${tx}%)`;
+  });
+
+  // Badge digital flash (65-95)
+  const flashProg = interpolate(f, [65, 80], [0, 1], { clamp: true });
+  if (f >= 65 && f <= 80) {
+    const flashW = interpolate(flashProg, [0, 0.5, 1], [0, 120, 0]);
+    badgeFlash.style.width = flashW + 'px';
+    badgeFlash.style.opacity = interpolate(flashProg, [0, 0.3, 0.8, 1], [0, 0.9, 0.6, 0]);
+  } else {
+    badgeFlash.style.opacity = '0';
+  }
+  badge.style.opacity = interpolate(f, [78, 88], [0, 1], { clamp: true });
+
+  // Headline scramble (85-130)
+  if (f >= 85) {
+    const scrambleProg = interpolate(f, [85, 130], [0, 1], { clamp: true });
+    const scrambled = scrambleText(C.headline, scrambleProg, f);
+    // Highlight word RGB split after resolved
+    const hlWords = C.highlight.toLowerCase().split(' ');
+    const words = scrambled.split(' ');
+    const origWords = C.headline.split(' ');
+    let html = '';
+    words.forEach((word, wi) => {
+      const isHl = hlWords.some(hw => origWords[wi] && origWords[wi].toLowerCase().includes(hw));
+      if (isHl && scrambleProg >= 0.95) {
+        const rgbSplit = interpolate(f, [125, 135], [0, 1], { clamp: true });
+        html += `<span style="position:relative;color:${T.primary};text-shadow:${rgbSplit*3}px 0 ${T.badge_bg}, ${-rgbSplit*3}px 0 ${T.gradient_to}">${word}</span>`;
+      } else {
+        html += word;
+      }
+      if (wi < words.length - 1) html += ' ';
+    });
+    headlineEl.innerHTML = html;
+    headlineEl.style.opacity = '1';
+
+    // Terminal cursor on headline
+    if (f < 140) {
+      const curBlink = (Math.floor(f / 6) % 2 === 0) ? 1 : 0;
+      headlineEl.innerHTML += `<span style="color:${T.primary};opacity:${curBlink}">_</span>`;
+    }
+  } else {
+    headlineEl.style.opacity = '0';
+  }
+
+  // Support terminal typing (120-150)
+  if (f >= 120) {
+    const typeProg = interpolate(f, [120, 155], [0, 1], { clamp: true });
+    const charsToShow = Math.floor(typeProg * C.support.length);
+    const curBlink = (Math.floor(f / 5) % 2 === 0) ? 1 : 0;
+    const visText = C.support.slice(0, charsToShow);
+    support.innerHTML = `<span style="color:${T.support_text};margin-right:4px">></span>${visText}<span style="opacity:${curBlink};color:${T.primary}">█</span>`;
+    support.style.opacity = '1';
+  } else {
+    support.style.opacity = '0';
+  }
+
+  // CTA pixel assembly (140-175)
+  const ctaAssembled = interpolate(f, [162, 175], [0, 1], { clamp: true });
+  ctaBtn.style.opacity = ctaAssembled;
+
+  pixelBlocks.forEach((pb, i) => {
+    const pbStart = 140 + i * 1.5;
+    const pbProg = interpolate(f, [pbStart, pbStart + 18], [0, 1], { clamp: true });
+    if (pbProg < 1) {
+      const randAngle = (i / 20) * Math.PI * 2;
+      const dist = (1 - pbProg) * 80;
+      const px = Math.cos(randAngle) * dist - 12 + (i % 4) * 8;
+      const py = Math.sin(randAngle) * dist - 8 + Math.floor(i / 4) * 8;
+      pb.style.transform = `translate(${px}px, ${py}px)`;
+      pb.style.opacity = interpolate(pbProg, [0, 0.3, 0.9, 1], [0.8, 0.6, 0.3, 0]);
+    } else {
+      pb.style.opacity = '0';
+    }
+  });
+
+  // Outro glitch burst (175-178) + clean hold
+  if (f >= 175 && f <= 178) {
+    const rand5 = seededRand(f * 53);
+    // Quick distortion: shift some DOM elements
+    glitchBurst.style.opacity = '1';
+    glitchBurst.style.background = T.primary;
+    glitchBurst.style.opacity = '0.15';
+    glitchBurst.style.transform = `translateX(${(rand5()-0.5)*12}px)`;
+  } else {
+    glitchBurst.style.opacity = '0';
+    glitchBurst.style.transform = '';
+  }
+}
+
+// ─── TEMPLATE BUILDER DISPATCH ────────────────────────────────────────────────
+
+function buildTemplate(id) {
+  switch(id) {
+    case 1: buildT1(); break;
+    case 2: buildT2(); break;
+    case 3: buildT3(); break;
+    case 4: buildT4(); break;
+    case 5: buildT5(); break;
+  }
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+
+buildTemplate(1);
+setFrame(0);
+play();
+
+</script>
+</body>
+</html>

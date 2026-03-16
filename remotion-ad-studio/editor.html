@@ -1,0 +1,3861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Remotion Ad Studio</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #F5F5F0;
+    --panel: #ffffff;
+    --panel-alt: #F5F5F0;
+    --border: #e0ddd5;
+    --accent: #1A237E;
+    --accent-bright: #C5A059;
+    --accent-glow: #C5A059;
+    --text: #37474F;
+    --text-muted: #6b7a82;
+    --text-dim: #9aa5ab;
+    --input-bg: #ffffff;
+    --tab-active: #1A237E;
+    --success: #4CAF50;
+    --danger: #e74c3c;
+    --radius: 8px;
+    --radius-sm: 4px;
+    --transition: 0.15s ease;
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    overflow: hidden;
+  }
+
+  /* ─── Layout ─────────────────────────────────────────── */
+  #app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+
+  #header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 20px;
+    height: 52px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    z-index: 10;
+  }
+
+  #header .logo {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    color: var(--text);
+  }
+  #header .logo span { color: #C5A059; }
+
+  #header .subtitle {
+    font-size: 12px;
+    color: var(--text-muted);
+    border-left: 1px solid var(--border);
+    padding-left: 12px;
+  }
+
+  /* Template selector bar */
+  #template-bar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 20px;
+    background: var(--panel-alt);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  #template-bar::-webkit-scrollbar { display: none; }
+  #template-bar .bar-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-dim);
+    margin-right: 8px;
+    white-space: nowrap;
+  }
+  .tmpl-btn {
+    padding: 4px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+  }
+  .tmpl-btn:hover { border-color: var(--accent-bright); color: var(--text); }
+  .tmpl-btn.active {
+    background: #1A237E;
+    border-color: #1A237E;
+    color: white;
+    font-weight: 600;
+  }
+
+  #main {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* ─── Left Panel ──────────────────────────────────────── */
+  #left-panel {
+    width: 480px;
+    min-width: 400px;
+    display: flex;
+    flex-direction: column;
+    background: var(--panel);
+    border-right: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  /* Tab bar */
+  .tab-bar {
+    display: flex;
+    background: var(--panel-alt);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tab-bar::-webkit-scrollbar { display: none; }
+
+  .tab-btn {
+    flex: 1;
+    padding: 11px 6px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color var(--transition), border-color var(--transition);
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active {
+    color: #C5A059;
+    border-bottom-color: #C5A059;
+  }
+
+  .tab-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  .tab-content::-webkit-scrollbar { width: 4px; }
+  .tab-content::-webkit-scrollbar-track { background: transparent; }
+  .tab-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
+
+  /* ─── Form Controls ───────────────────────────────────── */
+  .field {
+    margin-bottom: 14px;
+  }
+
+  .field label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+  }
+
+  .field input[type="text"],
+  .field input[type="url"],
+  .field textarea,
+  .field select {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    padding: 7px 10px;
+    font-size: 13px;
+    font-family: inherit;
+    transition: border-color var(--transition), box-shadow var(--transition);
+    outline: none;
+  }
+  .field input:focus,
+  .field textarea:focus,
+  .field select:focus {
+    border-color: #C5A059;
+    box-shadow: 0 0 0 2px rgba(197, 160, 89, 0.15);
+  }
+
+  .field textarea {
+    resize: vertical;
+    min-height: 70px;
+    line-height: 1.5;
+  }
+
+  .field select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 28px;
+    cursor: pointer;
+  }
+
+  /* Section headers */
+  .section-header {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-dim);
+    margin: 20px 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-header:first-child { margin-top: 0; }
+
+  /* Color picker rows */
+  .color-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .color-row label {
+    flex: 1;
+    font-size: 12px;
+    color: var(--text-muted);
+    cursor: pointer;
+  }
+  .color-row .hex-val {
+    font-size: 11px;
+    color: var(--text-dim);
+    font-family: monospace;
+    width: 64px;
+    text-align: right;
+  }
+  .color-swatch {
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  /* Color palette popover */
+  .color-palette-popover {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 4px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px;
+    z-index: 100;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    min-width: 200px;
+  }
+  .color-palette-popover.open { display: block; }
+  .color-palette-popover .palette-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+  .color-palette-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .palette-swatch {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color 0.15s, transform 0.15s;
+    position: relative;
+  }
+  .palette-swatch:hover { transform: scale(1.15); border-color: rgba(255,255,255,0.3); }
+  .palette-swatch.selected { border-color: #C5A059; }
+  .palette-swatch.selected::after {
+    content: '✓';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+  }
+  .palette-custom {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px solid var(--border);
+  }
+  .palette-custom input {
+    width: 80px;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    padding: 4px 8px;
+    font-size: 12px;
+    font-family: monospace;
+    outline: none;
+  }
+  .palette-custom input:focus { border-color: #C5A059; }
+  .palette-custom button {
+    padding: 4px 8px;
+    background: var(--accent-bright);
+    border: none;
+    border-radius: var(--radius-sm);
+    color: white;
+    font-size: 11px;
+    cursor: pointer;
+  }
+
+  /* Asset previews */
+  .asset-preview {
+    width: 100%;
+    height: 80px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--input-bg);
+    margin-top: 6px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .asset-preview img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: none;
+  }
+  .asset-preview img.loaded { display: block; }
+  .asset-placeholder {
+    font-size: 11px;
+    color: var(--text-dim);
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  /* Sliders */
+  .slider-row {
+    margin-bottom: 14px;
+  }
+  .slider-row .slider-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .slider-row .slider-label span:first-child {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .slider-row .slider-val {
+    font-size: 12px;
+    color: #C5A059;
+    font-family: monospace;
+    background: rgba(197, 160, 89, 0.1);
+    padding: 1px 6px;
+    border-radius: 3px;
+  }
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--border);
+    outline: none;
+    cursor: pointer;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #C5A059;
+    cursor: pointer;
+    box-shadow: 0 0 0 2px rgba(197, 160, 89, 0.3);
+    transition: box-shadow var(--transition);
+  }
+  input[type="range"]::-webkit-slider-thumb:hover {
+    box-shadow: 0 0 0 4px rgba(197, 160, 89, 0.25);
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border: none;
+    border-radius: 50%;
+    background: #C5A059;
+    cursor: pointer;
+  }
+
+  /* Toggle */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .toggle-row label { font-size: 13px; color: var(--text); cursor: pointer; }
+  .toggle {
+    position: relative;
+    width: 36px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+  .toggle input { opacity: 0; width: 0; height: 0; }
+  .toggle-track {
+    position: absolute;
+    inset: 0;
+    background: var(--border);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background var(--transition);
+  }
+  .toggle-track::after {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    width: 16px;
+    height: 16px;
+    background: white;
+    border-radius: 50%;
+    transition: transform var(--transition);
+  }
+  .toggle input:checked + .toggle-track { background: #C5A059; }
+  .toggle input:checked + .toggle-track::after { transform: translateX(16px); }
+
+  /* Buttons */
+  .btn {
+    padding: 7px 14px;
+    border-radius: var(--radius-sm);
+    border: none;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition);
+    letter-spacing: 0.3px;
+  }
+  .btn-primary {
+    background: #FFB300;
+    color: #1A237E;
+    font-weight: 700;
+  }
+  .btn-primary:hover { background: #e6a200; }
+  .btn-ghost {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+  .btn-ghost:hover { border-color: #C5A059; color: var(--text); }
+  .btn-danger {
+    background: transparent;
+    border: 1px solid var(--danger);
+    color: var(--danger);
+  }
+  .btn-danger:hover { background: rgba(231, 76, 60, 0.1); }
+
+  .btn-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+
+  /* Segmented control */
+  .seg-group {
+    display: flex;
+    gap: 2px;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 2px;
+    margin-top: 4px;
+  }
+  .seg-btn {
+    flex: 1;
+    padding: 5px 4px;
+    background: transparent;
+    border: none;
+    border-radius: 3px;
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+  }
+  .seg-btn:hover { color: var(--text); }
+  .seg-btn.active {
+    background: #1A237E;
+    color: white;
+    font-weight: 600;
+  }
+
+  /* JSON editor */
+  #json-editor, #reel-editor {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: #7ec8e3;
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 11.5px;
+    line-height: 1.6;
+    padding: 12px;
+    outline: none;
+    tab-size: 2;
+    transition: border-color var(--transition);
+  }
+  #json-editor:focus, #reel-editor:focus { border-color: #C5A059; }
+
+  .note-text {
+    font-size: 11px;
+    color: var(--text-dim);
+    line-height: 1.5;
+    padding: 8px 10px;
+    background: rgba(197, 160, 89, 0.05);
+    border-left: 2px solid rgba(197, 160, 89, 0.3);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    margin-bottom: 12px;
+  }
+
+  /* ─── Right Panel ─────────────────────────────────────── */
+  #right-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    overflow: hidden;
+    padding: 20px 20px 0;
+  }
+
+  #preview-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  /* Phone frame */
+  #phone-frame {
+    position: relative;
+    border-radius: 36px;
+    background: #000;
+    box-shadow:
+      0 0 0 2px #333,
+      0 0 0 4px #222,
+      0 20px 60px rgba(0, 0, 0, 0.8),
+      0 0 40px rgba(197, 160, 89, 0.1);
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  /* Dynamic notch */
+  #phone-notch {
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90px;
+    height: 26px;
+    background: #000;
+    border-radius: 20px;
+    z-index: 100;
+  }
+
+  #phone-screen {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* ─── Ad Preview Content ──────────────────────────────── */
+  #ad-bg {
+    position: absolute;
+    inset: 0;
+    transition: background 0.3s ease;
+  }
+
+  #ad-logo {
+    position: absolute;
+    top: 68px;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 120px;
+    max-height: 48px;
+    object-fit: contain;
+    z-index: 10;
+    display: none;
+  }
+  #ad-logo-placeholder {
+    position: absolute;
+    top: 68px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    font-size: 16px;
+    font-weight: 700;
+    color: white;
+    text-align: center;
+    white-space: nowrap;
+    opacity: 0;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  }
+
+  #ad-badge {
+    position: absolute;
+    top: 128px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    padding: 5px 16px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    opacity: 0;
+    white-space: nowrap;
+  }
+
+  #ad-headline {
+    position: absolute;
+    top: 168px;
+    left: 24px;
+    right: 24px;
+    z-index: 10;
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1.25;
+    text-align: center;
+    opacity: 0;
+  }
+
+  #ad-photo {
+    position: absolute;
+    left: 24px;
+    right: 24px;
+    border-radius: 16px;
+    overflow: hidden;
+    z-index: 8;
+    opacity: 0;
+    clip-path: inset(100% 0 0 0);
+  }
+  #ad-photo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none;
+  }
+  #ad-photo-img.loaded { display: block; }
+  #ad-photo-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.4);
+    font-size: 12px;
+  }
+
+  #ad-support {
+    position: absolute;
+    left: 28px;
+    right: 28px;
+    z-index: 10;
+    font-size: 14px;
+    line-height: 1.55;
+    text-align: center;
+    opacity: 0;
+  }
+
+  #ad-cta {
+    position: absolute;
+    left: 32px;
+    right: 32px;
+    z-index: 10;
+    padding: 14px 20px;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    border: none;
+    cursor: default;
+    opacity: 0;
+    transform: scale(0.8);
+    letter-spacing: 0.3px;
+  }
+
+  /* Highlight emphasis */
+  .hl {
+    border-radius: 3px;
+    padding: 0 3px;
+  }
+
+  /* ─── Bottom Bar ──────────────────────────────────────── */
+  #bottom-bar {
+    width: 100%;
+    padding: 12px 20px 14px;
+    background: var(--panel);
+    border-top: 1px solid var(--border);
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .transport-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .transport-btns {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .transport-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 1px solid var(--border);
+    color: var(--text);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: all var(--transition);
+    flex-shrink: 0;
+  }
+  .transport-btn:hover {
+    background: #C5A059;
+    border-color: #C5A059;
+  }
+  .transport-btn.play-btn {
+    width: 40px;
+    height: 40px;
+    background: #C5A059;
+    border-color: #C5A059;
+    font-size: 16px;
+  }
+  .transport-btn.play-btn:hover { background: #b08940; }
+
+  .time-display {
+    font-family: monospace;
+    font-size: 13px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    min-width: 120px;
+  }
+  .time-display span { color: var(--text); }
+
+  .frame-display {
+    font-family: monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    white-space: nowrap;
+  }
+
+  .spacer { flex: 1; }
+
+  .export-btns {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  /* Timeline */
+  .timeline-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  #timeline-scrubber {
+    flex: 1;
+  }
+
+  .scene-markers {
+    position: relative;
+    height: 3px;
+    background: transparent;
+    margin-top: 2px;
+  }
+
+  .scene-marker {
+    position: absolute;
+    top: 0;
+    height: 3px;
+    border-radius: 1px;
+    opacity: 0.7;
+  }
+
+  /* ─── Toast ───────────────────────────────────────────── */
+  #toast {
+    position: fixed;
+    bottom: 80px;
+    right: 24px;
+    background: #2ecc71;
+    color: white;
+    padding: 10px 18px;
+    border-radius: var(--radius);
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.2s ease;
+    z-index: 1000;
+    pointer-events: none;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  }
+  #toast.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  #toast.error { background: var(--danger); }
+
+  /* ─── Responsive ──────────────────────────────────────── */
+  @media (max-width: 900px) {
+    #main { flex-direction: column; overflow-y: auto; }
+    #left-panel { width: 100%; min-width: unset; height: 500px; border-right: none; border-bottom: 1px solid var(--border); }
+    #right-panel { padding: 12px; }
+  }
+
+  /* Animation scene indicators in timing tab */
+  .scene-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    padding: 8px 10px;
+    background: rgba(255,255,255,0.03);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+  }
+  .scene-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .scene-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    width: 70px;
+    flex-shrink: 0;
+  }
+  .scene-row .field { flex: 1; margin: 0; }
+  .scene-row select {
+    padding: 4px 24px 4px 8px !important;
+    font-size: 11px !important;
+  }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- Header -->
+  <header id="header">
+    <div class="logo">Remotion <span>Ad Studio</span></div>
+    <div class="subtitle">Interactive Ad JSON Editor &amp; Preview</div>
+  </header>
+
+  <div id="template-bar">
+    <span class="bar-label">Template</span>
+    <button class="tmpl-btn active" data-tmpl="1">1 · Polaroid</button>
+    <button class="tmpl-btn" data-tmpl="2">2 · Slider</button>
+    <button class="tmpl-btn" data-tmpl="3">3 · Kinetic</button>
+    <button class="tmpl-btn" data-tmpl="4">4 · Magazine</button>
+    <button class="tmpl-btn" data-tmpl="5">5 · Glitch</button>
+    <button class="tmpl-btn" data-tmpl="6">6 · Peel</button>
+    <button class="tmpl-btn" data-tmpl="7">7 · Blinds</button>
+    <button class="tmpl-btn" data-tmpl="8">8 · Orbit</button>
+    <button class="tmpl-btn" data-tmpl="9">9 · Film</button>
+    <button class="tmpl-btn" data-tmpl="10">10 · Mosaic</button>
+  </div>
+
+  <!-- Main area -->
+  <div id="main">
+
+    <!-- Left Panel -->
+    <div id="left-panel">
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="copy">Copy</button>
+        <button class="tab-btn" data-tab="design">Design</button>
+        <button class="tab-btn" data-tab="style">Style</button>
+        <button class="tab-btn" data-tab="assets">Assets</button>
+        <button class="tab-btn" data-tab="timing">Timing</button>
+        <button class="tab-btn" data-tab="voiceover">Voice</button>
+        <button class="tab-btn" data-tab="json">JSON</button>
+      </div>
+
+      <div class="tab-content">
+
+        <!-- COPY TAB -->
+        <div class="tab-pane active" id="tab-copy">
+          <div class="field">
+            <label>Headline</label>
+            <textarea id="f-headline" rows="2" placeholder="My mom's wedding day. Clear enough to share again."></textarea>
+          </div>
+          <div class="field">
+            <label>Support Text</label>
+            <textarea id="f-support" rows="2" placeholder="Restore the faces, the fabric, and the feeling in one tap."></textarea>
+          </div>
+          <div class="field">
+            <label>CTA Button</label>
+            <input type="text" id="f-cta" placeholder="Restore This Photo">
+          </div>
+          <div class="field">
+            <label>Highlight Word(s) <span style="color:var(--text-dim);text-transform:none;font-weight:400">(emphasized in headline)</span></label>
+            <input type="text" id="f-highlight" placeholder="share again">
+          </div>
+          <div class="field">
+            <label>Badge</label>
+            <input type="text" id="f-badge" placeholder="Family Story">
+          </div>
+          <div class="field">
+            <label>Angle</label>
+            <select id="f-angle">
+              <option value="family-memory">Family Memory</option>
+              <option value="nostalgia">Nostalgia</option>
+              <option value="quality">Quality</option>
+              <option value="restoration">Restoration</option>
+              <option value="heritage">Heritage</option>
+              <option value="preservation">Preservation</option>
+              <option value="gift">Gift</option>
+              <option value="milestone">Milestone</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Brand Name</label>
+            <input type="text" id="f-brandName" placeholder="Memorabil.ai">
+          </div>
+          <div class="field">
+            <label>Template ID</label>
+            <input type="text" id="f-templateId" placeholder="the-story">
+          </div>
+        </div>
+
+        <!-- DESIGN TAB -->
+        <div class="tab-pane" id="tab-design">
+          <div class="toggle-row" style="margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)">
+            <div class="toggle">
+              <input type="checkbox" id="toggle-logo" checked>
+              <label class="toggle-track" for="toggle-logo"></label>
+            </div>
+            <label for="toggle-logo" style="font-weight:600">Show Logo</label>
+          </div>
+          <div class="section-header" style="margin-top:0">Text Colors</div>
+          <div class="color-row"><label>Headline Text</label><span class="hex-val" id="hv-headline_text">#d26739</span><div class="color-swatch" id="sw-headline_text" data-token="headline_text"></div></div>
+          <div class="color-row"><label>Support Text</label><span class="hex-val" id="hv-support_text">#d26739</span><div class="color-swatch" id="sw-support_text" data-token="support_text"></div></div>
+          <div class="color-row"><label>Ink (Body)</label><span class="hex-val" id="hv-ink">#261d1a</span><div class="color-swatch" id="sw-ink" data-token="ink"></div></div>
+          <div class="color-row"><label>Light</label><span class="hex-val" id="hv-light">#d26739</span><div class="color-swatch" id="sw-light" data-token="light"></div></div>
+
+          <div class="section-header">Background Colors</div>
+          <div class="color-row"><label>Gradient From</label><span class="hex-val" id="hv-gradient_from">#261d1a</span><div class="color-swatch" id="sw-gradient_from" data-token="gradient_from"></div></div>
+          <div class="color-row"><label>Gradient To</label><span class="hex-val" id="hv-gradient_to">#6e3c27</span><div class="color-swatch" id="sw-gradient_to" data-token="gradient_to"></div></div>
+          <div class="color-row"><label>Surface</label><span class="hex-val" id="hv-surface">#42291f</span><div class="color-swatch" id="sw-surface" data-token="surface"></div></div>
+          <div class="color-row"><label>Chrome</label><span class="hex-val" id="hv-chrome">#42291f</span><div class="color-swatch" id="sw-chrome" data-token="chrome"></div></div>
+          <div class="color-row"><label>Media Fill</label><span class="hex-val" id="hv-media_fill">#4f2f21</span><div class="color-swatch" id="sw-media_fill" data-token="media_fill"></div></div>
+
+          <div class="section-header">UI Colors</div>
+          <div class="color-row"><label>Primary</label><span class="hex-val" id="hv-primary">#d26739</span><div class="color-swatch" id="sw-primary" data-token="primary"></div></div>
+          <div class="color-row"><label>Secondary</label><span class="hex-val" id="hv-secondary">#d26739</span><div class="color-swatch" id="sw-secondary" data-token="secondary"></div></div>
+          <div class="color-row"><label>Badge Background</label><span class="hex-val" id="hv-badge_bg">#d26739</span><div class="color-swatch" id="sw-badge_bg" data-token="badge_bg"></div></div>
+          <div class="color-row"><label>Badge Text</label><span class="hex-val" id="hv-badge_text">#efe7db</span><div class="color-swatch" id="sw-badge_text" data-token="badge_text"></div></div>
+          <div class="color-row"><label>CTA Background</label><span class="hex-val" id="hv-cta_bg">#d26739</span><div class="color-swatch" id="sw-cta_bg" data-token="cta_bg"></div></div>
+          <div class="color-row"><label>CTA Text</label><span class="hex-val" id="hv-cta_text">#efe7db</span><div class="color-swatch" id="sw-cta_text" data-token="cta_text"></div></div>
+        </div>
+
+        <!-- STYLE TAB -->
+        <div class="tab-pane" id="tab-style">
+          <div class="section-header">Typography</div>
+
+          <div class="slider-row">
+            <div class="slider-label"><span>Headline size</span><span class="slider-val" id="val-hl-size">28px</span></div>
+            <input type="range" min="16" max="48" value="28" id="slider-hl-size">
+          </div>
+          <div class="field">
+            <label>Headline weight</label>
+            <div class="seg-group" id="seg-hl-weight">
+              <button class="seg-btn" data-val="400">Regular</button>
+              <button class="seg-btn" data-val="600">Semi</button>
+              <button class="seg-btn active" data-val="700">Bold</button>
+              <button class="seg-btn" data-val="900">Black</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Headline transform</label>
+            <div class="seg-group" id="seg-hl-transform">
+              <button class="seg-btn active" data-val="none">None</button>
+              <button class="seg-btn" data-val="uppercase">Upper</button>
+              <button class="seg-btn" data-val="capitalize">Title</button>
+            </div>
+          </div>
+
+          <div class="slider-row">
+            <div class="slider-label"><span>Support size</span><span class="slider-val" id="val-support-size">16px</span></div>
+            <input type="range" min="12" max="24" value="16" id="slider-support-size">
+          </div>
+          <div class="field">
+            <label>Support weight</label>
+            <div class="seg-group" id="seg-support-weight">
+              <button class="seg-btn active" data-val="400">Regular</button>
+              <button class="seg-btn" data-val="600">Semi</button>
+              <button class="seg-btn" data-val="700">Bold</button>
+            </div>
+          </div>
+
+          <div class="slider-row">
+            <div class="slider-label"><span>CTA text size</span><span class="slider-val" id="val-cta-size">16px</span></div>
+            <input type="range" min="12" max="24" value="16" id="slider-cta-size">
+          </div>
+          <div class="field">
+            <label>CTA weight</label>
+            <div class="seg-group" id="seg-cta-weight">
+              <button class="seg-btn" data-val="600">Semi</button>
+              <button class="seg-btn active" data-val="700">Bold</button>
+            </div>
+          </div>
+
+          <div class="slider-row">
+            <div class="slider-label"><span>Badge size</span><span class="slider-val" id="val-badge-size">12px</span></div>
+            <input type="range" min="10" max="18" value="12" id="slider-badge-size">
+          </div>
+
+          <div class="section-header">Element Sizing</div>
+
+          <div class="slider-row">
+            <div class="slider-label"><span>Photo height</span><span class="slider-val" id="val-photo-height">35%</span></div>
+            <input type="range" min="20" max="60" value="35" id="slider-photo-height">
+          </div>
+          <div class="slider-row">
+            <div class="slider-label"><span>CTA width</span><span class="slider-val" id="val-cta-width">80%</span></div>
+            <input type="range" min="60" max="95" value="80" id="slider-cta-width">
+          </div>
+          <div class="slider-row">
+            <div class="slider-label"><span>CTA height</span><span class="slider-val" id="val-cta-height">48px</span></div>
+            <input type="range" min="36" max="64" value="48" id="slider-cta-height">
+          </div>
+          <div class="slider-row">
+            <div class="slider-label"><span>CTA corner radius</span><span class="slider-val" id="val-cta-radius">999px</span></div>
+            <input type="range" min="0" max="999" value="999" id="slider-cta-radius">
+          </div>
+          <div class="slider-row">
+            <div class="slider-label"><span>Logo size</span><span class="slider-val" id="val-logo-size">110px</span></div>
+            <input type="range" min="60" max="200" value="110" id="slider-logo-size">
+          </div>
+
+          <div class="section-header">Spacing</div>
+
+          <div class="slider-row">
+            <div class="slider-label"><span>Content padding</span><span class="slider-val" id="val-content-pad">24px</span></div>
+            <input type="range" min="16" max="48" value="24" id="slider-content-pad">
+          </div>
+          <div class="slider-row">
+            <div class="slider-label"><span>Element gap</span><span class="slider-val" id="val-element-gap">16px</span></div>
+            <input type="range" min="8" max="32" value="16" id="slider-element-gap">
+          </div>
+        </div>
+
+        <!-- ASSETS TAB -->
+        <div class="tab-pane" id="tab-assets">
+          <div class="field">
+            <label>Logo URL</label>
+            <input type="url" id="f-logoUrl" placeholder="/creative-inputs/brand-logos/logo.png">
+            <div class="asset-preview" id="prev-logo">
+              <img id="img-logo" alt="Logo preview">
+              <div class="asset-placeholder" id="ph-logo">No logo URL<br>Enter a URL above</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>After Photo URL <span style="color:var(--text-dim);text-transform:none;font-weight:400">(primary)</span></label>
+            <input type="url" id="f-afterPhotoUrl" placeholder="/creative-inputs/brand-images/photo.png">
+            <div class="asset-preview" id="prev-after" style="height:120px">
+              <img id="img-after" alt="After photo preview">
+              <div class="asset-placeholder" id="ph-after">No photo URL<br>Enter a URL above</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>Before Photo URL <span style="color:var(--text-dim);text-transform:none;font-weight:400">(optional)</span></label>
+            <input type="url" id="f-beforePhotoUrl" placeholder="">
+            <div class="asset-preview" id="prev-before">
+              <img id="img-before" alt="Before photo preview">
+              <div class="asset-placeholder" id="ph-before">No before photo<br>Optional field</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TIMING TAB -->
+        <div class="tab-pane" id="tab-timing">
+          <div class="section-header">Global</div>
+
+          <div class="slider-row">
+            <div class="slider-label">
+              <span>Total Duration</span>
+              <span class="slider-val" id="sv-duration">8s</span>
+            </div>
+            <input type="range" id="sl-duration" min="3" max="30" step="0.5" value="8">
+          </div>
+
+          <div class="field">
+            <label>FPS</label>
+            <select id="f-fps">
+              <option value="24">24 fps</option>
+              <option value="30" selected>30 fps</option>
+              <option value="60">60 fps</option>
+            </select>
+          </div>
+
+          <div class="section-header">Scene Timing</div>
+
+          <div class="slider-row">
+            <div class="slider-label">
+              <span>Logo entrance delay</span>
+              <span class="slider-val" id="sv-logoDelay">0s</span>
+            </div>
+            <input type="range" id="sl-logoDelay" min="0" max="2" step="0.1" value="0">
+          </div>
+
+          <div class="slider-row">
+            <div class="slider-label">
+              <span>Badge appear</span>
+              <span class="slider-val" id="sv-badgeDelay">0.5s</span>
+            </div>
+            <input type="range" id="sl-badgeDelay" min="0.5" max="3" step="0.1" value="0.5">
+          </div>
+
+          <div class="slider-row">
+            <div class="slider-label">
+              <span>Headline entrance</span>
+              <span class="slider-val" id="sv-headlineDelay">1s</span>
+            </div>
+            <input type="range" id="sl-headlineDelay" min="0.5" max="4" step="0.1" value="1">
+          </div>
+
+          <div class="slider-row">
+            <div class="slider-label">
+              <span>Photo reveal start</span>
+              <span class="slider-val" id="sv-photoDelay">2s</span>
+            </div>
+            <input type="range" id="sl-photoDelay" min="1" max="6" step="0.1" value="2">
+          </div>
+
+          <div class="slider-row">
+            <div class="slider-label">
+              <span>Support text delay</span>
+              <span class="slider-val" id="sv-supportDelay">3.5s</span>
+            </div>
+            <input type="range" id="sl-supportDelay" min="2" max="7" step="0.1" value="3.5">
+          </div>
+
+          <div class="slider-row">
+            <div class="slider-label">
+              <span>CTA entrance</span>
+              <span class="slider-val" id="sv-ctaDelay">5s</span>
+            </div>
+            <input type="range" id="sl-ctaDelay" min="3" max="8" step="0.1" value="5">
+          </div>
+
+          <div class="section-header">Animation Styles</div>
+
+          <div class="scene-row">
+            <div class="scene-dot" style="background:#C5A059"></div>
+            <div class="scene-name">Logo</div>
+            <div class="field"><select id="anim-logo"><option value="spring">Spring</option><option value="fade">Fade</option><option value="slide-up">Slide Up</option><option value="slide-left">Slide Left</option><option value="bounce">Bounce</option></select></div>
+          </div>
+          <div class="scene-row">
+            <div class="scene-dot" style="background:#3b82f6"></div>
+            <div class="scene-name">Badge</div>
+            <div class="field"><select id="anim-badge"><option value="spring">Spring</option><option value="fade" selected>Fade</option><option value="slide-up">Slide Up</option><option value="slide-left">Slide Left</option><option value="bounce">Bounce</option></select></div>
+          </div>
+          <div class="scene-row">
+            <div class="scene-dot" style="background:#10b981"></div>
+            <div class="scene-name">Headline</div>
+            <div class="field"><select id="anim-headline"><option value="spring" selected>Spring</option><option value="fade">Fade</option><option value="slide-up">Slide Up</option><option value="slide-left">Slide Left</option><option value="bounce">Bounce</option></select></div>
+          </div>
+          <div class="scene-row">
+            <div class="scene-dot" style="background:#f59e0b"></div>
+            <div class="scene-name">Photo</div>
+            <div class="field"><select id="anim-photo"><option value="spring">Spring</option><option value="fade">Fade</option><option value="slide-up" selected>Slide Up</option><option value="slide-left">Slide Left</option><option value="bounce">Bounce</option></select></div>
+          </div>
+          <div class="scene-row">
+            <div class="scene-dot" style="background:#ef4444"></div>
+            <div class="scene-name">Support</div>
+            <div class="field"><select id="anim-support"><option value="spring">Spring</option><option value="fade" selected>Fade</option><option value="slide-up">Slide Up</option><option value="slide-left">Slide Left</option><option value="bounce">Bounce</option></select></div>
+          </div>
+          <div class="scene-row">
+            <div class="scene-dot" style="background:#ec4899"></div>
+            <div class="scene-name">CTA</div>
+            <div class="field"><select id="anim-cta"><option value="spring">Spring</option><option value="fade">Fade</option><option value="slide-up">Slide Up</option><option value="slide-left">Slide Left</option><option value="bounce" selected>Bounce</option></select></div>
+          </div>
+        </div>
+
+        <!-- VOICEOVER TAB -->
+        <div class="tab-pane" id="tab-voiceover">
+          <div class="note-text">
+            Voiceover generation requires an ElevenLabs API key. This tab configures the script and settings — actual audio generation happens in your Remotion composition.
+          </div>
+
+          <div class="toggle-row">
+            <label class="toggle">
+              <input type="checkbox" id="f-voiceEnabled">
+              <div class="toggle-track"></div>
+            </label>
+            <label for="f-voiceEnabled">Enable Voiceover</label>
+          </div>
+
+          <div class="field">
+            <label>Voiceover Script</label>
+            <textarea id="f-voiceScript" rows="5" placeholder="Auto-populated from headline and support text..."></textarea>
+          </div>
+
+          <div class="field">
+            <label>Voice</label>
+            <select id="f-voice">
+              <option value="Rachel">Rachel (Calm, Female)</option>
+              <option value="Drew">Drew (Natural, Male)</option>
+              <option value="Clyde">Clyde (Deep, Male)</option>
+              <option value="Paul">Paul (News, Male)</option>
+              <option value="Domi">Domi (Strong, Female)</option>
+            </select>
+          </div>
+
+          <div class="slider-row">
+            <div class="slider-label">
+              <span>Speed</span>
+              <span class="slider-val" id="sv-voiceSpeed">1.0x</span>
+            </div>
+            <input type="range" id="sl-voiceSpeed" min="0.5" max="2" step="0.1" value="1">
+          </div>
+        </div>
+
+        <!-- JSON TAB -->
+        <div class="tab-pane" id="tab-json">
+          <div class="section-header" style="margin-top:0;display:flex;align-items:center;justify-content:space-between">
+            STATIC AD JSON
+            <div class="btn-row" style="margin:0">
+              <button class="btn btn-ghost" id="btn-format" style="padding:3px 8px;font-size:10px">Format</button>
+              <button class="btn btn-primary" id="btn-import" style="padding:3px 8px;font-size:10px">Apply</button>
+              <button class="btn btn-danger" id="btn-reset" style="padding:3px 8px;font-size:10px">Reset</button>
+            </div>
+          </div>
+          <textarea id="json-editor" spellcheck="false" style="height:45%;min-height:120px;resize:vertical"></textarea>
+          <div class="section-header" style="display:flex;align-items:center;justify-content:space-between">
+            REEL CONFIG
+            <button class="btn btn-ghost" id="btn-copy-reel" style="padding:3px 8px;font-size:10px">Copy</button>
+          </div>
+          <textarea id="reel-editor" spellcheck="false" style="height:40%;min-height:120px;resize:vertical;color:#8be9fd;font-size:12px"></textarea>
+        </div>
+
+      </div><!-- tab-content -->
+    </div><!-- left-panel -->
+
+    <!-- Right Panel — iframe to templates.html -->
+    <div id="right-panel">
+      <div id="preview-container">
+        <iframe id="template-iframe" src="templates.html?v=7" style="width:100%;height:100%;border:none;border-radius:12px;"></iframe>
+      </div>
+    </div>
+
+  </div><!-- main -->
+
+  <!-- Bottom Bar — export only, playback is in the iframe -->
+  <div id="bottom-bar">
+    <div class="transport-row">
+      <div class="spacer"></div>
+      <div class="export-btns">
+        <button class="btn btn-ghost" id="btn-export-json">Export JSON</button>
+        <button class="btn btn-primary" id="btn-export-remotion">Export Remotion Config</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- app -->
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+//  State
+// ═══════════════════════════════════════════════════════════
+
+const DEFAULT_STATE = {
+  source: "palette",
+  templateId: "the-story",
+  templatePhotoMode: 1,
+  templateStyle: 1,
+  showLogo: true,
+  copy: {
+    headline: "My mom's wedding day. Clear enough to share again.",
+    support: "Restore the faces, the fabric, and the feeling in one tap.",
+    cta: "Restore This Photo",
+    highlight: "share again",
+    badge: "Family Story",
+    angle: "family-memory",
+    style: {
+      textAlign: "center",
+      headlineSize: 1,
+      ctaStyle: "filled",
+      ctaRadius: 999,
+      backgroundStyle: "gradient",
+      textTone: "light",
+      emphasisStyle: "highlight-bg"
+    }
+  },
+  designTokens: {
+    primary: "#d26739",
+    secondary: "#d26739",
+    ink: "#261d1a",
+    light: "#d26739",
+    headline_text: "#d26739",
+    support_text: "#d26739",
+    surface: "#42291f",
+    chrome: "#42291f",
+    media_fill: "#4f2f21",
+    badge_bg: "#d26739",
+    badge_text: "#efe7db",
+    cta_bg: "#d26739",
+    cta_text: "#efe7db",
+    gradient_from: "#261d1a",
+    gradient_to: "#6e3c27"
+  },
+  assets: {
+    logoUrl: "https://pub-c7a5cb270590471c86fa625084a338d2.r2.dev/control-plane/creative-inputs/brand-logos/Screenshot_2026-03-12_at_3_10_35_PM-1773582223562.png",
+    beforePhotoUrl: "",
+    afterPhotoUrl: "https://pub-c7a5cb270590471c86fa625084a338d2.r2.dev/control-plane/creative-inputs/brand-images/Gemini_Generated_Image_re7mc5re7mc5re7m-1773584518003.png"
+  },
+  brandContext: {
+    brandName: "Memorabil.ai"
+  },
+  timing: {
+    duration: 8,
+    fps: 30,
+    logoDelay: 0,
+    badgeDelay: 0.5,
+    headlineDelay: 1,
+    photoDelay: 2,
+    supportDelay: 3.5,
+    ctaDelay: 5,
+    animations: {
+      logo: "spring",
+      badge: "fade",
+      headline: "spring",
+      photo: "slide-up",
+      support: "fade",
+      cta: "bounce"
+    }
+  },
+  voiceover: {
+    enabled: false,
+    script: "",
+    voice: "Rachel",
+    speed: 1
+  },
+  style: {
+    headlineFontSize: 28,
+    headlineFontWeight: 700,
+    headlineTextTransform: 'none',
+    supportFontSize: 16,
+    supportFontWeight: 400,
+    ctaFontSize: 16,
+    ctaFontWeight: 700,
+    badgeFontSize: 12,
+    photoHeight: 35,
+    ctaWidth: 80,
+    ctaHeight: 48,
+    ctaRadius: 999,
+    logoSize: 110,
+    contentPadding: 24,
+    elementGap: 16
+  }
+};
+
+let state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+
+// ═══════════════════════════════════════════════════════════
+//  Animation Engine
+// ═══════════════════════════════════════════════════════════
+
+let currentFrame = 0;
+let isPlaying = false;
+let animRAF = null;
+let lastTimestamp = null;
+
+function totalFrames() {
+  const templateDurations = { 1:240, 2:300, 3:270, 4:240, 5:210, 6:270, 7:240, 8:300, 9:270, 10:270 };
+  return templateDurations[state.templateStyle] || 240;
+}
+
+// interpolate: supports both (value, [in0,in1], [out0,out1]) and optional easing
+function interpolate(value, inputRange, outputRange, opts = {}) {
+  const [inMin, inMax] = inputRange;
+  const [outMin, outMax] = outputRange;
+  let t = (value - inMin) / (inMax - inMin);
+  if (opts.clamp !== false) t = Math.max(0, Math.min(1, t));
+  if (opts.easing) t = opts.easing(t);
+  return outMin + t * (outMax - outMin);
+}
+
+// spring: returns 0→1 value used by templates 1-10
+function spring(frame, { damping = 10, stiffness = 100, mass = 1, initialVelocity = 0 } = {}) {
+  if (frame <= 0) return 0;
+  const w0 = Math.sqrt(stiffness / mass);
+  const zeta = damping / (2 * Math.sqrt(stiffness * mass));
+  const t = frame / 30;
+  if (zeta < 1) {
+    const wd = w0 * Math.sqrt(1 - zeta * zeta);
+    return 1 - Math.exp(-zeta * w0 * t) * (Math.cos(wd * t) + (zeta * w0 / wd) * Math.sin(wd * t));
+  } else {
+    return 1 - Math.exp(-w0 * t) * (1 + w0 * t);
+  }
+}
+
+// Kept for old getAnimValue/applyAnim (not deleted per spec)
+function springValue(frame, delayFrames, damping = 12, frequency = 2.5) {
+  const t = Math.max(0, (frame - delayFrames) / 30);
+  if (t <= 0) return 0;
+  const v = 1 - Math.exp(-damping * t) * Math.cos(frequency * t * Math.PI);
+  return Math.min(1, Math.max(0, v));
+}
+
+function easeOut(t) { return 1 - Math.pow(1 - Math.max(0,Math.min(1,t)), 3); }
+function easeInOut(t) { t = Math.max(0,Math.min(1,t)); return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2; }
+function easeIn(t) { return t * t * t; }
+function clamp(v, lo, hi) { return Math.min(Math.max(v, lo), hi); }
+
+function seededRand(seed) {
+  let s = seed;
+  return function() {
+    s = (s * 1664525 + 1013904223) & 0xffffffff;
+    return (s >>> 0) / 0xffffffff;
+  };
+}
+
+function hexToRgb(hex) {
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  return { r, g, b };
+}
+function rgba(hex, a) {
+  const { r, g, b } = hexToRgb(hex);
+  return `rgba(${r},${g},${b},${a})`;
+}
+function lerpColor(c1, c2, t) {
+  const a = hexToRgb(c1), b = hexToRgb(c2);
+  const r = Math.round(a.r + (b.r - a.r) * t);
+  const g = Math.round(a.g + (b.g - a.g) * t);
+  const bv = Math.round(a.b + (b.b - a.b) * t);
+  return `rgb(${r},${g},${bv})`;
+}
+
+// ─── DOM BUILDER HELPERS ──────────────────────────────────────────────────────
+
+function el(tag, styles = {}, text = '') {
+  const e = document.createElement(tag);
+  Object.assign(e.style, styles);
+  if (text) e.textContent = text;
+  return e;
+}
+
+function div(styles = {}, text = '') { return el('div', styles, text); }
+
+function imgEl(src, styles = {}) {
+  const e = document.createElement('img');
+  e.src = src;
+  Object.assign(e.style, styles);
+  e.onerror = () => { e.style.display = 'none'; };
+  return e;
+}
+
+function getLogoUrl() {
+  return state.brandContext?.brandAssetUrls?.logoUrl || state.assets?.logoUrl || '';
+}
+function getPhotoUrl() {
+  return state.brandContext?.brandAssetUrls?.imageUrls?.[0] || state.assets?.afterPhotoUrl || '';
+}
+function getBeforePhotoUrl() {
+  return state.assets?.beforePhotoUrl || '';
+}
+
+function logoEl(styles = {}) {
+  const url = getLogoUrl();
+  if (url) {
+    return imgEl(url, { maxWidth:'100%', maxHeight:'100%', objectFit:'contain', ...styles });
+  }
+  const T = state.designTokens;
+  const B = state.brandContext;
+  return div({ fontWeight:'800', letterSpacing:'0.12em', color:T.badge_text, ...styles }, (B.brandName || 'Brand').toUpperCase());
+}
+
+function photoEl(styles = {}) {
+  const url = getPhotoUrl();
+  const T = state.designTokens;
+  if (url) {
+    return imgEl(url, { width:'100%', height:'100%', objectFit:'cover', ...styles });
+  }
+  return div({ width:'100%', height:'100%', background:`linear-gradient(135deg, ${T.gradient_from}, ${T.gradient_to}, ${T.primary})`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:'11px', color:'rgba(255,255,255,0.4)', ...styles }, 'No photo');
+}
+
+function getAnimValue(frame, delayFrames, style, durationFrames = 20) {
+  const localFrame = frame - delayFrames;
+
+  switch (style) {
+    case 'spring':
+      return {
+        opacity: springValue(frame, delayFrames, 10, 2),
+        translateY: interpolate(springValue(frame, delayFrames, 10, 2), [0, 1], [30, 0]),
+        translateX: 0,
+        scale: 1
+      };
+    case 'fade':
+      return {
+        opacity: interpolate(localFrame, [0, durationFrames], [0, 1], { extrapolateRight: 'clamp', extrapolateLeft: 'clamp' }),
+        translateY: 0,
+        translateX: 0,
+        scale: 1
+      };
+    case 'slide-up': {
+      const p = Math.min(1, Math.max(0, localFrame / durationFrames));
+      const eased = 1 - Math.pow(1 - p, 3);
+      return {
+        opacity: interpolate(localFrame, [0, durationFrames * 0.6], [0, 1], { extrapolateRight: 'clamp', extrapolateLeft: 'clamp' }),
+        translateY: (1 - eased) * 40,
+        translateX: 0,
+        scale: 1
+      };
+    }
+    case 'slide-left': {
+      const p2 = Math.min(1, Math.max(0, localFrame / durationFrames));
+      const eased2 = 1 - Math.pow(1 - p2, 3);
+      return {
+        opacity: interpolate(localFrame, [0, durationFrames * 0.6], [0, 1], { extrapolateRight: 'clamp', extrapolateLeft: 'clamp' }),
+        translateY: 0,
+        translateX: (1 - eased2) * 60,
+        scale: 1
+      };
+    }
+    case 'bounce': {
+      const sv = springValue(frame, delayFrames, 8, 3.5);
+      return {
+        opacity: interpolate(sv, [0, 0.3], [0, 1], { extrapolateRight: 'clamp', extrapolateLeft: 'clamp' }),
+        translateY: 0,
+        translateX: 0,
+        scale: 0.7 + sv * 0.3
+      };
+    }
+    default:
+      return { opacity: 1, translateY: 0, translateX: 0, scale: 1 };
+  }
+}
+
+function delayFrames(delaySeconds) {
+  return Math.round(delaySeconds * state.timing.fps);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  Phone frame sizing
+// ═══════════════════════════════════════════════════════════
+
+function sizePhoneFrame() {
+  const container = document.getElementById('preview-container');
+  const frame = document.getElementById('phone-frame');
+  if (!frame) return; // iframe mode — no phone frame to size
+  const cw = container.clientWidth - 32;
+  const ch = container.clientHeight - 16;
+
+  // 9:16
+  let w = Math.min(cw, (ch * 9) / 16);
+  let h = w * 16 / 9;
+
+  if (h > ch) { h = ch; w = h * 9 / 16; }
+
+  w = Math.max(200, Math.min(w, 380));
+  h = w * 16 / 9;
+
+  frame.style.width = w + 'px';
+  frame.style.height = h + 'px';
+
+  // Position photo area
+  const scale = w / 390;
+  const st = state.style;
+  const photoEl = document.getElementById('ad-photo');
+  const contentPad = Math.round((st.contentPadding || 24) * scale);
+  const photoTop = Math.round(260 * scale);
+  const photoHeight = Math.round(h * ((st.photoHeight || 35) / 100));
+  photoEl.style.top = photoTop + 'px';
+  photoEl.style.height = photoHeight + 'px';
+  photoEl.style.left = contentPad + 'px';
+  photoEl.style.right = contentPad + 'px';
+
+  const elementGap = Math.round((st.elementGap || 16) * scale);
+  const supportEl = document.getElementById('ad-support');
+  supportEl.style.top = (photoTop + photoHeight + elementGap) + 'px';
+  supportEl.style.left = contentPad + 'px';
+  supportEl.style.right = contentPad + 'px';
+
+  const ctaEl = document.getElementById('ad-cta');
+  ctaEl.style.bottom = Math.round(48 * scale) + 'px';
+  const ctaWidthPct = st.ctaWidth || 80;
+  const ctaWidthPx = Math.round(w * ctaWidthPct / 100);
+  ctaEl.style.width = ctaWidthPx + 'px';
+  ctaEl.style.left = Math.round((w - ctaWidthPx) / 2) + 'px';
+  ctaEl.style.right = 'auto';
+  ctaEl.style.height = Math.round((st.ctaHeight || 48) * scale) + 'px';
+
+  const logoImg = document.getElementById('ad-logo');
+  const logoPlaceholder = document.getElementById('ad-logo-placeholder');
+  const logoSize = Math.round((st.logoSize || 110) * scale);
+  logoImg.style.maxWidth = logoSize + 'px';
+  logoPlaceholder.style.fontSize = Math.round((st.logoSize || 110) * scale / 7) + 'px';
+
+  // Scale font sizes
+  document.getElementById('ad-headline').style.fontSize = Math.round((st.headlineFontSize || 28) * scale) + 'px';
+  document.getElementById('ad-support').style.fontSize = Math.round((st.supportFontSize || 16) * scale) + 'px';
+  document.getElementById('ad-cta').style.fontSize = Math.round((st.ctaFontSize || 16) * scale) + 'px';
+  document.getElementById('ad-badge').style.fontSize = Math.round((st.badgeFontSize || 12) * scale) + 'px';
+}
+
+// ═══════════════════════════════════════════════════════════
+//  Template configs
+// ═══════════════════════════════════════════════════════════
+
+function getTemplateConfig(templateId) {
+  const configs = {
+    1: { // Polaroid Drop — bouncy, things drop from above
+      name: 'Polaroid Drop',
+      bgGradient: '180deg',
+      logoAnim: 'bounce', logoDelay: 0.3,
+      badgeAnim: 'slide-left', badgeDelay: 1.2,
+      headlineAnim: 'fade', headlineDelay: 1.5,
+      photoAnim: 'bounce', photoDelay: 0.8,
+      supportAnim: 'fade', supportDelay: 2.5,
+      ctaAnim: 'bounce', ctaDelay: 3.5,
+      photoClip: 'drop',
+      photoRotation: -3,
+      photoBorder: true,
+    },
+    2: { // Slider Reveal — before/after sweep
+      name: 'Slider Reveal',
+      bgGradient: '160deg',
+      logoAnim: 'spring', logoDelay: 0.2,
+      badgeAnim: 'spring', badgeDelay: 0.8,
+      headlineAnim: 'slide-up', headlineDelay: 3.5,
+      photoAnim: 'none', photoDelay: 1.0,
+      supportAnim: 'fade', supportDelay: 4.5,
+      ctaAnim: 'slide-up', ctaDelay: 5.5,
+      photoClip: 'slider',
+    },
+    3: { // Kinetic Type — words fly in from edges
+      name: 'Kinetic Type',
+      bgGradient: '135deg',
+      logoAnim: 'fade', logoDelay: 4.5,
+      badgeAnim: 'spring', badgeDelay: 2.0,
+      headlineAnim: 'spring', headlineDelay: 0.3,
+      photoAnim: 'slide-up', photoDelay: 2.0,
+      supportAnim: 'fade', supportDelay: 3.0,
+      ctaAnim: 'bounce', ctaDelay: 3.5,
+      headlineExtra: 'kinetic',
+    },
+    4: { // Magazine Cover — clip-path center reveal
+      name: 'Magazine Cover',
+      bgGradient: '0deg',
+      logoAnim: 'fade', logoDelay: 1.0,
+      badgeAnim: 'spring', badgeDelay: 2.0,
+      headlineAnim: 'slide-left', headlineDelay: 1.5,
+      photoAnim: 'none', photoDelay: 0.3,
+      supportAnim: 'fade', supportDelay: 2.5,
+      ctaAnim: 'slide-left', ctaDelay: 3.5,
+      photoClip: 'center-reveal',
+      bgOverlay: true,
+    },
+    5: { // The Glitch — jittery, RGB offset
+      name: 'The Glitch',
+      bgGradient: '180deg',
+      logoAnim: 'fade', logoDelay: 0.3,
+      badgeAnim: 'fade', badgeDelay: 1.8,
+      headlineAnim: 'fade', headlineDelay: 2.2,
+      photoAnim: 'fade', photoDelay: 1.0,
+      supportAnim: 'fade', supportDelay: 3.0,
+      ctaAnim: 'fade', ctaDelay: 3.5,
+      glitch: true,
+    },
+    6: { // Peel Away — elements slide in from right
+      name: 'Peel Away',
+      bgGradient: '160deg',
+      logoAnim: 'fade', logoDelay: 2.0,
+      badgeAnim: 'slide-left', badgeDelay: 2.5,
+      headlineAnim: 'slide-left', headlineDelay: 3.0,
+      photoAnim: 'spring', photoDelay: 3.5,
+      supportAnim: 'fade', supportDelay: 4.0,
+      ctaAnim: 'spring', ctaDelay: 5.0,
+      photoClip: 'slide-right',
+    },
+    7: { // Venetian Blinds — staggered horizontal strips
+      name: 'Venetian Blinds',
+      bgGradient: '180deg',
+      logoAnim: 'fade', logoDelay: 1.2,
+      badgeAnim: 'fade', badgeDelay: 2.0,
+      headlineAnim: 'fade', headlineDelay: 1.8,
+      photoAnim: 'none', photoDelay: 0.3,
+      supportAnim: 'fade', supportDelay: 3.0,
+      ctaAnim: 'fade', ctaDelay: 4.0,
+      photoClip: 'blinds',
+    },
+    8: { // The Orbit — elements scale up from center
+      name: 'The Orbit',
+      bgGradient: '180deg',
+      logoAnim: 'spring', logoDelay: 0.5,
+      badgeAnim: 'spring', badgeDelay: 1.5,
+      headlineAnim: 'spring', headlineDelay: 2.0,
+      photoAnim: 'spring', photoDelay: 3.0,
+      supportAnim: 'spring', supportDelay: 4.0,
+      ctaAnim: 'spring', ctaDelay: 5.0,
+      orbit: true,
+    },
+    9: { // Filmstrip — slide in from right, projector flicker
+      name: 'Filmstrip',
+      bgGradient: '180deg',
+      logoAnim: 'fade', logoDelay: 1.5,
+      badgeAnim: 'slide-left', badgeDelay: 2.0,
+      headlineAnim: 'fade', headlineDelay: 2.5,
+      photoAnim: 'slide-left', photoDelay: 0.8,
+      supportAnim: 'slide-up', supportDelay: 3.5,
+      ctaAnim: 'fade', ctaDelay: 4.5,
+      flicker: true,
+    },
+    10: { // Mosaic Assemble — elements pop in with scale bounce
+      name: 'Mosaic Assemble',
+      bgGradient: '45deg',
+      logoAnim: 'bounce', logoDelay: 0.5,
+      badgeAnim: 'bounce', badgeDelay: 2.0,
+      headlineAnim: 'bounce', headlineDelay: 2.5,
+      photoAnim: 'bounce', photoDelay: 1.0,
+      supportAnim: 'bounce', supportDelay: 3.5,
+      ctaAnim: 'bounce', ctaDelay: 4.0,
+    },
+  };
+  return configs[templateId] || configs[1];
+}
+
+// ═══════════════════════════════════════════════════════════
+//  Template element refs (T1-T5)
+// ═══════════════════════════════════════════════════════════
+
+let t1Els = {}, t2Els = {}, t3Els = {}, t4Els = {}, t5Els = {};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TEMPLATE 1: THE POLAROID DROP
+// ─────────────────────────────────────────────────────────────────────────────
+
+function buildT1() {
+  const canvas = document.getElementById('template-canvas');
+  canvas.innerHTML = '';
+  t1Els = {};
+  const T = state.designTokens, C = state.copy, B = state.brandContext;
+
+  const bg = div({ position:'absolute', inset:'0', background:`linear-gradient(180deg, ${T.gradient_from} 0%, ${T.gradient_to} 100%)` });
+  canvas.appendChild(bg);
+
+  const shutter = div({ position:'absolute', top:'30px', left:'50%', transform:'translateX(-50%)', fontSize:'22px', opacity:'0', userSelect:'none' }, '📷');
+  canvas.appendChild(shutter);
+  t1Els.shutter = shutter;
+
+  const logoWrap = div({ position:'absolute', top:'14px', left:'50%', transform:'translateX(-50%) translateY(-80px)', opacity:'0', width:'80px', height:'36px', display:'flex', alignItems:'center', justifyContent:'center' });
+  logoWrap.appendChild(logoEl({ maxHeight:'36px', filter:'drop-shadow(0 2px 8px rgba(0,0,0,0.5))' }));
+  canvas.appendChild(logoWrap);
+  t1Els.logo = logoWrap;
+
+  const logoShadow = div({ position:'absolute', top:'36px', left:'50%', transform:'translateX(-50%)', width:'80px', height:'4px', background:'rgba(0,0,0,0.4)', borderRadius:'50%', filter:'blur(4px)', opacity:'0' });
+  canvas.appendChild(logoShadow);
+  t1Els.logoShadow = logoShadow;
+
+  const polaroidWrap = div({ position:'absolute', top:'70px', left:'50%', transform:'translateX(-50%) translateY(-400px) rotate(-3deg)', transformOrigin:'center top', opacity:'0' });
+  const polaroid = div({ background:'#fff', padding:'10px 10px 30px', boxShadow:'0 12px 40px rgba(0,0,0,0.7), 0 2px 8px rgba(0,0,0,0.4)', borderRadius:'2px' });
+  const photoWrap = div({ width:'160px', height:'160px', background:`linear-gradient(135deg, ${T.gradient_from} 0%, ${T.gradient_to} 60%, ${T.primary} 100%)`, overflow:'hidden', borderRadius:'1px' });
+  photoWrap.appendChild(photoEl());
+  polaroid.appendChild(photoWrap);
+  const polLabel = div({ textAlign:'center', paddingTop:'8px', fontSize:'9px', color:'#aaa', letterSpacing:'0.08em', textTransform:'uppercase' }, B.brandName || 'Brand');
+  polaroid.appendChild(polLabel);
+  polaroidWrap.appendChild(polaroid);
+  canvas.appendChild(polaroidWrap);
+  t1Els.polaroidWrap = polaroidWrap;
+
+  const ripple = div({ position:'absolute', top:'248px', left:'50%', transform:'translateX(-50%)', width:'0px', height:'0px', border:`2px solid ${T.primary}`, borderRadius:'50%', opacity:'0' });
+  canvas.appendChild(ripple);
+  t1Els.ripple = ripple;
+
+  const badge = div({ position:'absolute', top:'254px', left:'-100px', background:T.badge_bg, color:T.badge_text, padding:'4px 10px', borderRadius:'4px', fontSize:'10px', fontWeight:'700', letterSpacing:'0.06em', textTransform:'uppercase', boxShadow:'0 2px 8px rgba(0,0,0,0.4)' }, C.badge);
+  canvas.appendChild(badge);
+  t1Els.badge = badge;
+
+  const headlineWrap = div({ position:'absolute', top:'278px', left:'12px', right:'12px', fontSize:'16px', fontWeight:'800', color:T.headline_text, lineHeight:'1.3', minHeight:'60px' });
+  canvas.appendChild(headlineWrap);
+  t1Els.headlineWrap = headlineWrap;
+
+  const support = div({ position:'absolute', top:'366px', left:'12px', right:'12px', fontSize:'11px', color:T.support_text, lineHeight:'1.5', opacity:'0', transform:'translateY(8px)' }, C.support);
+  canvas.appendChild(support);
+  t1Els.support = support;
+
+  const cta = div({ position:'absolute', bottom:'30px', left:'50%', transform:'translateX(-50%) translateY(80px)', background:T.cta_bg, color:T.cta_text, padding:'12px 28px', borderRadius:'8px', fontSize:'13px', fontWeight:'700', letterSpacing:'0.03em', whiteSpace:'nowrap', boxShadow:`0 4px 20px rgba(0,0,0,0.5)`, opacity:'0' }, C.cta);
+  canvas.appendChild(cta);
+  t1Els.cta = cta;
+
+  const outro = div({ position:'absolute', inset:'0', transformOrigin:'center center', pointerEvents:'none' });
+  canvas.appendChild(outro);
+  t1Els.outro = outro;
+}
+
+function renderT1(f) {
+  const T = state.designTokens, C = state.copy;
+  const { shutter, logo, logoShadow, polaroidWrap, ripple, badge, headlineWrap, support, cta } = t1Els;
+  if (!shutter) return;
+  const canvas = document.getElementById('template-canvas');
+
+  const shutterOp = interpolate(f, [0,10], [0,0.6]) - interpolate(f, [20,30], [0,0.6]);
+  shutter.style.opacity = Math.max(0, shutterOp);
+  shutter.style.transform = `translateX(-50%) scale(${0.8 + 0.4 * Math.abs(Math.sin(f * 0.3))})`;
+
+  const logoProgress = Math.max(0, f - 15);
+  const logoSpring = spring(logoProgress, { damping:8, stiffness:120, mass:1.2 });
+  const logoY = interpolate(logoSpring, [0,1], [-80,0]);
+  logo.style.transform = `translateX(-50%) translateY(${logoY}px)`;
+  logo.style.opacity = interpolate(f, [15,28], [0,1], { clamp:true });
+  logoShadow.style.opacity = interpolate(logoSpring, [0.8,1], [0,0.8], { clamp:true });
+
+  const polProgress = Math.max(0, f - 40);
+  const polSpring = spring(polProgress, { damping:8, stiffness:100, mass:1.5 });
+  const polY = interpolate(polSpring, [0,1], [-400,0]);
+  polaroidWrap.style.transform = `translateX(-50%) translateY(${polY}px) rotate(-3deg)`;
+  polaroidWrap.style.opacity = interpolate(f, [40,52], [0,1], { clamp:true });
+
+  const rippleProg = interpolate(f, [66,84], [0,1], { clamp:true });
+  const rippleSize = interpolate(rippleProg, [0,1], [0,140]);
+  const rippleOp = interpolate(rippleProg, [0,0.3,1], [0,0.7,0]);
+  ripple.style.width = rippleSize + 'px'; ripple.style.height = rippleSize + 'px';
+  ripple.style.marginLeft = (-rippleSize/2) + 'px'; ripple.style.marginTop = (-rippleSize/2) + 'px';
+  ripple.style.opacity = rippleOp;
+
+  const badgeProg = Math.max(0, f - 60);
+  const badgeSpring = spring(badgeProg, { damping:10, stiffness:200, mass:0.8 });
+  badge.style.left = interpolate(badgeSpring, [0,1], [-100,14]) + 'px';
+
+  const headline = C.headline;
+  const highlightWords = (C.highlight || '').toLowerCase().split(' ');
+  const charStart = 80, charEnd = 140;
+  const charsToShow = Math.floor(interpolate(f, [charStart,charEnd], [0,headline.length], { clamp:true }));
+  const showCursor = f >= charStart && f < charEnd + 10;
+  let html = '';
+  const words = headline.split(' ');
+  let charCount = 0;
+  words.forEach((word, wi) => {
+    const wordStart = charCount;
+    const wordEnd = charCount + word.length;
+    const isHighlight = highlightWords.some(hw => word.toLowerCase().includes(hw));
+    if (wordStart < charsToShow) {
+      const visiblePart = word.slice(0, Math.max(0, charsToShow - wordStart));
+      if (isHighlight && charsToShow >= wordEnd) {
+        html += `<span style="background:${T.badge_bg};color:${T.badge_text};padding:1px 4px;border-radius:3px">${visiblePart}</span>`;
+      } else { html += visiblePart; }
+    }
+    if (wi < words.length - 1) { if (charCount + word.length < charsToShow) html += ' '; charCount += word.length + 1; }
+    else { charCount += word.length; }
+  });
+  if (showCursor) { const blinkOp = (Math.floor(f/8) % 2 === 0) ? 1 : 0; html += `<span style="display:inline-block;width:2px;height:0.9em;background:${T.primary};margin-left:1px;vertical-align:middle;opacity:${blinkOp}"></span>`; }
+  headlineWrap.innerHTML = html;
+
+  support.style.opacity = interpolate(f, [130,170], [0,1], { clamp:true });
+  support.style.transform = `translateY(${interpolate(f, [130,160], [8,0], { clamp:true })}px)`;
+
+  const ctaProg = Math.max(0, f - 160);
+  const ctaSpring = spring(ctaProg, { damping:12, stiffness:150, mass:1 });
+  cta.style.transform = `translateX(-50%) translateY(${interpolate(ctaSpring, [0,1], [80,0])}px)`;
+  cta.style.opacity = interpolate(f, [160,175], [0,1], { clamp:true });
+
+  if (canvas) { canvas.style.transform = `scale(${interpolate(f, [200,240], [1,0.95], { clamp:true })})`; canvas.style.transformOrigin = 'center center'; }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TEMPLATE 2: THE SLIDER REVEAL
+// ─────────────────────────────────────────────────────────────────────────────
+
+function buildT2() {
+  const canvas = document.getElementById('template-canvas');
+  canvas.innerHTML = ''; canvas.style.transform = ''; t2Els = {};
+  const T = state.designTokens, C = state.copy;
+
+  canvas.appendChild(div({ position:'absolute', inset:'0', background:`linear-gradient(180deg, ${T.gradient_from} 0%, ${T.gradient_to} 100%)` }));
+
+  const logo = div({ position:'absolute', top:'14px', left:'50%', transform:'translateX(-50%)', opacity:'0', zIndex:'10', width:'80px', height:'36px', display:'flex', alignItems:'center', justifyContent:'center' });
+  logo.appendChild(logoEl({ maxHeight:'36px', filter:'drop-shadow(0 2px 8px rgba(0,0,0,0.5))' }));
+  canvas.appendChild(logo); t2Els.logo = logo;
+
+  const badge = div({ position:'absolute', top:'50px', right:'12px', background:T.badge_bg, color:T.badge_text, padding:'4px 10px', borderRadius:'20px', fontSize:'10px', fontWeight:'700', letterSpacing:'0.06em', textTransform:'uppercase', transform:'scale(0)', transformOrigin:'right center', zIndex:'10', boxShadow:'0 2px 8px rgba(0,0,0,0.4)' }, C.badge);
+  canvas.appendChild(badge); t2Els.badge = badge;
+
+  const photoContainer = div({ position:'absolute', top:'80px', left:'12px', right:'12px', height:'210px', borderRadius:'8px', overflow:'hidden', boxShadow:'0 8px 30px rgba(0,0,0,0.5)' });
+  const beforePhoto = div({ position:'absolute', inset:'0', filter:'sepia(0.8) grayscale(0.3) brightness(0.8)', overflow:'hidden' });
+  beforePhoto.appendChild(photoEl({ filter:'none' }));
+  photoContainer.appendChild(beforePhoto);
+  const afterPhoto = div({ position:'absolute', inset:'0', clipPath:'inset(0 100% 0 0)', overflow:'hidden' });
+  afterPhoto.appendChild(photoEl({ filter:'none' }));
+  photoContainer.appendChild(afterPhoto); t2Els.afterPhoto = afterPhoto;
+  const beforeLabel = div({ position:'absolute', top:'8px', left:'10px', fontSize:'9px', fontWeight:'700', color:'rgba(255,255,255,0.7)', letterSpacing:'0.1em', textTransform:'uppercase', background:'rgba(0,0,0,0.4)', padding:'2px 6px', borderRadius:'3px' }, 'BEFORE');
+  photoContainer.appendChild(beforeLabel);
+  const afterLabel = div({ position:'absolute', top:'8px', right:'10px', fontSize:'9px', fontWeight:'700', color:'rgba(255,255,255,0.9)', letterSpacing:'0.1em', textTransform:'uppercase', background:'rgba(0,0,0,0.5)', padding:'2px 6px', borderRadius:'3px', opacity:'0' }, 'AFTER');
+  photoContainer.appendChild(afterLabel); t2Els.afterLabel = afterLabel;
+  const dividerEl = div({ position:'absolute', top:'0', bottom:'0', left:'0%', width:'2px', background:'rgba(255,255,255,0.9)', boxShadow:'0 0 12px rgba(255,255,255,0.8), 0 0 4px rgba(255,255,255,1)', zIndex:'5' });
+  const handle = div({ position:'absolute', top:'50%', left:'50%', transform:'translate(-50%,-50%)', width:'24px', height:'24px', borderRadius:'50%', background:'white', boxShadow:'0 0 12px rgba(255,255,255,0.8), 0 2px 8px rgba(0,0,0,0.5)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'8px', color:'#333', fontWeight:'800' }, '⟺');
+  dividerEl.appendChild(handle); photoContainer.appendChild(dividerEl); t2Els.divider = dividerEl;
+  canvas.appendChild(photoContainer);
+
+  const headlineWrap = div({ position:'absolute', top:'308px', left:'12px', right:'12px', fontSize:'16px', fontWeight:'800', color:T.headline_text, lineHeight:'1.3', opacity:'0', transform:'translateY(16px)' });
+  canvas.appendChild(headlineWrap); t2Els.headlineWrap = headlineWrap;
+
+  const support = div({ position:'absolute', top:'400px', left:'12px', right:'12px', fontSize:'11px', color:T.support_text, lineHeight:'1.5', opacity:'0' }, C.support);
+  canvas.appendChild(support); t2Els.support = support;
+
+  const cta = div({ position:'absolute', bottom:'30px', left:'50%', transform:'translateX(-50%) translateY(60px)', background:T.cta_bg, color:T.cta_text, padding:'12px 28px', borderRadius:'8px', fontSize:'13px', fontWeight:'700', letterSpacing:'0.03em', whiteSpace:'nowrap', boxShadow:'0 4px 20px rgba(0,0,0,0.5)', opacity:'0' }, C.cta);
+  canvas.appendChild(cta); t2Els.cta = cta;
+}
+
+function renderT2(f) {
+  const T = state.designTokens, C = state.copy;
+  const { logo, badge, afterPhoto, afterLabel, divider, headlineWrap, support, cta } = t2Els;
+  if (!logo) return;
+
+  const logoSpring = spring(Math.max(0, f), { damping:12, stiffness:100 });
+  logo.style.opacity = interpolate(f, [0,20], [0,1], { clamp:true });
+  logo.style.transform = `translateX(-50%) scale(${interpolate(logoSpring, [0,1], [0.8,1])})`;
+
+  const badgeSpring = spring(Math.max(0, f - 20), { damping:10, stiffness:250, mass:0.7 });
+  badge.style.transform = `scale(${interpolate(badgeSpring, [0,1], [0,1])})`;
+
+  const sliderPct = interpolate(f, [60,150], [0,100], { clamp:true });
+  divider.style.left = sliderPct + '%';
+  afterPhoto.style.clipPath = `inset(0 ${100 - sliderPct}% 0 0)`;
+  afterLabel.style.opacity = interpolate(f, [100,120], [0,1], { clamp:true });
+
+  const hlProg = Math.max(0, f - 140);
+  const hlSpring = spring(hlProg, { damping:12, stiffness:120 });
+  headlineWrap.style.transform = `translateY(${interpolate(hlSpring, [0,1], [16,0])}px)`;
+  headlineWrap.style.opacity = interpolate(f, [140,160], [0,1], { clamp:true });
+
+  const highlightWords = (C.highlight || '').toLowerCase().split(' ');
+  const words = C.headline.split(' ');
+  let html = '';
+  words.forEach((word, wi) => {
+    const isHl = highlightWords.some(hw => word.toLowerCase().includes(hw));
+    if (isHl) {
+      const underlinePct = interpolate(f, [165,185], [0,100], { clamp:true });
+      html += `<span style="position:relative;display:inline-block">${word}<span style="position:absolute;bottom:-2px;left:0;height:2px;background:${T.primary};width:${underlinePct}%;border-radius:1px"></span></span>`;
+    } else { html += word; }
+    if (wi < words.length - 1) html += ' ';
+  });
+  headlineWrap.innerHTML = html;
+
+  support.style.opacity = interpolate(f, [170,210], [0,1], { clamp:true });
+
+  const ctaSpring = spring(Math.max(0, f - 200), { damping:14, stiffness:120 });
+  cta.style.transform = `translateX(-50%) translateY(${interpolate(ctaSpring, [0,1], [60,0])}px)`;
+  cta.style.opacity = interpolate(f, [200,220], [0,1], { clamp:true });
+
+  const pulseProg = interpolate(f, [260,280], [0,1], { clamp:true }) - interpolate(f, [280,300], [0,0.3], { clamp:true });
+  logo.style.textShadow = `0 0 ${pulseProg * 10}px ${T.primary}`;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TEMPLATE 3: KINETIC TYPOGRAPHY
+// ─────────────────────────────────────────────────────────────────────────────
+
+function buildT3() {
+  const canvas = document.getElementById('template-canvas');
+  canvas.innerHTML = ''; canvas.style.transform = ''; t3Els = {};
+  const T = state.designTokens, C = state.copy;
+
+  const bg = div({ position:'absolute', inset:'0', background:`linear-gradient(180deg, ${T.gradient_from} 0%, ${T.gradient_to} 100%)` });
+  canvas.appendChild(bg); t3Els.bg = bg;
+
+  const words = C.headline.split(' ');
+  const highlightWords = (C.highlight || '').toLowerCase().split(' ');
+  const wordEls = [];
+  const wordContainer = div({ position:'absolute', top:'50px', left:'12px', right:'12px', fontSize:'22px', fontWeight:'900', color:T.headline_text, lineHeight:'1.2' });
+  const startOffsets = ['0px,-300px','300px,0px','0px,300px','-300px,0px'];
+  words.forEach((word, i) => {
+    const isHl = highlightWords.some(hw => word.toLowerCase().includes(hw));
+    const dir = i % 4;
+    const [ox, oy] = startOffsets[dir].split(',').map(Number);
+    const wordEl = div({ display:'inline-block', marginRight:'6px', marginBottom:'4px', transform:`translate(${ox}px,${oy}px) scale(2)`, opacity:'0', transition:'none', color: isHl ? T.primary : T.headline_text }, word);
+    wordEl.dataset.ox = ox; wordEl.dataset.oy = oy; wordEl.dataset.highlight = isHl ? '1' : '0';
+    wordContainer.appendChild(wordEl); wordEls.push(wordEl);
+  });
+  canvas.appendChild(wordContainer); t3Els.wordContainer = wordContainer; t3Els.wordEls = wordEls;
+
+  const photo = div({ position:'absolute', top:'210px', left:'12px', right:'12px', height:'180px', borderRadius:'8px', overflow:'hidden', transform:'translateY(300px) scale(0.3)', opacity:'0', boxShadow:'0 8px 30px rgba(0,0,0,0.5)', background:`linear-gradient(135deg, ${T.gradient_from}, ${T.gradient_to}, ${T.primary})` });
+  photo.appendChild(photoEl({ borderRadius:'8px' })); canvas.appendChild(photo); t3Els.photo = photo;
+
+  const badge = div({ position:'absolute', top:'195px', left:'50%', transform:'translateX(-50%) rotate(-180deg)', background:T.badge_bg, color:T.badge_text, padding:'4px 12px', borderRadius:'4px', fontSize:'10px', fontWeight:'700', letterSpacing:'0.06em', textTransform:'uppercase', opacity:'0', zIndex:'10', boxShadow:'0 2px 8px rgba(0,0,0,0.5)' }, C.badge);
+  canvas.appendChild(badge); t3Els.badge = badge;
+
+  const supportWords = C.support.split(' ');
+  const supportContainer = div({ position:'absolute', top:'408px', left:'12px', right:'12px', fontSize:'11px', color:T.support_text, lineHeight:'1.5' });
+  const supportWordEls = [];
+  supportWords.forEach(word => {
+    const sw = div({ display:'inline-block', marginRight:'4px', marginBottom:'3px', opacity:'0', transform:'translateY(12px)' }, word);
+    supportContainer.appendChild(sw); supportWordEls.push(sw);
+  });
+  canvas.appendChild(supportContainer); t3Els.supportWordEls = supportWordEls;
+
+  const cta = div({ position:'absolute', top:'480px', left:'50%', transform:'translateX(-50%) translateY(-100px) scale(2)', background:T.cta_bg, color:T.cta_text, padding:'12px 28px', borderRadius:'8px', fontSize:'13px', fontWeight:'700', letterSpacing:'0.03em', whiteSpace:'nowrap', boxShadow:'0 4px 20px rgba(0,0,0,0.5)', opacity:'0' }, C.cta);
+  canvas.appendChild(cta); t3Els.cta = cta;
+
+  const particlesContainer = div({ position:'absolute', top:'480px', left:'50%', pointerEvents:'none', zIndex:'5' });
+  const particles = [];
+  for (let i = 0; i < 16; i++) {
+    const angle = (i / 16) * Math.PI * 2;
+    const p = div({ position:'absolute', width:'4px', height:'4px', borderRadius:'50%', background:T.primary, opacity:'0', transform:'translate(-50%,-50%)' });
+    p.dataset.angle = angle; particlesContainer.appendChild(p); particles.push(p);
+  }
+  canvas.appendChild(particlesContainer); t3Els.particles = particles;
+
+  const logo = div({ position:'absolute', bottom:'20px', left:'50%', transform:'translateX(-50%) translateY(0px)', opacity:'0', width:'70px', height:'30px', display:'flex', alignItems:'center', justifyContent:'center' });
+  logo.appendChild(logoEl({ maxHeight:'30px', filter:'drop-shadow(0 2px 6px rgba(0,0,0,0.5))' }));
+  canvas.appendChild(logo); t3Els.logo = logo;
+}
+
+function renderT3(f) {
+  const T = state.designTokens, C = state.copy;
+  const { bg, wordEls, wordContainer, photo, badge, supportWordEls, cta, particles, logo } = t3Els;
+  if (!bg) return;
+  const canvas = document.getElementById('template-canvas');
+
+  bg.style.filter = `hue-rotate(${Math.sin(f * 0.1) * 5}deg)`;
+
+  wordEls.forEach((wordEl, i) => {
+    const wStart = 10 + i * 8;
+    const wSpring = spring(Math.max(0, f - wStart), { damping:15, stiffness:120, mass:2 });
+    const ox = parseFloat(wordEl.dataset.ox), oy = parseFloat(wordEl.dataset.oy);
+    const wx = interpolate(wSpring, [0,1], [ox,0]);
+    const wy = interpolate(wSpring, [0,1], [oy,0]);
+    const scale = interpolate(wSpring, [0,1], [2,1]);
+    wordEl.style.transform = `translate(${wx}px,${wy}px) scale(${scale})`;
+    wordEl.style.opacity = interpolate(f, [wStart, wStart + 10], [0,1], { clamp:true });
+  });
+
+  wordEls.forEach(wordEl => {
+    if (wordEl.dataset.highlight === '1') {
+      const flashScale = interpolate(f, [50,58,70], [1,1.2,1]);
+      wordEl.style.transform = wordEl.style.transform.replace(/scale\([^)]+\)/, `scale(${flashScale})`);
+      wordEl.style.textShadow = `0 0 ${interpolate(f, [50,60], [0,1], { clamp:true }) * 12}px ${T.primary}`;
+    }
+  });
+
+  const photoSpring = spring(Math.max(0, f - 70), { damping:10, stiffness:200, mass:0.8 });
+  photo.style.transform = `translateY(${interpolate(photoSpring, [0,1], [300,0])}px) scale(${interpolate(photoSpring, [0,1], [0.3,1])})`;
+  photo.style.opacity = interpolate(f, [70,82], [0,1], { clamp:true });
+  wordContainer.style.transform = `translateY(${interpolate(f, [70,100], [0,-20], { clamp:true })}px)`;
+
+  const badgeSpring = spring(Math.max(0, f - 90), { damping:12, stiffness:150 });
+  badge.style.transform = `translateX(-50%) rotate(${interpolate(badgeSpring, [0,1], [-180,0])}deg)`;
+  badge.style.opacity = interpolate(f, [90,102], [0,1], { clamp:true });
+
+  supportWordEls.forEach((sw, i) => {
+    const swStart = 110 + i * 4;
+    const swSpring = spring(Math.max(0, f - swStart), { damping:12, stiffness:200, mass:0.7 });
+    sw.style.transform = `translateY(${interpolate(swSpring, [0,1], [12,0])}px)`;
+    sw.style.opacity = interpolate(f, [swStart, swStart + 8], [0,1], { clamp:true });
+  });
+
+  const ctaSpring = spring(Math.max(0, f - 150), { damping:8, stiffness:300, mass:0.5 });
+  cta.style.transform = `translateX(-50%) translateY(${interpolate(ctaSpring, [0,1], [-80,0])}px) scale(${interpolate(ctaSpring, [0,1], [2,1])})`;
+  cta.style.opacity = interpolate(f, [150,162], [0,1], { clamp:true });
+
+  particles.forEach((p, i) => {
+    const pProg = interpolate(f, [155,185], [0,1], { clamp:true });
+    const angle = parseFloat(p.dataset.angle);
+    const dist = pProg * 60;
+    p.style.transform = `translate(calc(-50% + ${Math.cos(angle) * dist}px), calc(-50% + ${Math.sin(angle) * dist}px))`;
+    p.style.opacity = interpolate(pProg, [0,0.2,1], [0,1,0]);
+  });
+
+  logo.style.opacity = interpolate(f, [190,220], [0,1], { clamp:true });
+  logo.style.transform = `translateX(-50%) translateY(${interpolate(f, [190,220], [10,0], { clamp:true })}px)`;
+
+  if (canvas) canvas.style.transform = f >= 230 ? `translateY(${Math.sin((f - 230) * 0.15) * 3}px)` : '';
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TEMPLATE 4: THE MAGAZINE COVER
+// ─────────────────────────────────────────────────────────────────────────────
+
+function buildT4() {
+  const canvas = document.getElementById('template-canvas');
+  canvas.innerHTML = ''; canvas.style.transform = ''; t4Els = {};
+  const T = state.designTokens, C = state.copy;
+
+  const bg = div({ position:'absolute', inset:'0', background:T.gradient_from });
+  canvas.appendChild(bg); t4Els.bg = bg;
+
+  const openLine = div({ position:'absolute', top:'50%', left:'50%', transform:'translate(-50%,-50%)', height:'2px', background:T.primary, width:'0px', zIndex:'5', boxShadow:`0 0 8px ${T.primary}` });
+  canvas.appendChild(openLine); t4Els.openLine = openLine;
+
+  const photo = div({ position:'absolute', inset:'0', clipPath:'inset(50% 0 50% 0)', transform:'scale(1.1)', transformOrigin:'center center', overflow:'hidden', background:`linear-gradient(160deg, ${T.gradient_from}, ${T.gradient_to}, ${T.primary})` });
+  photo.appendChild(photoEl({ objectPosition:'center center' }));
+  canvas.appendChild(photo); t4Els.photo = photo;
+
+  const overlay = div({ position:'absolute', inset:'0', background:'linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.6) 60%, rgba(0,0,0,0.85) 100%)', opacity:'0' });
+  canvas.appendChild(overlay); t4Els.overlay = overlay;
+
+  const masthead = div({ position:'absolute', top:'16px', left:'0', right:'0', textAlign:'center', opacity:'0', transform:'translateY(-8px)', zIndex:'10', width:'100%', height:'36px', display:'flex', alignItems:'center', justifyContent:'center' });
+  masthead.appendChild(logoEl({ maxHeight:'32px', filter:'drop-shadow(0 1px 4px rgba(0,0,0,0.5))' }));
+  canvas.appendChild(masthead); t4Els.masthead = masthead;
+
+  const colorBar = div({ position:'absolute', top:'290px', left:'-100%', right:'0', height:'70px', background:T.badge_bg, zIndex:'4' });
+  canvas.appendChild(colorBar); t4Els.colorBar = colorBar;
+
+  const hlWords = C.headline.split(' ').slice(0,5).join(' ');
+  const headline = div({ position:'absolute', top:'294px', left:'0', right:'0', padding:'0 14px', fontSize:'20px', fontWeight:'900', color:T.badge_text, lineHeight:'1.15', letterSpacing:'-0.01em', transform:'translateX(300px)', zIndex:'5', textTransform:'uppercase' });
+  headline.textContent = hlWords;
+  canvas.appendChild(headline); t4Els.headline = headline;
+
+  const badgeSticker = div({ position:'absolute', top:'52px', right:'14px', background:T.badge_bg, color:T.badge_text, padding:'6px 10px', borderRadius:'4px', fontSize:'10px', fontWeight:'800', letterSpacing:'0.08em', textTransform:'uppercase', transform:'rotate(-12deg) scale(0)', transformOrigin:'right top', zIndex:'10', boxShadow:'0 3px 12px rgba(0,0,0,0.6)' }, C.badge);
+  canvas.appendChild(badgeSticker); t4Els.badgeSticker = badgeSticker;
+
+  const supportContainer = div({ position:'absolute', top:'376px', left:'14px', right:'14px', zIndex:'6' });
+  const supportEls = [];
+  C.support.split('.').filter(s => s.trim()).forEach((line, i) => {
+    const se = div({ fontSize:'11px', color:'rgba(239,231,219,0.85)', lineHeight:'1.5', marginBottom:'4px', opacity:'0', transform:'translateY(6px)' }, line.trim() + (i === 0 ? '.' : ''));
+    supportContainer.appendChild(se); supportEls.push(se);
+  });
+  if (supportEls.length === 0) { const se = div({ fontSize:'11px', color:'rgba(239,231,219,0.85)', lineHeight:'1.5', opacity:'0', transform:'translateY(6px)' }, C.support); supportContainer.appendChild(se); supportEls.push(se); }
+  canvas.appendChild(supportContainer); t4Els.supportEls = supportEls;
+
+  const cta = div({ position:'absolute', bottom:'36px', right:'-200px', background:T.cta_bg, color:T.cta_text, padding:'11px 20px', borderRadius:'999px', fontSize:'12px', fontWeight:'700', letterSpacing:'0.02em', whiteSpace:'nowrap', boxShadow:'0 4px 20px rgba(0,0,0,0.5)', display:'flex', alignItems:'center', gap:'6px', zIndex:'10' });
+  cta.innerHTML = `${C.cta} <span id="t4Arrow" style="display:inline-block;opacity:0;transform:translateX(-8px)">→</span>`;
+  canvas.appendChild(cta); t4Els.cta = cta;
+
+  const flash = div({ position:'absolute', inset:'0', background:'white', opacity:'0', zIndex:'20', pointerEvents:'none' });
+  canvas.appendChild(flash); t4Els.flash = flash;
+
+  const vignette = div({ position:'absolute', inset:'0', background:'radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.7) 100%)', opacity:'0', zIndex:'15', pointerEvents:'none' });
+  canvas.appendChild(vignette); t4Els.vignette = vignette;
+
+  const bottomLogo = div({ position:'absolute', bottom:'14px', left:'50%', transform:'translateX(-50%)', opacity:'0', zIndex:'16', width:'90px', height:'36px', display:'flex', alignItems:'center', justifyContent:'center' });
+  bottomLogo.appendChild(logoEl({ maxHeight:'34px', filter:'drop-shadow(0 2px 8px rgba(0,0,0,0.6))' }));
+  canvas.appendChild(bottomLogo); t4Els.bottomLogo = bottomLogo;
+}
+
+function renderT4(f) {
+  const { bg, openLine, photo, overlay, masthead, colorBar, headline, badgeSticker, supportEls, cta, flash, vignette, bottomLogo } = t4Els;
+  if (!openLine) return;
+
+  const lineWidth = interpolate(f, [0,15], [0,260], { clamp:true });
+  openLine.style.width = lineWidth + 'px';
+  openLine.style.marginLeft = (-lineWidth/2) + 'px';
+
+  const revealPct = interpolate(f, [15,45], [0,100], { clamp:true });
+  const topClip = Math.max(0, 50 - revealPct/2);
+  photo.style.clipPath = `inset(${topClip}% 0 ${topClip}% 0)`;
+  overlay.style.opacity = interpolate(f, [30,55], [0,1], { clamp:true });
+
+  const kbScale = interpolate(f, [170,240], [1.1,1.15], { clamp:true });
+  photo.style.transform = `scale(${kbScale}) translateX(${interpolate(f, [170,240], [0,2], { clamp:true })}px)`;
+
+  const mastheadSpring = spring(Math.max(0, f - 35), { damping:14, stiffness:100 });
+  masthead.style.opacity = interpolate(f, [35,55], [0,1], { clamp:true });
+  masthead.style.transform = `translateY(${interpolate(mastheadSpring, [0,1], [-8,0])}px)`;
+
+  colorBar.style.left = interpolate(f, [55,85], [-100,0], { clamp:true }) + '%';
+
+  const hlSpring = spring(Math.max(0, f - 65), { damping:12, stiffness:150 });
+  headline.style.transform = `translateX(${interpolate(hlSpring, [0,1], [300,0])}px)`;
+
+  const badgeSpring = spring(Math.max(0, f - 80), { damping:10, stiffness:250, mass:0.7 });
+  badgeSticker.style.transform = `rotate(-12deg) scale(${interpolate(badgeSpring, [0,1], [0,1])})`;
+
+  supportEls.forEach((se, i) => {
+    const seStart = 100 + i * 10;
+    const seSpring = spring(Math.max(0, f - seStart), { damping:14, stiffness:120 });
+    se.style.opacity = interpolate(f, [seStart, seStart + 10], [0,1], { clamp:true });
+    se.style.transform = `translateY(${interpolate(seSpring, [0,1], [6,0])}px)`;
+  });
+
+  const ctaRight = interpolate(f, [130,165], [-200,14], { clamp:true });
+  cta.style.right = ctaRight + 'px'; cta.style.left = 'auto'; cta.style.transform = '';
+  const arrowEl = document.getElementById('t4Arrow');
+  if (arrowEl) { arrowEl.style.opacity = interpolate(f, [160,175], [0,1], { clamp:true }); arrowEl.style.transform = `translateX(${interpolate(f, [160,175], [-8,0], { clamp:true })}px)`; }
+
+  flash.style.opacity = (f >= 200 && f <= 202) ? interpolate(f, [200,201,202], [0,0.8,0]) : 0;
+  vignette.style.opacity = interpolate(f, [203,218], [0,1], { clamp:true });
+  bottomLogo.style.opacity = interpolate(f, [205,225], [0,1], { clamp:true });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TEMPLATE 5: THE GLITCH
+// ─────────────────────────────────────────────────────────────────────────────
+
+const GLITCH_CHARS = '!@#$%^&*<>?/\\|[]{}0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+function scrambleText(target, progress, frame) {
+  const rand = seededRand(frame * 7 + 13);
+  let result = '';
+  for (let i = 0; i < target.length; i++) {
+    if (target[i] === ' ') { result += ' '; continue; }
+    const charProgress = Math.max(0, Math.min(1, (progress * target.length - i) / 3));
+    if (charProgress >= 1) { result += target[i]; }
+    else if (charProgress > 0) { result += Math.random() < charProgress ? target[i] : GLITCH_CHARS[Math.floor(rand() * GLITCH_CHARS.length)]; }
+    else { result += GLITCH_CHARS[Math.floor(rand() * GLITCH_CHARS.length)]; }
+  }
+  return result;
+}
+
+function buildT5() {
+  const canvas = document.getElementById('template-canvas');
+  canvas.innerHTML = ''; canvas.style.transform = ''; t5Els = {};
+  const T = state.designTokens, C = state.copy, B = state.brandContext;
+
+  canvas.appendChild(div({ position:'absolute', inset:'0', background:'#050510' }));
+
+  const noiseContainer = div({ position:'absolute', inset:'0', overflow:'hidden', zIndex:'1' });
+  const noiseBlocks = [];
+  for (let i = 0; i < 80; i++) {
+    const nb = div({ position:'absolute', width:(Math.random() * 20 + 4) + 'px', height:(Math.random() * 4 + 2) + 'px', left:(Math.random() * 260) + 'px', top:(Math.random() * 564) + 'px', opacity:'0' });
+    noiseContainer.appendChild(nb); noiseBlocks.push(nb);
+  }
+  canvas.appendChild(noiseContainer); t5Els.noiseBlocks = noiseBlocks;
+
+  const logoContainer = div({ position:'absolute', top:'24px', left:'50%', transform:'translateX(-50%)', zIndex:'8', whiteSpace:'nowrap' });
+  const brandName = (B.brandName || 'Brand').toUpperCase();
+  const logoRed = div({ position:'absolute', top:'0', fontFamily:'"SF Mono","Fira Code",monospace', fontSize:'13px', fontWeight:'800', letterSpacing:'0.12em', color:'red', opacity:'0.6', transform:'translateX(-52px) translateX(2px)', mixBlendMode:'screen', whiteSpace:'nowrap' }, brandName);
+  const logoGreen = div({ position:'absolute', top:'0', fontFamily:'"SF Mono","Fira Code",monospace', fontSize:'13px', fontWeight:'800', letterSpacing:'0.12em', color:'lime', opacity:'0.6', transform:'translateX(-52px) translateX(-2px)', mixBlendMode:'screen', whiteSpace:'nowrap' }, brandName);
+  const logoMain = div({ position:'relative', fontFamily:'"SF Mono","Fira Code",monospace', fontSize:'13px', fontWeight:'800', letterSpacing:'0.12em', color:T.badge_text, whiteSpace:'nowrap' }, brandName);
+  logoContainer.appendChild(logoRed); logoContainer.appendChild(logoGreen); logoContainer.appendChild(logoMain);
+  canvas.appendChild(logoContainer);
+  t5Els.logoContainer = logoContainer; t5Els.logoRed = logoRed; t5Els.logoGreen = logoGreen; t5Els.logoMain = logoMain;
+
+  const photoContainer = div({ position:'absolute', top:'72px', left:'12px', right:'12px', height:'180px', overflow:'hidden', borderRadius:'6px', boxShadow:'0 6px 24px rgba(0,0,0,0.7)' });
+  const stripCount = 12;
+  const strips = [];
+  for (let i = 0; i < stripCount; i++) {
+    const stripH = 180 / stripCount;
+    const fromLeft = i % 2 === 0;
+    const photoSrc = getPhotoUrl();
+    const strip = div({ position:'absolute', left:'0', right:'0', top:(i * stripH) + 'px', height:stripH + 'px', background: photoSrc ? `url(${photoSrc})` : `linear-gradient(90deg, ${T.gradient_from}, ${T.gradient_to}, ${T.primary})`, backgroundSize: photoSrc ? '236px 180px' : 'cover', backgroundPosition: photoSrc ? `0px -${i * stripH}px` : 'center', transform: fromLeft ? 'translateX(-100%)' : 'translateX(100%)', overflow:'hidden' });
+    photoContainer.appendChild(strip); strips.push({ el:strip, fromLeft });
+  }
+  canvas.appendChild(photoContainer); t5Els.strips = strips;
+
+  const badgeFlash = div({ position:'absolute', top:'264px', left:'12px', background:'white', width:'120px', height:'26px', borderRadius:'4px', opacity:'0' });
+  canvas.appendChild(badgeFlash); t5Els.badgeFlash = badgeFlash;
+
+  const badge = div({ position:'absolute', top:'264px', left:'12px', background:T.badge_bg, color:T.badge_text, padding:'4px 10px', borderRadius:'4px', fontFamily:'monospace', fontSize:'10px', fontWeight:'700', letterSpacing:'0.08em', textTransform:'uppercase', opacity:'0', zIndex:'6' }, C.badge);
+  canvas.appendChild(badge); t5Els.badge = badge;
+
+  const headlineEl = div({ position:'absolute', top:'300px', left:'12px', right:'12px', fontFamily:'"SF Mono","Fira Code",monospace', fontSize:'15px', fontWeight:'800', color:T.headline_text, lineHeight:'1.35', zIndex:'6' });
+  canvas.appendChild(headlineEl); t5Els.headlineEl = headlineEl;
+
+  const hlRgbRed = div({ position:'absolute', top:'300px', left:'12px', right:'12px', fontFamily:'"SF Mono","Fira Code",monospace', fontSize:'15px', fontWeight:'800', color:'red', opacity:'0', lineHeight:'1.35', zIndex:'5', pointerEvents:'none', mixBlendMode:'screen', transform:'translateX(3px)' });
+  canvas.appendChild(hlRgbRed); t5Els.hlRgbRed = hlRgbRed;
+
+  const support = div({ position:'absolute', top:'420px', left:'12px', right:'12px', fontFamily:'"SF Mono","Fira Code",monospace', fontSize:'10px', color:'#00ff88', lineHeight:'1.5', opacity:'0' });
+  canvas.appendChild(support); t5Els.support = support;
+
+  const ctaContainer = div({ position:'absolute', bottom:'36px', left:'50%', transform:'translateX(-50%)', zIndex:'8' });
+  const ctaBtn = div({ background:T.cta_bg, color:T.cta_text, padding:'12px 28px', borderRadius:'8px', fontFamily:'"SF Mono","Fira Code",monospace', fontSize:'12px', fontWeight:'700', letterSpacing:'0.05em', whiteSpace:'nowrap', boxShadow:'0 4px 20px rgba(0,0,0,0.7)', opacity:'0', position:'relative', overflow:'hidden' }, C.cta);
+  ctaContainer.appendChild(ctaBtn); canvas.appendChild(ctaContainer); t5Els.ctaBtn = ctaBtn;
+
+  const pixelBlocks = [];
+  for (let i = 0; i < 20; i++) {
+    const pb = div({ position:'absolute', width:'8px', height:'8px', background:T.cta_bg, opacity:'0', borderRadius:'1px' });
+    ctaContainer.appendChild(pb); pixelBlocks.push(pb);
+  }
+  t5Els.pixelBlocks = pixelBlocks;
+
+  const scanLines = div({ position:'absolute', inset:'0', backgroundImage:'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.15) 3px, rgba(0,0,0,0.15) 4px)', zIndex:'20', pointerEvents:'none', opacity:'0.6' });
+  canvas.appendChild(scanLines);
+
+  const glitchBurst = div({ position:'absolute', inset:'0', zIndex:'19', pointerEvents:'none', opacity:'0' });
+  canvas.appendChild(glitchBurst); t5Els.glitchBurst = glitchBurst;
+}
+
+function renderT5(f) {
+  const T = state.designTokens, C = state.copy;
+  const { noiseBlocks, logoContainer, logoRed, logoGreen, logoMain, strips, badgeFlash, badge, headlineEl, support, ctaBtn, pixelBlocks, glitchBurst } = t5Els;
+  if (!logoContainer) return;
+
+  const noiseOp = interpolate(f, [0,5,18,22], [0,1,0.8,0], { clamp:true });
+  const rand0 = seededRand(f * 31 + 7);
+  noiseBlocks.forEach(nb => {
+    if (noiseOp > 0) { const r = rand0(); nb.style.opacity = (r * noiseOp * 0.8).toString(); const colors = ['#ff003c','#00ff88','#0088ff','#ffffff','#ffcc00']; nb.style.background = colors[Math.floor(r * colors.length)]; nb.style.left = (rand0() * 260) + 'px'; }
+    else nb.style.opacity = '0';
+  });
+
+  if (f > 45) { logoMain.style.opacity = '1'; logoRed.style.opacity = '0'; logoGreen.style.opacity = '0'; logoContainer.style.opacity = '1'; logoContainer.style.transform = 'translateX(-50%)'; }
+  else if (f >= 15) { const flickerSeed = seededRand(f * 17); const flicker = flickerSeed(); logoContainer.style.opacity = flicker > 0.3 ? '1' : '0'; const rgbActive = flickerSeed() > 0.4; if (rgbActive) { logoRed.style.opacity = '0.5'; logoGreen.style.opacity = '0.5'; } else { logoRed.style.opacity = '0'; logoGreen.style.opacity = '0'; } logoContainer.style.transform = `translateX(-50%) translateX(${(flickerSeed() - 0.5) * 20}px)`; }
+  else logoContainer.style.opacity = '0';
+
+  strips.forEach(({ el, fromLeft }, i) => {
+    const stripStart = 40 + i * 2.5;
+    const stripProg = interpolate(f, [stripStart, stripStart + 18], [0,1], { clamp:true });
+    el.style.transform = `translateX(${fromLeft ? interpolate(stripProg, [0,1], [-100,0]) : interpolate(stripProg, [0,1], [100,0])}%)`;
+  });
+
+  if (f >= 65 && f <= 80) { const flashProg = interpolate(f, [65,80], [0,1], { clamp:true }); badgeFlash.style.width = interpolate(flashProg, [0,0.5,1], [0,120,0]) + 'px'; badgeFlash.style.opacity = interpolate(flashProg, [0,0.3,0.8,1], [0,0.9,0.6,0]); } else badgeFlash.style.opacity = '0';
+  badge.style.opacity = interpolate(f, [78,88], [0,1], { clamp:true });
+
+  if (f >= 85) {
+    const scrambleProg = interpolate(f, [85,130], [0,1], { clamp:true });
+    const scrambled = scrambleText(C.headline, scrambleProg, f);
+    const hlWords = (C.highlight || '').toLowerCase().split(' ');
+    const words = scrambled.split(' ');
+    const origWords = C.headline.split(' ');
+    let html = '';
+    words.forEach((word, wi) => {
+      const isHl = hlWords.some(hw => origWords[wi] && origWords[wi].toLowerCase().includes(hw));
+      if (isHl && scrambleProg >= 0.95) { const rgbSplit = interpolate(f, [125,135], [0,1], { clamp:true }); html += `<span style="position:relative;color:${T.primary};text-shadow:${rgbSplit*3}px 0 red, ${-rgbSplit*3}px 0 cyan">${word}</span>`; }
+      else html += word;
+      if (wi < words.length - 1) html += ' ';
+    });
+    headlineEl.innerHTML = html; headlineEl.style.opacity = '1';
+    if (f < 140) { const curBlink = (Math.floor(f / 6) % 2 === 0) ? 1 : 0; headlineEl.innerHTML += `<span style="color:#00ff88;opacity:${curBlink}">_</span>`; }
+  } else headlineEl.style.opacity = '0';
+
+  if (f >= 120) { const typeProg = interpolate(f, [120,155], [0,1], { clamp:true }); const charsToShow = Math.floor(typeProg * C.support.length); const curBlink = (Math.floor(f / 5) % 2 === 0) ? 1 : 0; support.innerHTML = `<span style="color:#888;margin-right:4px">></span>${C.support.slice(0, charsToShow)}<span style="opacity:${curBlink};color:#00ff88">█</span>`; support.style.opacity = '1'; }
+  else support.style.opacity = '0';
+
+  ctaBtn.style.opacity = interpolate(f, [162,175], [0,1], { clamp:true });
+  pixelBlocks.forEach((pb, i) => {
+    const pbStart = 140 + i * 1.5;
+    const pbProg = interpolate(f, [pbStart, pbStart + 18], [0,1], { clamp:true });
+    if (pbProg < 1) { const randAngle = (i / 20) * Math.PI * 2; const dist = (1 - pbProg) * 80; pb.style.transform = `translate(${Math.cos(randAngle) * dist - 12 + (i%4)*8}px, ${Math.sin(randAngle) * dist - 8 + Math.floor(i/4)*8}px)`; pb.style.opacity = interpolate(pbProg, [0,0.3,0.9,1], [0.8,0.6,0.3,0]); }
+    else pb.style.opacity = '0';
+  });
+
+  if (f >= 175 && f <= 178) { const rand5 = seededRand(f * 53); glitchBurst.style.opacity = '1'; glitchBurst.style.background = `rgba(${Math.floor(rand5()*255)},0,${Math.floor(rand5()*255)},0.15)`; glitchBurst.style.transform = `translateX(${(rand5()-0.5)*12}px)`; }
+  else { glitchBurst.style.opacity = '0'; glitchBurst.style.transform = ''; }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TEMPLATES 6-10: copied from templates.html, T/C/B/BRAND → state refs
+// ─────────────────────────────────────────────────────────────────────────────
+
+const STRIPS = 8;
+const MOSAIC_COLS = 9;
+const MOSAIC_ROWS = 16;
+const TILE_COUNT = MOSAIC_COLS * MOSAIC_ROWS;
+
+function initTemplate6(canvas) {
+  const T = state.designTokens, C = state.copy, BRAND = (state.brandContext.brandName || 'Brand');
+  canvas.innerHTML = `
+    <div id="t6-bg" style="position:absolute;inset:0;background:linear-gradient(160deg,${T.gradient_from},${T.gradient_to});"></div>
+    <div id="t6-photo-wrap" style="position:absolute;inset:0;transform-style:preserve-3d;perspective:600px;transform-origin:top right;">
+      <div id="t6-photo" style="position:absolute;inset:0;background:linear-gradient(135deg,${T.surface} 0%,${T.gradient_to} 50%,${T.gradient_from} 100%);transform-origin:top right;transform-style:preserve-3d;backface-visibility:hidden;">
+        <div style="position:absolute;inset:0;background:repeating-radial-gradient(circle at 1px 1px,rgba(255,255,255,0.04) 1px,transparent 1px) 0 0/4px 4px;pointer-events:none;"></div>
+        <div id="t6-wm" style="position:absolute;bottom:20px;right:16px;font-size:11px;font-weight:700;letter-spacing:1px;color:#fff;opacity:0.15;">${BRAND}</div>
+        <div style="position:absolute;inset:40px;border-radius:10px;background:linear-gradient(45deg,${T.surface},${T.gradient_to});overflow:hidden;">${getPhotoUrl() ? `<img src="${getPhotoUrl()}" style="width:100%;height:100%;object-fit:cover;">` : `<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.15);font-size:11px;">Photo</div>`}</div>
+      </div>
+      <div id="t6-photo-back" style="position:absolute;inset:0;background:linear-gradient(135deg,#c8a080,#e8d0b0);transform:rotateY(180deg);backface-visibility:hidden;opacity:0;"></div>
+      <div id="t6-shadow" style="position:absolute;inset:0;background:radial-gradient(ellipse at top right,rgba(0,0,0,0.5) 0%,transparent 60%);opacity:0;pointer-events:none;"></div>
+    </div>
+    <div id="t6-content" style="position:absolute;inset:0;display:flex;flex-direction:column;padding:24px 20px;gap:12px;">
+      <div id="t6-logo" style="opacity:0;height:36px;display:flex;align-items:center;">${getLogoUrl() ? `<img src="${getLogoUrl()}" style="max-height:32px;object-fit:contain;filter:drop-shadow(0 1px 4px rgba(0,0,0,0.4));">` : `<span style="font-size:12px;font-weight:800;letter-spacing:1.5px;color:${T.badge_text};">${BRAND}</span>`}</div>
+      <div id="t6-badge" style="display:inline-flex;align-items:center;padding:4px 12px;background:${T.badge_bg};border-radius:20px;font-size:10px;font-weight:700;color:${T.badge_text};letter-spacing:0.5px;transform:translateX(60px);opacity:0;align-self:flex-start;">${C.badge}</div>
+      <div id="t6-photo-small" style="width:100%;height:140px;border-radius:12px;background:linear-gradient(135deg,${T.surface},${T.gradient_to});overflow:hidden;opacity:0;transform:scale(0.95);margin-top:4px;">${getPhotoUrl() ? `<img src="${getPhotoUrl()}" style="width:100%;height:100%;object-fit:cover;">` : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.2);font-size:10px;">Photo</div>`}</div>
+      <div id="t6-headline-wrap" style="overflow:hidden;position:relative;margin-top:4px;">
+        <div id="t6-headline" style="font-size:17px;font-weight:800;color:${T.headline_text};line-height:1.35;clip-path:inset(0 100% 0 0);">${C.headline}</div>
+        <svg id="t6-underline" style="position:absolute;bottom:-4px;left:0;width:100%;height:8px;overflow:visible;opacity:0;" viewBox="0 0 200 8">
+          <path id="t6-underline-path" d="M0,5 Q25,1 50,5 Q75,9 100,5 Q125,1 150,5 Q175,9 200,5" fill="none" stroke="${T.primary}" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="220" stroke-dashoffset="220"/>
+        </svg>
+      </div>
+      <div id="t6-support" style="font-size:11px;color:${T.support_text};line-height:1.6;opacity:0;margin-top:4px;"></div>
+      <div id="t6-cta-wrap" style="margin-top:auto;position:relative;">
+        <div id="t6-cta" style="padding:12px 20px;background:transparent;border-radius:8px;font-size:13px;font-weight:700;color:${T.cta_text};text-align:center;position:relative;overflow:hidden;">
+          <div id="t6-cta-border" style="position:absolute;inset:0;border-radius:8px;border:2px solid transparent;"></div>
+          <div id="t6-cta-fill" style="position:absolute;inset:0;background:${T.cta_bg};transform:scaleX(0);transform-origin:left;border-radius:8px;"></div>
+          <span style="position:relative;z-index:1;">${C.cta}</span>
+        </div>
+      </div>
+      <div id="t6-logo-bottom" style="opacity:0;text-align:center;transform:scale(1.4);padding-bottom:4px;display:flex;justify-content:center;">${getLogoUrl() ? `<img src="${getLogoUrl()}" style="max-height:28px;object-fit:contain;">` : `<span style="font-size:11px;font-weight:700;letter-spacing:1.5px;color:${T.badge_text}">${BRAND}</span>`}</div>
+    </div>
+  `;
+  const supportEl = document.getElementById('t6-support');
+  if (supportEl) {
+    const C2 = state.copy;
+    supportEl.innerHTML = C2.support.split('').map((ch, i) =>
+      `<span id="t6-sc-${i}" style="opacity:0;display:inline;">${ch === ' ' ? '&nbsp;' : ch}</span>`
+    ).join('');
+  }
+}
+
+function renderTemplate6(frame) {
+  const T = state.designTokens, C = state.copy;
+  const f = frame;
+  const peelProgress = interpolate(f, [30,140], [0,1], { clamp:true, easing:easeInOut });
+  const photoEl2 = document.getElementById('t6-photo');
+  const shadowEl = document.getElementById('t6-shadow');
+  if (photoEl2) {
+    const rotX = interpolate(peelProgress, [0,1], [0,-35], { clamp:false });
+    const rotY = interpolate(peelProgress, [0,1], [0,40], { clamp:false });
+    const scaleX = interpolate(peelProgress, [0,1], [1,0.6], { clamp:false });
+    if (f < 140) photoEl2.style.transform = `perspective(600px) rotateX(${rotX}deg) rotateY(${rotY}deg) scaleX(${scaleX})`;
+    photoEl2.style.opacity = interpolate(f, [140,170], [1,0], { clamp:true });
+    if (shadowEl) shadowEl.style.opacity = interpolate(peelProgress, [0,0.5,1], [0,0.8,0], { clamp:false });
+  }
+  const badgeEl = document.getElementById('t6-badge');
+  if (badgeEl) { const bs = spring(f - 80, { damping:10, stiffness:120 }); badgeEl.style.transform = `translateX(${interpolate(bs, [0,1], [60,0], {clamp:false})}px)`; badgeEl.style.opacity = interpolate(f, [80,95], [0,1], { clamp:true }); }
+  const hlEl = document.getElementById('t6-headline');
+  if (hlEl) hlEl.style.clipPath = `inset(0 ${interpolate(f, [100,150], [100,0], { clamp:true, easing:easeOut })}% 0 0)`;
+  const ulPath = document.getElementById('t6-underline-path');
+  const ulSvg = document.getElementById('t6-underline');
+  if (ulPath) { ulPath.setAttribute('stroke-dashoffset', interpolate(f, [130,160], [220,0], { clamp:true, easing:easeOut })); if (ulSvg) ulSvg.style.opacity = interpolate(f, [128,135], [0,1], { clamp:true }); }
+  const logoEl2 = document.getElementById('t6-logo');
+  if (logoEl2) logoEl2.style.opacity = interpolate(f, [100,115], [0,1], { clamp:true });
+  const smallPhoto = document.getElementById('t6-photo-small');
+  if (smallPhoto) { const sp = spring(f - 145, { damping:12, stiffness:100 }); smallPhoto.style.opacity = clamp(sp, 0, 1); smallPhoto.style.transform = `scale(${interpolate(sp, [0,1], [0.92,1], {clamp:false})})`; }
+  if (f >= 170) {
+    const chars = C.support.length;
+    for (let i = 0; i < chars; i++) { const charEl = document.getElementById(`t6-sc-${i}`); if (!charEl) continue; const delay = (i / chars) * 40 + (((i * 7) % 5) - 2); charEl.style.opacity = interpolate(f - 170 - delay, [0,4], [0,1], { clamp:true }); }
+    const s2 = document.getElementById('t6-support'); if (s2) s2.style.opacity = 1;
+  }
+  const ctaBorder = document.getElementById('t6-cta-border');
+  const ctaFill = document.getElementById('t6-cta-fill');
+  if (ctaBorder) { const traceP = interpolate(f, [200,230], [0,1], { clamp:true, easing:easeInOut }); const a = clamp(traceP * 2, 0, 1); ctaBorder.style.borderColor = rgba(T.cta_bg, a); ctaBorder.style.boxShadow = `0 0 ${traceP * 8}px ${rgba(T.cta_bg, traceP * 0.5)}`; }
+  if (ctaFill) ctaFill.style.transform = `scaleX(${interpolate(f, [228,240], [0,1], { clamp:true, easing:easeOut })})`;
+  const logoBottom = document.getElementById('t6-logo-bottom');
+  if (logoBottom) { const s = spring(f - 240, { damping:6, stiffness:200 }); logoBottom.style.opacity = interpolate(f, [240,248], [0,1], { clamp:true }); logoBottom.style.transform = `scale(${interpolate(s, [0,1], [1.4,1], {clamp:false})})`; }
+}
+
+function initTemplate7(canvas) {
+  const T = state.designTokens, C = state.copy, BRAND = (state.brandContext.brandName || 'Brand');
+  const stripH = 100 / STRIPS;
+  const stripContents = [
+    `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:${T.gradient_from};">${getLogoUrl() ? `<img src="${getLogoUrl()}" style="max-height:90%;object-fit:contain;">` : `<span style="font-size:13px;font-weight:800;letter-spacing:1.5px;color:${T.badge_text}">${BRAND}</span>`}</div>`,
+    `<div style="width:100%;height:100%;display:flex;align-items:center;padding:0 20px;background:${T.surface};"><span style="font-size:15px;font-weight:800;color:${T.headline_text};line-height:1.3;">${C.headline.split(' ').slice(0,3).join(' ')}</span></div>`,
+    `<div style="width:100%;height:100%;display:flex;align-items:center;padding:0 20px;background:${T.gradient_to};"><span style="font-size:15px;font-weight:800;color:${T.badge_text};">${C.headline.split(' ').slice(3,6).join(' ')}</span></div>`,
+    `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:${T.badge_bg};"><span style="font-size:11px;font-weight:700;letter-spacing:1px;color:${T.badge_text};text-transform:uppercase;">${C.badge}</span></div>`,
+    `<div style="width:100%;height:100%;display:flex;align-items:center;padding:0 20px;background:${T.gradient_from};"><span style="font-size:15px;font-weight:800;color:${T.primary};">${C.highlight || C.headline.split(' ').slice(6).join(' ')}</span></div>`,
+    `<div style="width:100%;height:100%;display:flex;align-items:center;padding:0 20px;background:${T.surface};"><span style="font-size:10px;color:${T.support_text};line-height:1.5;">${C.support.slice(0, Math.floor(C.support.length/2))}</span></div>`,
+    `<div style="width:100%;height:100%;display:flex;align-items:center;padding:0 20px;background:${T.gradient_from};"><span style="font-size:10px;color:${T.support_text};line-height:1.5;">${C.support.slice(Math.floor(C.support.length/2))}</span></div>`,
+    `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:${T.cta_bg};"><span style="font-size:13px;font-weight:700;color:${T.cta_text};">${C.cta}</span></div>`
+  ];
+  const bgColors = [T.gradient_from, T.surface, T.gradient_to, T.surface, T.gradient_from, T.surface, T.gradient_to, T.surface];
+  let html = '<div style="position:absolute;inset:0;">';
+  for (let i = 0; i < STRIPS; i++) {
+    const top = (i / STRIPS) * 100;
+    html += `<div id="t7-strip-${i}" style="position:absolute;left:0;right:0;top:${top}%;height:${stripH}%;perspective:400px;border-bottom:1px solid rgba(0,0,0,0.3);"><div id="t7-inner-${i}" style="width:100%;height:100%;transform-style:preserve-3d;transform-origin:center;backface-visibility:hidden;"><div style="position:absolute;inset:0;background:${bgColors[i]};backface-visibility:hidden;"></div><div style="position:absolute;inset:0;backface-visibility:hidden;transform:rotateX(180deg);">${stripContents[i]}</div></div></div>`;
+  }
+  html += '</div>';
+  canvas.innerHTML = html;
+}
+
+function renderTemplate7(frame) {
+  const flipStarts = [10,15,20,25,70,85,140,170];
+  for (let i = 0; i < STRIPS; i++) {
+    const inner = document.getElementById(`t7-inner-${i}`);
+    if (!inner) continue;
+    const fs = flipStarts[i];
+    const flipDur = 30;
+    const flipF = frame - fs;
+    let rotX = 0;
+    if (flipF < 0) rotX = 0;
+    else if (flipF < flipDur) rotX = easeInOut(clamp(flipF / flipDur, 0, 1)) * 180;
+    else rotX = 180;
+    inner.style.transform = `rotateX(${rotX}deg)`;
+    if (i === 4) {
+      const stripEl = document.getElementById(`t7-strip-${i}`);
+      if (stripEl && frame >= 110 && frame <= 150) { const osc = Math.sin((frame - 110) * 0.9) * 2 * interpolate(frame, [110,150], [1,0], { clamp:true }); stripEl.style.transform = `translateX(${osc}px)`; }
+      else if (stripEl) stripEl.style.transform = 'translateX(0)';
+    }
+  }
+  if (frame >= 210) {
+    for (let i = 0; i < STRIPS; i++) {
+      const strip = document.getElementById(`t7-strip-${i}`);
+      if (!strip) continue;
+      const waveF = frame - 210;
+      const decay = interpolate(frame, [210,240], [1,0], { clamp:true });
+      strip.style.transform = `translateY(${Math.sin(waveF * 0.25 + i * 0.6) * 3 * decay}px)`;
+    }
+  }
+}
+
+function initTemplate8(canvas) {
+  const T = state.designTokens, C = state.copy, BRAND = (state.brandContext.brandName || 'Brand');
+  const cx = 135, cy = 292;
+  canvas.innerHTML = `
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,${T.gradient_to} 0%,${T.gradient_from} 70%);"></div>
+    <div id="t8-stars" style="position:absolute;inset:0;overflow:hidden;"></div>
+    <div id="t8-logo-ghost1" style="position:absolute;font-size:10px;font-weight:800;letter-spacing:1px;color:${T.primary};opacity:0;transform:translate(-50%,-50%);white-space:nowrap;">${BRAND}</div>
+    <div id="t8-logo-ghost2" style="position:absolute;font-size:10px;font-weight:800;letter-spacing:1px;color:${T.primary};opacity:0;transform:translate(-50%,-50%);white-space:nowrap;">${BRAND}</div>
+    <div id="t8-logo-ghost3" style="position:absolute;font-size:10px;font-weight:800;letter-spacing:1px;color:${T.primary};opacity:0;transform:translate(-50%,-50%);white-space:nowrap;">${BRAND}</div>
+    <div id="t8-dot" style="position:absolute;left:${cx}px;top:${cy}px;width:12px;height:12px;background:${T.primary};border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 20px ${T.primary},0 0 40px ${rgba(T.primary,0.4)};opacity:0;"></div>
+    <div id="t8-logo" style="position:absolute;opacity:0;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;">${getLogoUrl() ? `<img src="${getLogoUrl()}" style="max-height:28px;object-fit:contain;filter:drop-shadow(0 0 12px rgba(0,0,0,0.5));">` : `<span style="font-size:11px;font-weight:800;letter-spacing:1.5px;color:${T.badge_text}">${BRAND}</span>`}</div>
+    <div id="t8-badge" style="position:absolute;padding:5px 14px;background:${T.badge_bg};border-radius:20px;font-size:10px;font-weight:700;color:${T.badge_text};opacity:0;transform:translate(-50%,-50%);white-space:nowrap;">${C.badge}</div>
+    <div id="t8-hl-wrap" style="position:absolute;left:16px;right:16px;top:200px;opacity:0;"><div id="t8-headline" style="font-size:16px;font-weight:800;color:${T.headline_text};line-height:1.35;"></div></div>
+    <div id="t8-hl-flash" style="position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;border-radius:24px;"></div>
+    <div id="t8-words-layer" style="position:absolute;inset:0;"></div>
+    <div id="t8-photo" style="position:absolute;left:${cx}px;top:${cy - 20}px;width:0;height:0;background:linear-gradient(135deg,${T.surface},${T.gradient_to});border-radius:50%;transform:translate(-50%,-50%) rotate(-15deg);overflow:hidden;opacity:0;">${getPhotoUrl() ? `<img src="${getPhotoUrl()}" style="width:100%;height:100%;object-fit:cover;">` : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.2);font-size:9px;">Photo</div>`}</div>
+    <div id="t8-support" style="position:absolute;left:16px;right:16px;bottom:120px;font-size:10px;color:${T.support_text};line-height:1.6;opacity:0;text-align:center;"></div>
+    <div id="t8-particles" style="position:absolute;left:16px;right:16px;bottom:50px;height:44px;"></div>
+    <div id="t8-cta" style="position:absolute;left:16px;right:16px;bottom:50px;height:44px;background:${T.cta_bg};border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:${T.cta_text};opacity:0;transform:scale(0.9);">${C.cta}</div>
+    <div id="t8-logo-bottom" style="position:absolute;bottom:14px;left:0;right:0;text-align:center;opacity:0;display:flex;justify-content:center;">${getLogoUrl() ? `<img src="${getLogoUrl()}" style="max-height:24px;object-fit:contain;">` : `<span style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:${T.badge_text}">${BRAND}</span>`}</div>
+  `;
+  const stars = document.getElementById('t8-stars');
+  for (let i = 0; i < 30; i++) { const d = document.createElement('div'); const x = Math.random() * 270; const y = Math.random() * 585; const s = Math.random() * 2 + 1; d.style.cssText = `position:absolute;left:${x}px;top:${y}px;width:${s}px;height:${s}px;background:rgba(255,255,255,${0.1 + Math.random()*0.2});border-radius:50%;`; stars.appendChild(d); }
+  const particlesEl = document.getElementById('t8-particles');
+  for (let i = 0; i < 20; i++) { const d = document.createElement('div'); d.id = `t8-p-${i}`; const angle = (i / 20) * Math.PI * 2; const r = 60 + Math.random() * 40; const px = 119 + Math.cos(angle) * r; const py = 22 + Math.sin(angle) * r; d.style.cssText = `position:absolute;left:${px}px;top:${py}px;width:5px;height:5px;background:${T.primary};border-radius:50%;transform:translate(-50%,-50%);opacity:0;`; d.dataset.angle = angle; d.dataset.r = r; particlesEl.appendChild(d); }
+}
+
+function renderTemplate8(frame) {
+  const T = state.designTokens, C = state.copy;
+  const cx = 135, cy = 292;
+  const dot = document.getElementById('t8-dot');
+  if (dot) { dot.style.opacity = interpolate(frame, [50,70], [1,0], { clamp:true }); dot.style.transform = `translate(-50%,-50%) scale(${0.8 + 0.4 * Math.sin(frame * 0.4)})`; }
+  const logoEl8 = document.getElementById('t8-logo');
+  if (logoEl8) {
+    if (frame < 20) { logoEl8.style.opacity = 0; }
+    else if (frame <= 60) { const t = easeOut((frame - 20) / 40); const r = interpolate(t, [0,1], [130,0], { clamp:false }); const angle = -Math.PI / 2 + (1 - t) * Math.PI * 3; logoEl8.style.left = (cx + Math.cos(angle) * r) + 'px'; logoEl8.style.top = (cy + Math.sin(angle) * r) + 'px'; logoEl8.style.opacity = clamp(t * 2, 0, 1); }
+    else if (frame <= 250) { logoEl8.style.left = cx + 'px'; logoEl8.style.top = (38 + Math.sin(frame * 0.05) * 2) + 'px'; logoEl8.style.opacity = 1; }
+    else logoEl8.style.opacity = 0;
+  }
+  for (let g = 1; g <= 3; g++) { const ghost = document.getElementById(`t8-logo-ghost${g}`); if (!ghost) continue; if (frame >= 20 && frame <= 65) { const backF = frame - g * 5; if (backF >= 20 && backF <= 60) { const t = easeOut((backF - 20) / 40); const r = interpolate(t, [0,1], [130,0], { clamp:false }); const angle = -Math.PI / 2 + (1 - t) * Math.PI * 3; ghost.style.left = (cx + Math.cos(angle) * r) + 'px'; ghost.style.top = (cy + Math.sin(angle) * r) + 'px'; ghost.style.opacity = 0.3 - g * 0.08; } else ghost.style.opacity = 0; } else ghost.style.opacity = 0; }
+  const badgeEl8 = document.getElementById('t8-badge');
+  if (badgeEl8) {
+    if (frame < 50) { badgeEl8.style.opacity = 0; }
+    else if (frame <= 90) { const t = easeOut((frame - 50) / 40); const r = interpolate(t, [0,1], [200,0], { clamp:false }); const angle = Math.PI / 4 + (1 - t) * Math.PI * 1.5; badgeEl8.style.left = (cx + Math.cos(angle) * r) + 'px'; badgeEl8.style.top = (cy + Math.sin(angle) * r) + 'px'; badgeEl8.style.opacity = clamp(t * 3, 0, 1); }
+    else { badgeEl8.style.left = cx + 'px'; badgeEl8.style.top = (68 + Math.sin(frame * 0.05 + 1) * 2) + 'px'; badgeEl8.style.opacity = 1; }
+  }
+  const wordsLayer = document.getElementById('t8-words-layer');
+  const hlWrap = document.getElementById('t8-hl-wrap');
+  const words = C.headline.split(' ');
+  if (wordsLayer && frame >= 80) {
+    if (frame >= 145) {
+      wordsLayer.style.opacity = 0;
+      if (hlWrap) { hlWrap.style.opacity = 1; const hl = document.getElementById('t8-headline'); if (hl && !hl.dataset.set) { hl.innerHTML = C.headline.replace(C.highlight || '', `<span style="color:${T.badge_bg};">${C.highlight || ''}</span>`); hl.dataset.set = '1'; } }
+    } else {
+      wordsLayer.style.opacity = 1; if (hlWrap) hlWrap.style.opacity = 0;
+      if (!wordsLayer.dataset.init) { wordsLayer.dataset.init = '1'; wordsLayer.innerHTML = words.map((w, i) => `<div id="t8-word-${i}" style="position:absolute;font-size:15px;font-weight:800;color:${T.headline_text};opacity:0;transform:translate(-50%,-50%);white-space:nowrap;">${w}</div>`).join(''); }
+      words.forEach((w, i) => { const wordEl = document.getElementById(`t8-word-${i}`); if (!wordEl) return; const wordStart = 80 + i * 7; if (frame < wordStart) { wordEl.style.opacity = 0; return; } const t = easeOut(clamp((frame - wordStart) / 25, 0, 1)); const r = interpolate(t, [0,1], [160,0], { clamp:false }); const angle = (i / words.length) * Math.PI * 2 - Math.PI / 2; const targetX = 16 + (i % 3) * 70 + 35; const targetY = 200 + Math.floor(i / 3) * 25 + 12; const px = cx + Math.cos(angle) * r * (1 - t) + targetX * t; const py = cy + Math.sin(angle) * r * (1 - t) + targetY * t; wordEl.style.left = px + 'px'; wordEl.style.top = py + 'px'; wordEl.style.opacity = clamp(t * 2, 0, 1); const hlFlash = document.getElementById('t8-hl-flash'); if (hlFlash && i === words.length - 1 && frame >= wordStart && frame <= wordStart + 3) { hlFlash.style.opacity = (0.7 - (frame - wordStart) * 0.25) + ''; } else if (hlFlash && i === words.length - 1) hlFlash.style.opacity = 0; });
+    }
+  }
+  const photoEl8 = document.getElementById('t8-photo');
+  if (photoEl8) {
+    if (frame < 130) { photoEl8.style.opacity = 0; }
+    else { const t = spring(frame - 130, { damping:12, stiffness:80 }); const w = interpolate(t, [0,1], [0,220], { clamp:false }); const h = interpolate(t, [0,1], [0,130], { clamp:false }); const br = interpolate(t, [0,1], [50,12], { clamp:false }); const rot = interpolate(t, [0,1], [-15,0], { clamp:false }); photoEl8.style.width = w + 'px'; photoEl8.style.height = h + 'px'; photoEl8.style.borderRadius = br + '%'; photoEl8.style.left = (cx - w/2) + 'px'; photoEl8.style.top = (cy - 100 - h/2) + 'px'; photoEl8.style.transform = `rotate(${rot}deg)`; photoEl8.style.opacity = clamp(t * 3, 0, 1); }
+  }
+  const supportEl8 = document.getElementById('t8-support');
+  if (supportEl8) { const sv = spring(frame - 160, { damping:14, stiffness:90 }); supportEl8.style.opacity = clamp(sv * 2, 0, 1); supportEl8.style.transform = `translateY(${interpolate(sv, [0,1], [20,0], {clamp:false})}px)`; if (!supportEl8.dataset.set) { supportEl8.textContent = C.support; supportEl8.dataset.set = '1'; } }
+  const ctaEl8 = document.getElementById('t8-cta');
+  if (ctaEl8) {
+    if (frame < 200) { ctaEl8.style.opacity = 0; }
+    else if (frame <= 240) { const t = clamp((frame - 200) / 40, 0, 1); for (let i = 0; i < 20; i++) { const p = document.getElementById(`t8-p-${i}`); if (!p) continue; const angle = parseFloat(p.dataset.angle); const r0 = parseFloat(p.dataset.r); const r = r0 * (1 - easeInOut(t)); const px = 119 + Math.cos(angle) * r; const py = 22 + Math.sin(angle) * r; p.style.left = px + 'px'; p.style.top = py + 'px'; p.style.opacity = t < 0.9 ? clamp(t * 3, 0, 0.9) : interpolate(frame, [235,242], [0.9,0], { clamp:true }); } if (t > 0.85) { const bt = spring(frame - 236, { damping:12, stiffness:180 }); ctaEl8.style.opacity = clamp(bt * 4, 0, 1); ctaEl8.style.transform = `scale(${interpolate(bt, [0,1], [0.9,1], {clamp:false})})`; } }
+    else { ctaEl8.style.opacity = 1; ctaEl8.style.transform = 'scale(1)'; }
+  }
+  const logoBottom8 = document.getElementById('t8-logo-bottom');
+  if (logoBottom8) { logoBottom8.style.opacity = interpolate(frame, [250,265], [0,1], { clamp:true }); if (logoEl8) logoEl8.style.opacity = interpolate(frame, [250,260], [1,0], { clamp:true }); }
+  if (frame >= 270) { ['t8-badge','t8-cta','t8-support','t8-hl-wrap'].forEach((id, i) => { const e = document.getElementById(id); if (!e) return; const dy = Math.sin(frame * 0.04 + i * 1.2) * 1.5; const dx = Math.cos(frame * 0.03 + i * 0.8) * 0.8; const cur = e.style.transform || ''; e.style.transform = cur.replace(/translateX\([^)]*\)\s*translateY\([^)]*\)/g, '') + ` translateX(${dx}px) translateY(${dy}px)`; }); }
+}
+
+function initTemplate9(canvas) {
+  const T = state.designTokens, C = state.copy, BRAND = (state.brandContext.brandName || 'Brand');
+  const sprocketHTML = (side) => { let html = ''; for (let i = 0; i < 10; i++) { html += `<div style="width:10px;height:16px;background:#111;border-radius:3px;box-shadow:inset 0 0 0 1px #000;margin:${i===0?'8px':''} 0 8px 0;flex-shrink:0;"></div>`; } return `<div id="t9-sprocket-${side}" style="position:absolute;${side}:0;top:0;bottom:0;width:20px;display:flex;flex-direction:column;align-items:center;padding:4px 0;background:rgba(0,0,0,0.5);z-index:10;opacity:0;">${html}</div>`; };
+  canvas.innerHTML = `
+    <div style="position:absolute;inset:0;background:${T.gradient_from};"></div>
+    <div id="t9-grain" style="position:absolute;inset:0;z-index:8;pointer-events:none;opacity:0.25;background-image:repeating-radial-gradient(circle at 50% 50%,transparent 1px,rgba(0,0,0,0.15) 2px),repeating-radial-gradient(circle at 20% 80%,transparent 1px,rgba(255,255,255,0.03) 2px);background-size:3px 3px,5px 5px;"></div>
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,transparent 40%,rgba(0,0,0,0.6) 100%);z-index:9;pointer-events:none;"></div>
+    ${sprocketHTML('left')}${sprocketHTML('right')}
+    <div id="t9-countdown" style="position:absolute;inset:0;background:#000;z-index:20;display:flex;align-items:center;justify-content:center;"><div style="position:relative;width:100px;height:100px;"><div style="position:absolute;top:50%;left:0;right:0;height:1px;background:rgba(255,255,255,0.3);transform:translateY(-50%);"></div><div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(255,255,255,0.3);transform:translateX(-50%);"></div><div style="position:absolute;inset:10px;border-radius:50%;border:2px solid rgba(255,255,255,0.4);"></div><div id="t9-num" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:900;color:#fff;font-family:serif;"></div></div></div>
+    <div id="t9-leader" style="position:absolute;inset:0;z-index:19;display:none;"><div style="position:absolute;inset:20px;border:3px solid rgba(255,255,255,0.6);border-radius:4px;"></div><div style="position:absolute;top:50%;left:20px;right:20px;height:2px;background:rgba(255,255,255,0.4);transform:translateY(-50%);"></div><div style="position:absolute;left:50%;top:20px;bottom:20px;width:2px;background:rgba(255,255,255,0.4);transform:translateX(-50%);"></div></div>
+    <div id="t9-lightleak" style="position:absolute;inset:0;z-index:7;pointer-events:none;background:linear-gradient(90deg,transparent,${rgba(T.primary, 0.4)},transparent);opacity:0;"></div>
+    <div style="position:absolute;left:20px;right:20px;top:0;bottom:0;display:flex;flex-direction:column;gap:10px;padding:16px 8px;">
+      <div id="t9-logo" style="opacity:0;filter:blur(6px);text-align:center;display:flex;justify-content:center;">${getLogoUrl() ? `<img src="${getLogoUrl()}" style="max-height:30px;object-fit:contain;">` : `<span style="font-size:11px;font-weight:800;letter-spacing:2px;color:${T.badge_text}">${BRAND}</span>`}</div>
+      <div id="t9-photo-wrap" style="flex:0 0 150px;position:relative;overflow:hidden;opacity:0;transform:translateX(100%);"><div style="position:absolute;inset:0;border:3px solid #000;z-index:2;pointer-events:none;"></div><div style="position:absolute;inset:0;background:linear-gradient(135deg,${T.surface},${T.gradient_to});"></div>${getPhotoUrl() ? `<img src="${getPhotoUrl()}" style="width:100%;height:100%;object-fit:cover;">` : `<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.15);font-size:10px;">Photo</div>`}<div style="position:absolute;inset:0;background-image:repeating-radial-gradient(circle,transparent 1px,rgba(0,0,0,0.1) 2px);background-size:3px 3px;z-index:1;"></div></div>
+      <div id="t9-badge-wrap" style="position:relative;height:32px;overflow:visible;"><div id="t9-clapper-top" style="position:absolute;top:0;left:0;right:0;height:16px;background:${T.badge_bg};transform-origin:bottom;transform:rotateX(0deg);z-index:2;display:flex;align-items:flex-end;padding-bottom:2px;"><div style="height:3px;width:100%;background:repeating-linear-gradient(90deg,#000 0,#000 8px,${T.badge_bg} 8px,${T.badge_bg} 16px);"></div></div><div id="t9-clapper-bot" style="position:absolute;bottom:0;left:0;right:0;height:16px;background:${T.badge_bg};display:flex;align-items:center;justify-content:center;"><span id="t9-badge-text" style="font-size:10px;font-weight:700;letter-spacing:1px;color:${T.badge_text};opacity:0;">${C.badge}</span></div><div id="t9-badge-full" style="position:absolute;inset:0;background:${T.badge_bg};border-radius:20px;display:flex;align-items:center;justify-content:center;opacity:0;"><span style="font-size:10px;font-weight:700;letter-spacing:1px;color:${T.badge_text};">${C.badge}</span></div></div>
+      <div id="t9-headline" style="font-size:15px;font-weight:800;color:${T.headline_text};line-height:1.4;">${C.headline.split(' ').reduce((acc,w,i) => { const line = Math.floor(i/3); if (!acc[line]) acc[line]=[]; acc[line].push(w); return acc; },[]).map((line,li) => `<div id="t9-hl-line-${li}" style="opacity:0;">${line.join(' ')}</div>`).join('')}</div>
+      <div id="t9-support-wrap" style="overflow:hidden;height:36px;position:relative;"><div id="t9-support" style="position:absolute;left:0;right:0;top:36px;font-size:10px;color:${T.support_text};line-height:1.6;text-align:center;">${C.support}</div></div>
+      <div id="t9-cta-wrap" style="margin-top:auto;position:relative;"><div id="t9-spotlight" style="position:absolute;inset:-30px;background:radial-gradient(ellipse at 50% 50%,rgba(255,255,255,0.15) 0%,transparent 60%);opacity:0;pointer-events:none;transform:translateX(-150%);"></div><div id="t9-cta" style="padding:12px 16px;background:${T.cta_bg};border-radius:8px;font-size:12px;font-weight:700;color:${T.cta_text};text-align:center;opacity:0;">${C.cta}</div></div>
+      <div id="t9-fin" style="text-align:center;opacity:0;"><div style="font-size:28px;font-weight:900;font-style:italic;font-family:serif;color:#fff;letter-spacing:4px;">FIN</div></div>
+      <div id="t9-logo-bottom" style="opacity:0;text-align:center;padding-bottom:4px;display:flex;justify-content:center;">${getLogoUrl() ? `<img src="${getLogoUrl()}" style="max-height:24px;object-fit:contain;">` : `<span style="font-size:10px;font-weight:700;letter-spacing:2px;color:${T.badge_text}">${BRAND}</span>`}</div>
+    </div>
+  `;
+}
+
+function renderTemplate9(frame) {
+  const countdown = document.getElementById('t9-countdown');
+  const numEl = document.getElementById('t9-num');
+  if (countdown) { if (frame < 30) { countdown.style.opacity = 1; if (numEl) { numEl.textContent = frame < 5 ? '3' : frame < 10 ? '2' : frame < 15 ? '1' : ''; numEl.style.opacity = (frame % 2 === 0 || frame > 12) ? '1' : '0.3'; } } else countdown.style.opacity = interpolate(frame, [30,34], [1,0], { clamp:true }); }
+  const leader = document.getElementById('t9-leader');
+  if (leader) leader.style.display = (frame >= 15 && frame < 30) ? ((frame % 3 < 2) ? 'block' : 'none') : 'none';
+  ['left','right'].forEach(side => { const sp = document.getElementById(`t9-sprocket-${side}`); if (sp) sp.style.opacity = interpolate(frame, [30,40], [0,1], { clamp:true }); });
+  const grain = document.getElementById('t9-grain');
+  if (grain) grain.style.opacity = (interpolate(frame, [30,40], [0,0.25], { clamp:true }) + 0.03 * Math.sin(frame * 13.7)) + '';
+  const photoWrap = document.getElementById('t9-photo-wrap');
+  if (photoWrap) { const t = spring(frame - 30, { damping:14, stiffness:90 }); photoWrap.style.opacity = clamp(t * 3, 0, 1); photoWrap.style.transform = `translateX(${interpolate(t, [0,1], [100,0], {clamp:false})}%)`; }
+  const logoEl9 = document.getElementById('t9-logo');
+  if (logoEl9) { const lt = clamp((frame - 55) / 30, 0, 1); logoEl9.style.opacity = lt; const blur = interpolate(lt, [0,1], [6,0], { clamp:true }); const sepia = interpolate(lt, [0,0.5,1], [1,0.5,0], { clamp:true }); logoEl9.style.filter = `blur(${blur}px) sepia(${sepia})`; }
+  const clapTop = document.getElementById('t9-clapper-top');
+  const badgeFull = document.getElementById('t9-badge-full');
+  const badgeText = document.getElementById('t9-badge-text');
+  if (clapTop && frame >= 75) { if (frame < 100) { clapTop.style.transform = `perspective(200px) rotateX(${interpolate(easeIn(clamp((frame - 75)/12,0,1)), [0,1], [-60,0], {clamp:false})}deg)`; if (badgeText) badgeText.style.opacity = interpolate(frame, [86,92], [0,1], { clamp:true }); } else if (frame < 108) { const t = clamp((frame - 100)/8,0,1); clapTop.style.opacity = interpolate(t, [0,1], [1,0], { clamp:false }); if (badgeFull) badgeFull.style.opacity = t; } else { clapTop.style.opacity = 0; if (badgeFull) badgeFull.style.opacity = 1; } }
+  const lightleak = document.getElementById('t9-lightleak');
+  if (lightleak) { if (frame >= 100 && frame <= 150) { const t = clamp((frame - 100)/50,0,1); lightleak.style.transform = `translateX(${interpolate(t, [0,1], [-150,150], { clamp:true })}%)`; lightleak.style.opacity = interpolate(t, [0,0.3,0.7,1], [0,0.6,0.6,0], { clamp:true }); } else lightleak.style.opacity = 0; }
+  for (let li = 0; li < 3; li++) { const lineEl = document.getElementById(`t9-hl-line-${li}`); if (!lineEl) continue; const lineStart = 100 + li * 15; if (frame >= lineStart) { const flickF = frame - lineStart; lineEl.style.opacity = (flickF < 6) ? ((flickF % 2 < 1) ? '0.9' : '0.1') : '1'; } }
+  const supportEl9 = document.getElementById('t9-support');
+  if (supportEl9 && frame >= 140) supportEl9.style.top = interpolate(frame, [140,190], [36,-20], { clamp:true, easing:easeOut }) + 'px';
+  const spotlight = document.getElementById('t9-spotlight');
+  const ctaEl9 = document.getElementById('t9-cta');
+  if (spotlight && frame >= 170) { const t = clamp((frame - 170)/40,0,1); spotlight.style.transform = `translateX(${interpolate(t, [0,0.6,1], [-150,0,0], { clamp:true })}%)`; spotlight.style.opacity = interpolate(t, [0,0.2,0.8,1], [0,0.7,0.9,0.5], { clamp:true }); if (ctaEl9) ctaEl9.style.opacity = interpolate(frame, [200,212], [0,1], { clamp:true }); }
+  const finEl = document.getElementById('t9-fin');
+  if (finEl) finEl.style.opacity = (frame >= 210 && frame < 225) ? ((frame % 3 < 2) ? '1' : '0.2') : '0';
+  const logoBottom9 = document.getElementById('t9-logo-bottom');
+  if (logoBottom9) logoBottom9.style.opacity = interpolate(frame, [224,235], [0,1], { clamp:true });
+}
+
+function computeSpiralOrder(cols, rows) {
+  const cx = Math.floor(cols / 2), cy = Math.floor(rows / 2);
+  const tiles = [];
+  for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) tiles.push({ r, c, dist: Math.sqrt((c-cx)**2 + (r-cy)**2), idx: r*cols+c });
+  tiles.sort((a,b) => a.dist - b.dist);
+  return tiles;
+}
+const spiralOrder = computeSpiralOrder(MOSAIC_COLS, MOSAIC_ROWS);
+
+function getTileRegion(row) {
+  if (row <= 1) return 'logo';
+  if (row <= 2) return 'badge';
+  if (row >= 3 && row <= 8) return 'photo';
+  if (row >= 9 && row <= 12) return 'headline';
+  if (row >= 13 && row <= 14) return 'support';
+  if (row >= 15) return 'cta';
+  return 'bg';
+}
+
+function getLogoTileColor(col) { return col % 2 === 0 ? state.designTokens.badge_bg : state.designTokens.surface; }
+function getRegionGradientColor(row, col, rows, cols) { const T = state.designTokens; return lerpColor(T.gradient_from, T.gradient_to, row/rows + col/cols * 0.3); }
+
+const CTA_EXPLODE_VELS = [];
+for (let i = 0; i < TILE_COUNT; i++) { if (Math.floor(i / MOSAIC_COLS) >= 15) { const angle = Math.random() * Math.PI * 2; const speed = 2 + Math.random() * 5; CTA_EXPLODE_VELS.push({ vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed }); } else CTA_EXPLODE_VELS.push(null); }
+
+function initTemplate10(canvas) {
+  const T = state.designTokens, C = state.copy;
+  const TILE_PALETTE = [T.gradient_from, T.gradient_to, T.surface, T.primary, '#1a0f0a', '#3d1f12', '#562810'];
+  const tw = 270 / MOSAIC_COLS, th = 585 / MOSAIC_ROWS;
+  let html = `<div id="t10-grid" style="position:absolute;inset:0;display:grid;grid-template-columns:repeat(${MOSAIC_COLS},1fr);grid-template-rows:repeat(${MOSAIC_ROWS},1fr);">`;
+  for (let r = 0; r < MOSAIC_ROWS; r++) {
+    for (let c = 0; c < MOSAIC_COLS; c++) {
+      const idx = r * MOSAIC_COLS + c;
+      const region = getTileRegion(r);
+      const color = TILE_PALETTE[idx % TILE_PALETTE.length];
+      html += `<div id="t10-tile-${idx}" style="position:relative;background:${color};border:0.5px solid rgba(0,0,0,0.2);transform-style:preserve-3d;perspective:100px;overflow:hidden;display:flex;align-items:center;justify-content:center;" data-row="${r}" data-col="${c}" data-region="${region}"><div id="t10-tile-back-${idx}" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;backface-visibility:hidden;transform:rotateY(180deg);font-size:9px;font-weight:700;color:${T.badge_text};overflow:hidden;"></div></div>`;
+    }
+  }
+  html += `</div><div id="t10-cta" style="position:absolute;left:10px;right:10px;bottom:10px;height:50px;background:${T.cta_bg};border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:${T.cta_text};opacity:0;">${C.cta}</div>`;
+  canvas.innerHTML = html;
+  for (let i = 0; i < TILE_COUNT; i++) { const el2 = document.getElementById(`t10-tile-${i}`); if (el2) el2.dataset.seed = (Math.random() * 100).toFixed(2); }
+}
+
+function renderTemplate10(frame) {
+  const T = state.designTokens, C = state.copy;
+  const TILE_PALETTE = [T.gradient_from, T.gradient_to, T.surface, T.primary, '#1a0f0a', '#3d1f12', '#562810'];
+  const tw = 270 / MOSAIC_COLS, th = 585 / MOSAIC_ROWS;
+  const spiralIndexMap = {};
+  spiralOrder.forEach((tile, si) => { spiralIndexMap[tile.idx] = si; });
+  const HL_WORDS = C.headline.split(' ');
+
+  for (let idx = 0; idx < TILE_COUNT; idx++) {
+    const tileEl = document.getElementById(`t10-tile-${idx}`);
+    if (!tileEl) continue;
+    const row = Math.floor(idx / MOSAIC_COLS), col = idx % MOSAIC_COLS;
+    const region = getTileRegion(row);
+    const si = spiralIndexMap[idx];
+
+    if (frame < 20) { const seed = parseFloat(tileEl.dataset.seed); tileEl.style.opacity = 0.3 + 0.7 * Math.abs(Math.sin((frame + seed) * 0.4)); }
+    else tileEl.style.opacity = 1;
+
+    if (region === 'logo' && frame >= 20) { const tileF = frame - 20 - si * 0.4; if (tileF >= 0) { const t = clamp(tileF/8,0,1); tileEl.style.background = lerpColor(TILE_PALETTE[idx % TILE_PALETTE.length], getLogoTileColor(col), easeOut(t)); const pop = tileF < 3 ? 1 + tileF*0.1 : tileF < 5 ? 1.3-(tileF-3)*0.15 : 1; tileEl.style.transform = `scale(${pop})`; } }
+
+    if (region === 'photo' && frame >= 60) { const tileF = frame - 60 - (col + row * 0.5) * 1.2; if (tileF >= 0) { const t = clamp(tileF/15,0,1); const targetColor = getRegionGradientColor(row,col,MOSAIC_ROWS,MOSAIC_COLS); tileEl.style.background = lerpColor(tileEl.style.background || TILE_PALETTE[idx%TILE_PALETTE.length], targetColor, easeInOut(t)); if (tileF > 10 && !tileEl.dataset.subdivided) { tileEl.dataset.subdivided = '1'; tileEl.style.backgroundImage = `linear-gradient(${targetColor},${targetColor}),repeating-linear-gradient(0deg,rgba(0,0,0,0.15) 0px,rgba(0,0,0,0.15) 1px,transparent 1px,transparent ${th/2}px),repeating-linear-gradient(90deg,rgba(0,0,0,0.15) 0px,rgba(0,0,0,0.15) 1px,transparent 1px,transparent ${tw/2}px)`; tileEl.style.backgroundBlendMode = 'normal,multiply,multiply'; } } }
+
+    if (region === 'badge' && frame >= 100) { const tileF = frame - 100 - col * 2; if (tileF >= 0) { const t = clamp(tileF/12,0,1); tileEl.style.background = lerpColor(tileEl.style.background || T.surface, col === Math.floor(MOSAIC_COLS/2) ? T.badge_text : T.badge_bg, easeOut(t)); const pop = tileF < 3 ? 1+tileF*0.1 : tileF < 5 ? 1.3-(tileF-3)*0.15 : 1; tileEl.style.transform = `scale(${pop})`; } }
+
+    if (region === 'headline' && frame >= 130) { const tileF = frame - 130 - col * 3.5; const backEl = document.getElementById(`t10-tile-back-${idx}`); if (tileF >= 0) { const t = clamp(tileF/18,0,1); tileEl.style.transform = `perspective(200px) rotateY(${interpolate(easeInOut(t), [0,1], [0,180], { clamp:false })}deg)`; if (backEl) { const hlWordStart = C.headline.indexOf(C.highlight || ''); const charPos = col + (row - 9) * MOSAIC_COLS; const isHighlight = C.highlight && (charPos >= hlWordStart / 3) && (charPos < (hlWordStart + (C.highlight||'').length) / 3); backEl.style.background = isHighlight ? T.badge_bg : T.gradient_to; const wordIdx = Math.floor((col / MOSAIC_COLS) * HL_WORDS.length); const lineIdx = row - 9; const word = HL_WORDS[Math.min(wordIdx + lineIdx, HL_WORDS.length - 1)] || ''; backEl.textContent = word.charAt(col % Math.max(word.length, 1)); } } }
+
+    if (region === 'support' && frame >= 170) { const tileF = frame - 170 - (row - 13) * 10 - col * 1.5; const backEl = document.getElementById(`t10-tile-back-${idx}`); if (tileF >= 0) { const t = clamp(tileF/16,0,1); tileEl.style.transform = `perspective(200px) rotateY(${interpolate(easeInOut(t), [0,1], [0,180], { clamp:false })}deg)`; if (backEl) { backEl.style.background = T.surface; const charIdx = col + (row - 13) * MOSAIC_COLS; backEl.textContent = C.support.charAt(charIdx % C.support.length); } } }
+
+    if (region === 'cta' && frame >= 200) { const vel = CTA_EXPLODE_VELS[idx]; if (vel) { const explodeF = frame - 200; tileEl.style.transform = `translate(${vel.vx*explodeF}px, ${vel.vy*explodeF}px) rotate(${explodeF*vel.vx*3}deg)`; tileEl.style.opacity = interpolate(frame, [200,240], [1,0], { clamp:true }); } }
+
+    if (region !== 'cta' && frame >= 240) { const waveF = frame - 240; const dy = Math.sin(waveF * 0.2 + (col + row) * 0.4) * 2; if (region !== 'headline' && region !== 'support') tileEl.style.transform = `translateY(${dy}px)`; }
+  }
+
+  const ctaEl10 = document.getElementById('t10-cta');
+  if (ctaEl10) { const t = spring(frame - 200, { damping:14, stiffness:100 }); ctaEl10.style.opacity = clamp(t * 2, 0, 1); ctaEl10.style.transform = `scale(${interpolate(t, [0,1], [0.9,1], {clamp:false})})`; }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  switchTemplate — clears canvas and builds new template DOM
+// ═══════════════════════════════════════════════════════════
+
+function switchTemplate(id) {
+  const canvas = document.getElementById('template-canvas');
+  if (!canvas) return;
+  canvas.innerHTML = '';
+  canvas.style.transform = '';
+  switch (id) {
+    case 1: buildT1(); break;
+    case 2: buildT2(); break;
+    case 3: buildT3(); break;
+    case 4: buildT4(); break;
+    case 5: buildT5(); break;
+    case 6: initTemplate6(canvas); break;
+    case 7: initTemplate7(canvas); break;
+    case 8: initTemplate8(canvas); break;
+    case 9: initTemplate9(canvas); break;
+    case 10: initTemplate10(canvas); break;
+  }
+  currentFrame = 0;
+}
+
+// ═══════════════════════════════════════════════════════════
+//  renderFrame — dispatches to active template renderer
+// ═══════════════════════════════════════════════════════════
+
+function renderFrame(frame) {
+  // In iframe mode, the iframe handles rendering — skip
+  if (document.getElementById('template-iframe')) return;
+  switch (state.templateStyle) {
+    case 1: renderT1(frame); break;
+    case 2: renderT2(frame); break;
+    case 3: renderT3(frame); break;
+    case 4: renderT4(frame); break;
+    case 5: renderT5(frame); break;
+    case 6: renderTemplate6(frame); break;
+    case 7: renderTemplate7(frame); break;
+    case 8: renderTemplate8(frame); break;
+    case 9: renderTemplate9(frame); break;
+    case 10: renderTemplate10(frame); break;
+  }
+
+  // Update transport controls
+  const totalF = totalFrames();
+  const currentTime = (frame / state.timing.fps).toFixed(2);
+  const tdCurrent = document.getElementById('td-current');
+  const tdTotal = document.getElementById('td-total');
+  const fdCurrent = document.getElementById('fd-current');
+  const fdTotal = document.getElementById('fd-total');
+  if (tdCurrent) tdCurrent.textContent = currentTime;
+  if (tdTotal) tdTotal.textContent = state.timing.duration.toFixed(2);
+  if (fdCurrent) fdCurrent.textContent = frame;
+  if (fdTotal) fdTotal.textContent = totalF;
+  const scrubber = document.getElementById('timeline-scrubber');
+  if (scrubber) { scrubber.max = totalF; scrubber.value = frame; }
+}
+
+// Legacy renderFrame (dead code kept per spec — old per-element approach)
+function _OLD_renderFrame(frame) {
+  const t = state.timing;
+  const dt = state.designTokens;
+  const copy = state.copy;
+  const tmpl = getTemplateConfig(state.templateStyle);
+  const def = DEFAULT_STATE.timing;
+
+  // Helper: use template config value unless user has manually changed the timing default
+  function resolveDelay(stateVal, defVal, tmplVal) {
+    return (stateVal !== defVal) ? stateVal : tmplVal;
+  }
+  function resolveAnim(stateVal, defVal, tmplVal) {
+    return (stateVal !== defVal) ? stateVal : tmplVal;
+  }
+
+  const logoDelayS    = resolveDelay(t.logoDelay,    def.logoDelay,    tmpl.logoDelay);
+  const badgeDelayS   = resolveDelay(t.badgeDelay,   def.badgeDelay,   tmpl.badgeDelay);
+  const hlDelayS      = resolveDelay(t.headlineDelay,def.headlineDelay,tmpl.headlineDelay);
+  const photoDelayS   = resolveDelay(t.photoDelay,   def.photoDelay,   tmpl.photoDelay);
+  const supDelayS     = resolveDelay(t.supportDelay, def.supportDelay, tmpl.supportDelay);
+  const ctaDelayS     = resolveDelay(t.ctaDelay,     def.ctaDelay,     tmpl.ctaDelay);
+
+  const logoAnimStyle    = resolveAnim(t.animations.logo,    def.animations.logo,    tmpl.logoAnim);
+  const badgeAnimStyle   = resolveAnim(t.animations.badge,   def.animations.badge,   tmpl.badgeAnim);
+  const hlAnimStyle      = resolveAnim(t.animations.headline,def.animations.headline,tmpl.headlineAnim);
+  const supAnimStyle     = resolveAnim(t.animations.support, def.animations.support, tmpl.supportAnim);
+  const ctaAnimStyle     = resolveAnim(t.animations.cta,     def.animations.cta,     tmpl.ctaAnim);
+
+  // Glitch effect: every 30 frames, jitter for 3 frames
+  const glitchActive = tmpl.glitch && (frame % 30) < 3;
+  const glitchX = glitchActive ? (Math.random() * 6 - 3) : 0;
+
+  // Flicker effect: every 25 frames, dim for 2 frames
+  const flickerActive = tmpl.flicker && (frame % 25) < 2;
+  const flickerOpacity = flickerActive ? 0.7 : 1.0;
+
+  // Background
+  const bg = document.getElementById('ad-bg');
+  bg.style.background = `linear-gradient(${tmpl.bgGradient}, ${dt.gradient_from} 0%, ${dt.gradient_to} 100%)`;
+
+  // Optional dark overlay for Magazine Cover
+  if (tmpl.bgOverlay) {
+    bg.style.background =
+      `linear-gradient(${tmpl.bgGradient}, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.1) 60%, rgba(0,0,0,0.5) 100%), ` +
+      `linear-gradient(${tmpl.bgGradient}, ${dt.gradient_from} 0%, ${dt.gradient_to} 100%)`;
+  }
+
+  // Logo
+  const logoDelayF = delayFrames(logoDelayS);
+  const logoPlaceholder = document.getElementById('ad-logo-placeholder');
+  const logoImg = document.getElementById('ad-logo');
+  logoPlaceholder.textContent = state.brandContext.brandName || 'Brand';
+
+  if (tmpl.orbit) {
+    // Orbit: scale from 0 at center using spring
+    const sv = springValue(frame, logoDelayF, 10, 2);
+    const orbitAnim = { opacity: sv, translateY: 0, translateX: glitchX, scale: sv };
+    applyAnim(logoPlaceholder, orbitAnim);
+    applyAnim(logoImg, orbitAnim);
+  } else {
+    let logoAnim = getAnimValue(frame, logoDelayF, logoAnimStyle);
+    if (glitchActive) logoAnim = { ...logoAnim, translateX: logoAnim.translateX + glitchX };
+    if (flickerActive) logoAnim = { ...logoAnim, opacity: logoAnim.opacity * flickerOpacity };
+    applyAnim(logoPlaceholder, logoAnim);
+    applyAnim(logoImg, logoAnim);
+  }
+
+  // Badge
+  const badgeDelayF = delayFrames(badgeDelayS);
+  const badge = document.getElementById('ad-badge');
+  badge.textContent = copy.badge || '';
+  badge.style.background = dt.badge_bg;
+  badge.style.color = dt.badge_text;
+
+  if (tmpl.orbit) {
+    const sv = springValue(frame, badgeDelayF, 10, 2);
+    applyAnim(badge, { opacity: sv, translateY: 0, translateX: glitchX, scale: sv });
+  } else {
+    let badgeAnim = getAnimValue(frame, badgeDelayF, badgeAnimStyle);
+    if (glitchActive) badgeAnim = { ...badgeAnim, translateX: badgeAnim.translateX + glitchX };
+    applyAnim(badge, badgeAnim);
+  }
+
+  // Headline
+  const hlDelayF = delayFrames(hlDelayS);
+  const headline = document.getElementById('ad-headline');
+  headline.style.color = dt.headline_text;
+  headline.style.fontWeight = state.style.headlineFontWeight || 700;
+  headline.style.textTransform = state.style.headlineTextTransform || 'none';
+  renderHeadline(headline, copy.headline || '', copy.highlight || '', dt);
+
+  if (tmpl.orbit) {
+    const sv = springValue(frame, hlDelayF, 10, 2);
+    applyAnim(headline, { opacity: sv, translateY: 0, translateX: glitchX, scale: sv });
+  } else if (tmpl.headlineExtra === 'kinetic') {
+    // Kinetic: headline springs from scale(1.8) down to scale(1)
+    const sv = springValue(frame, hlDelayF, 10, 2);
+    const kineticScale = sv > 0 ? (1.8 - sv * 0.8) : 1.8;
+    const baseAnim = getAnimValue(frame, hlDelayF, hlAnimStyle);
+    applyAnim(headline, { ...baseAnim, scale: Math.max(1, kineticScale) });
+  } else {
+    let hlAnim = getAnimValue(frame, hlDelayF, hlAnimStyle);
+    if (glitchActive) hlAnim = { ...hlAnim, translateX: hlAnim.translateX + glitchX };
+    if (flickerActive) hlAnim = { ...hlAnim, opacity: hlAnim.opacity * flickerOpacity };
+    applyAnim(headline, hlAnim);
+  }
+
+  // Photo
+  const photoDelayF = delayFrames(photoDelayS);
+  const photoLocalFrame = frame - photoDelayF;
+  const revealDuration = Math.round(t.fps * 0.8);
+  const photoRevealProgress = Math.min(1, Math.max(0, photoLocalFrame / revealDuration));
+  const eased = 1 - Math.pow(1 - photoRevealProgress, 3);
+  const pct = Math.round(eased * 100); // 0→100 as reveal progresses
+  const photo = document.getElementById('ad-photo');
+  const photoPlaceholder = document.getElementById('ad-photo-placeholder');
+  photoPlaceholder.style.background = dt.media_fill;
+  photo.style.opacity = photoRevealProgress > 0 ? '1' : '0';
+
+  // Photo clip-path per template
+  const clipType = tmpl.photoClip || 'default';
+  let clipPath;
+  if (clipType === 'drop') {
+    // Drops from top: top edge sweeps down
+    clipPath = `inset(${100 - pct}% 0 0 0)`;
+  } else if (clipType === 'slider') {
+    // Left-to-right wipe
+    clipPath = `inset(0 ${100 - pct}% 0 0)`;
+  } else if (clipType === 'center-reveal') {
+    // Expands from center horizontally
+    const half = Math.round((100 - pct) / 2);
+    clipPath = `inset(${half}% 0 ${half}% 0)`;
+  } else if (clipType === 'slide-right') {
+    // Slides in from right
+    clipPath = `inset(0 0 0 ${100 - pct}%)`;
+  } else if (clipType === 'blinds') {
+    // 5 horizontal strips stagger in; use polygon approximation via inset on photo element
+    // We simulate blinds by using a single staggered inset per strip
+    // Real multi-strip blinds require multiple elements; here we approximate with staggered wipe
+    const numStrips = 5;
+    const stripProgress = (strip) => Math.min(1, Math.max(0, pct / 100 * numStrips - strip));
+    // Use the average to drive a single inset for the overall photo reveal
+    const avgPct = Math.round(
+      [0,1,2,3,4].reduce((sum, i) => sum + stripProgress(i), 0) / numStrips * 100
+    );
+    clipPath = `inset(0 ${100 - avgPct}% 0 0)`;
+  } else {
+    // Default: bottom-up reveal
+    clipPath = `inset(${100 - pct}% 0 0 0)`;
+  }
+  photo.style.clipPath = clipPath;
+
+  // Photo extra styling
+  let photoTransform = '';
+  if (tmpl.photoRotation) {
+    photoTransform += ` rotate(${tmpl.photoRotation}deg)`;
+  }
+  if (tmpl.orbit) {
+    const sv = springValue(frame, photoDelayF, 10, 2);
+    photo.style.opacity = sv > 0 ? '1' : '0';
+    photoTransform += ` scale(${sv})`;
+  }
+  if (glitchActive) {
+    photoTransform += ` translateX(${glitchX}px)`;
+  }
+  photo.style.transform = photoTransform.trim();
+  photo.style.border = tmpl.photoBorder ? '8px solid white' : '';
+  photo.style.borderRadius = tmpl.photoBorder ? '4px' : '';
+
+  // Support
+  const supDelayF = delayFrames(supDelayS);
+  const support = document.getElementById('ad-support');
+  support.textContent = copy.support || '';
+  support.style.color = dt.support_text;
+  support.style.fontWeight = state.style.supportFontWeight || 400;
+
+  if (tmpl.orbit) {
+    const sv = springValue(frame, supDelayF, 10, 2);
+    applyAnim(support, { opacity: sv, translateY: 0, translateX: glitchX, scale: sv });
+  } else {
+    let supAnim = getAnimValue(frame, supDelayF, supAnimStyle);
+    if (glitchActive) supAnim = { ...supAnim, translateX: supAnim.translateX + glitchX };
+    applyAnim(support, supAnim);
+  }
+
+  // CTA
+  const ctaDelayF = delayFrames(ctaDelayS);
+  const cta = document.getElementById('ad-cta');
+  cta.textContent = copy.cta || '';
+  cta.style.background = dt.cta_bg;
+  cta.style.color = dt.cta_text;
+  cta.style.fontWeight = state.style.ctaFontWeight || 700;
+  cta.style.borderRadius = (state.style.ctaRadius !== undefined ? state.style.ctaRadius : 999) + 'px';
+
+  if (tmpl.orbit) {
+    const sv = springValue(frame, ctaDelayF, 10, 2);
+    applyAnim(cta, { opacity: sv, translateY: 0, translateX: glitchX, scale: sv });
+  } else {
+    let ctaAnim = getAnimValue(frame, ctaDelayF, ctaAnimStyle);
+    if (glitchActive) ctaAnim = { ...ctaAnim, translateX: ctaAnim.translateX + glitchX };
+    applyAnim(cta, ctaAnim);
+  }
+
+  // Update transport (guarded — elements may not exist)
+  const totalF = totalFrames();
+  const currentTime = (frame / state.timing.fps).toFixed(2);
+  const tdC = document.getElementById('td-current');
+  const tdT = document.getElementById('td-total');
+  const fdC = document.getElementById('fd-current');
+  const fdT = document.getElementById('fd-total');
+  if (tdC) tdC.textContent = currentTime;
+  if (tdT) tdT.textContent = state.timing.duration.toFixed(2);
+  if (fdC) fdC.textContent = frame;
+  if (fdT) fdT.textContent = totalF;
+  const scrubber = document.getElementById('timeline-scrubber');
+  if (scrubber) { scrubber.max = totalF; scrubber.value = frame; }
+}
+
+function applyAnim(el, anim) {
+  el.style.opacity = anim.opacity;
+  el.style.transform = `translateY(${anim.translateY || 0}px) translateX(${anim.translateX || 0}px) scale(${anim.scale || 1})`;
+}
+
+function renderHeadline(el, text, highlight, dt) {
+  if (!highlight || !text.toLowerCase().includes(highlight.toLowerCase())) {
+    el.textContent = text;
+    return;
+  }
+  const regex = new RegExp(`(${escapeRegex(highlight)})`, 'gi');
+  const parts = text.split(regex);
+  el.innerHTML = parts.map(part => {
+    if (part.toLowerCase() === highlight.toLowerCase()) {
+      return `<span class="hl" style="background:${dt.primary};color:${dt.cta_text};border-radius:4px;padding:0 4px">${part}</span>`;
+    }
+    return part;
+  }).join('');
+}
+
+function escapeRegex(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// ═══════════════════════════════════════════════════════════
+//  Playback
+// ═══════════════════════════════════════════════════════════
+
+function play() {
+  if (isPlaying) return;
+  isPlaying = true;
+  lastTimestamp = null;
+  const bp = document.getElementById('btn-play');
+  if (bp) bp.innerHTML = '&#9646;&#9646;';
+  animRAF = requestAnimationFrame(tick);
+}
+
+function pause() {
+  isPlaying = false;
+  const bp = document.getElementById('btn-play');
+  if (bp) bp.innerHTML = '&#9654;';
+  if (animRAF) { cancelAnimationFrame(animRAF); animRAF = null; }
+}
+
+function restart() {
+  pause();
+  currentFrame = 0;
+  renderFrame(0);
+  setTimeout(play, 50);
+}
+
+function tick(timestamp) {
+  if (!isPlaying) return;
+  if (!lastTimestamp) lastTimestamp = timestamp;
+
+  const elapsed = timestamp - lastTimestamp;
+  const frameDuration = 1000 / state.timing.fps;
+  const framesElapsed = elapsed / frameDuration;
+
+  currentFrame += framesElapsed;
+  lastTimestamp = timestamp;
+
+  const total = totalFrames();
+  if (currentFrame >= total) {
+    currentFrame = 0; // loop
+  }
+
+  renderFrame(Math.floor(currentFrame));
+  animRAF = requestAnimationFrame(tick);
+}
+
+function togglePlay() {
+  if (isPlaying) pause(); else play();
+}
+
+// ═══════════════════════════════════════════════════════════
+//  State <-> UI sync
+// ═══════════════════════════════════════════════════════════
+
+let jsonUpdateDebounce = null;
+let previewDebounce = null;
+
+function schedulePreviewUpdate() {
+  clearTimeout(previewDebounce);
+  previewDebounce = setTimeout(() => {
+    if (!isPlaying) renderFrame(Math.floor(currentFrame));
+    updateJSONEditor();
+    updateReelEditor();
+    updateSceneMarkers();
+    syncIframeData();
+    syncIframeStyle();
+  }, 100);
+}
+
+function syncIframeData() {
+  const iframe = document.getElementById('template-iframe');
+  if (iframe && iframe.contentWindow) {
+    iframe.contentWindow.postMessage({
+      type: 'updateData',
+      copy: state.copy,
+      designTokens: state.designTokens,
+      assets: state.assets,
+      brandContext: state.brandContext
+    }, '*');
+  }
+}
+
+function syncIframeStyle() {
+  const iframe = document.getElementById('template-iframe');
+  if (iframe && iframe.contentWindow) {
+    iframe.contentWindow.postMessage({
+      type: 'updateStyle',
+      style: state.style
+    }, '*');
+  }
+}
+
+function updatePreview() {
+  switchTemplate(state.templateStyle);
+  renderFrame(Math.floor(currentFrame));
+  updateSceneMarkers();
+}
+
+function syncJsonEditor() {
+  updateJSONEditor();
+  updateReelEditor();
+}
+
+function updateJSONEditor() {
+  const cleanState = buildExportState();
+  const el = document.getElementById('json-editor');
+  if (el && !el.matches(':focus')) {
+    el.value = JSON.stringify(cleanState, null, 2);
+  }
+}
+
+function updateReelEditor() {
+  const config = buildReelConfig();
+  const el = document.getElementById('reel-editor');
+  if (el && !el.matches(':focus')) {
+    el.value = JSON.stringify(config, null, 2);
+  }
+}
+
+function buildExportState() {
+  return {
+    source: state.source,
+    templateId: state.templateId,
+    templatePhotoMode: state.templatePhotoMode,
+    copy: state.copy,
+    designTokens: state.designTokens,
+    assets: state.assets,
+    brandContext: state.brandContext
+  };
+}
+
+function buildReelConfig() {
+  const templateNames = {1:'polaroid-drop',2:'slider-reveal',3:'kinetic-type',4:'magazine-cover',5:'the-glitch',6:'peel-away',7:'venetian-blinds',8:'the-orbit',9:'filmstrip',10:'mosaic-assemble'};
+  const templateDurations = {1:240,2:300,3:270,4:240,5:210,6:270,7:240,8:300,9:270,10:270};
+  const tid = state.templateStyle || 1;
+  return {
+    compositionId: 'ad-reel',
+    reelTemplate: templateNames[tid] || 'polaroid-drop',
+    width: 1080,
+    height: 1920,
+    fps: 30,
+    durationInFrames: templateDurations[tid] || 240,
+    defaultProps: {
+      copy: state.copy,
+      designTokens: state.designTokens,
+      assets: state.assets,
+      brandContext: state.brandContext
+    },
+    style: state.style
+  };
+}
+
+function syncFromState() {
+  // Copy
+  setVal('f-headline', state.copy.headline);
+  setVal('f-support', state.copy.support);
+  setVal('f-cta', state.copy.cta);
+  setVal('f-highlight', state.copy.highlight);
+  setVal('f-badge', state.copy.badge);
+  setVal('f-angle', state.copy.angle);
+  setVal('f-brandName', state.brandContext.brandName);
+  setVal('f-templateId', state.templateId);
+
+  // Design tokens
+  const dt = state.designTokens;
+  Object.keys(dt).forEach(key => {
+    const sw = document.getElementById('sw-' + key);
+    const hv = document.getElementById('hv-' + key);
+    if (sw) sw.style.background = dt[key];
+    if (hv) hv.textContent = dt[key];
+  });
+
+  // Assets
+  setVal('f-logoUrl', state.assets.logoUrl || '');
+  setVal('f-beforePhotoUrl', state.assets.beforePhotoUrl || '');
+  setVal('f-afterPhotoUrl', state.assets.afterPhotoUrl || '');
+  updateAssetPreview('logo', state.assets.logoUrl);
+  updateAssetPreview('before', state.assets.beforePhotoUrl);
+  updateAssetPreview('after', state.assets.afterPhotoUrl);
+
+  // Timing
+  const sl = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.value = val;
+  };
+  sl('sl-duration', state.timing.duration);
+  sl('sl-badgeDelay', state.timing.badgeDelay);
+  sl('sl-headlineDelay', state.timing.headlineDelay);
+  sl('sl-photoDelay', state.timing.photoDelay);
+  sl('sl-supportDelay', state.timing.supportDelay);
+  sl('sl-ctaDelay', state.timing.ctaDelay);
+  sl('sl-logoDelay', state.timing.logoDelay);
+  setVal('f-fps', state.timing.fps);
+
+  updateSliderVal('sv-duration', state.timing.duration + 's');
+  updateSliderVal('sv-logoDelay', state.timing.logoDelay + 's');
+  updateSliderVal('sv-badgeDelay', state.timing.badgeDelay + 's');
+  updateSliderVal('sv-headlineDelay', state.timing.headlineDelay + 's');
+  updateSliderVal('sv-photoDelay', state.timing.photoDelay + 's');
+  updateSliderVal('sv-supportDelay', state.timing.supportDelay + 's');
+  updateSliderVal('sv-ctaDelay', state.timing.ctaDelay + 's');
+
+  Object.keys(state.timing.animations).forEach(key => {
+    const sel = document.getElementById('anim-' + key);
+    if (sel) sel.value = state.timing.animations[key];
+  });
+
+  // Voiceover
+  document.getElementById('f-voiceEnabled').checked = state.voiceover.enabled;
+  setVal('f-voiceScript', state.voiceover.script);
+  setVal('f-voice', state.voiceover.voice);
+  document.getElementById('sl-voiceSpeed').value = state.voiceover.speed;
+  updateSliderVal('sv-voiceSpeed', state.voiceover.speed.toFixed(1) + 'x');
+
+  updateJSONEditor();
+  updateAdAssets();
+}
+
+function setVal(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.value = val;
+}
+
+function updateSliderVal(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+function updateAssetPreview(type, url) {
+  const img = document.getElementById('img-' + type);
+  const ph = document.getElementById('ph-' + type);
+  if (!url) {
+    if (img) { img.src = ''; img.classList.remove('loaded'); }
+    if (ph) ph.style.display = '';
+    return;
+  }
+  if (img) {
+    img.src = url;
+    img.onload = () => { img.classList.add('loaded'); if (ph) ph.style.display = 'none'; };
+    img.onerror = () => { img.classList.remove('loaded'); if (ph) ph.style.display = ''; };
+  }
+}
+
+function updateAdAssets() {
+  // Logo (guarded — elements may not exist in iframe mode)
+  const logoImg = document.getElementById('ad-logo');
+  const logoPlaceholder = document.getElementById('ad-logo-placeholder');
+  if (!logoImg) return;
+  if (state.assets.logoUrl) {
+    logoImg.src = state.assets.logoUrl;
+    logoImg.style.display = 'block';
+    logoPlaceholder.style.display = 'none';
+    logoImg.onerror = () => {
+      logoImg.style.display = 'none';
+      logoPlaceholder.style.display = 'block';
+    };
+  } else {
+    logoImg.style.display = 'none';
+    logoPlaceholder.style.display = 'block';
+  }
+
+  // Photo
+  const photoImg = document.getElementById('ad-photo-img');
+  const photoPh = document.getElementById('ad-photo-placeholder');
+  if (state.assets.afterPhotoUrl) {
+    photoImg.src = state.assets.afterPhotoUrl;
+    photoImg.onload = () => {
+      photoImg.classList.add('loaded');
+      photoPh.style.display = 'none';
+    };
+    photoImg.onerror = () => {
+      photoImg.classList.remove('loaded');
+      photoPh.style.display = 'flex';
+    };
+  } else {
+    photoImg.classList.remove('loaded');
+    photoPh.style.display = 'flex';
+    photoPh.textContent = 'No photo';
+    photoPh.style.background = state.designTokens.media_fill;
+  }
+}
+
+function updateSceneMarkers() {
+  const container = document.getElementById('scene-markers');
+  if (!container) return;
+  const total = state.timing.duration;
+  const scenes = [
+    { key: 'logo', delay: state.timing.logoDelay, color: '#C5A059' },
+    { key: 'badge', delay: state.timing.badgeDelay, color: '#3b82f6' },
+    { key: 'headline', delay: state.timing.headlineDelay, color: '#10b981' },
+    { key: 'photo', delay: state.timing.photoDelay, color: '#f59e0b' },
+    { key: 'support', delay: state.timing.supportDelay, color: '#ef4444' },
+    { key: 'cta', delay: state.timing.ctaDelay, color: '#ec4899' }
+  ];
+
+  container.innerHTML = scenes.map(s => {
+    const pct = Math.min(100, (s.delay / total) * 100);
+    return `<div class="scene-marker" style="left:${pct}%;width:4px;background:${s.color}" title="${s.key}: ${s.delay}s"></div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════════
+//  Event Wiring
+// ═══════════════════════════════════════════════════════════
+
+function wireInputs() {
+  // Copy fields
+  const copyFields = {
+    'f-headline': v => { state.copy.headline = v; autoUpdateVoiceScript(); },
+    'f-support': v => { state.copy.support = v; autoUpdateVoiceScript(); },
+    'f-cta': v => state.copy.cta = v,
+    'f-highlight': v => state.copy.highlight = v,
+    'f-badge': v => state.copy.badge = v,
+    'f-angle': v => state.copy.angle = v,
+    'f-brandName': v => state.brandContext.brandName = v,
+    'f-templateId': v => state.templateId = v
+  };
+  Object.entries(copyFields).forEach(([id, setter]) => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', e => { setter(e.target.value); schedulePreviewUpdate(); });
+  });
+
+  // Color palette popovers
+  function getBrandColors() {
+    const dt = state.designTokens;
+    const colors = new Set();
+    Object.values(dt).forEach(v => {
+      if (typeof v === 'string' && v && v.startsWith('#')) colors.add(v.toLowerCase());
+    });
+    return [...colors];
+  }
+
+  function openColorPalette(swatchEl, tokenKey) {
+    // Close any open popovers
+    document.querySelectorAll('.color-palette-popover').forEach(p => p.remove());
+
+    const popover = document.createElement('div');
+    popover.className = 'color-palette-popover open';
+
+    const label = document.createElement('div');
+    label.className = 'palette-label';
+    label.textContent = 'Brand Palette';
+    popover.appendChild(label);
+
+    const grid = document.createElement('div');
+    grid.className = 'color-palette-grid';
+
+    const currentColor = state.designTokens[tokenKey]?.toLowerCase();
+
+    getBrandColors().forEach(color => {
+      const swatch = document.createElement('div');
+      swatch.className = 'palette-swatch' + (color === currentColor ? ' selected' : '');
+      swatch.style.background = color;
+      swatch.title = color;
+      swatch.addEventListener('click', () => {
+        state.designTokens[tokenKey] = color;
+        swatchEl.style.background = color;
+        const hexVal = swatchEl.parentElement.querySelector('.hex-val');
+        if (hexVal) hexVal.textContent = color;
+        popover.remove();
+        schedulePreviewUpdate();
+      });
+      grid.appendChild(swatch);
+    });
+    popover.appendChild(grid);
+
+    // Custom hex input
+    const custom = document.createElement('div');
+    custom.className = 'palette-custom';
+    const customLabel = document.createElement('span');
+    customLabel.style.cssText = 'font-size:11px;color:var(--text-muted)';
+    customLabel.textContent = 'Custom:';
+    custom.appendChild(customLabel);
+    const customInput = document.createElement('input');
+    customInput.type = 'text';
+    customInput.value = currentColor || '#';
+    customInput.placeholder = '#hex';
+    custom.appendChild(customInput);
+    const applyBtn = document.createElement('button');
+    applyBtn.textContent = 'Apply';
+    applyBtn.addEventListener('click', () => {
+      const hex = customInput.value.trim();
+      if (/^#[0-9a-fA-F]{3,8}$/.test(hex)) {
+        state.designTokens[tokenKey] = hex;
+        swatchEl.style.background = hex;
+        const hexVal = swatchEl.parentElement.querySelector('.hex-val');
+        if (hexVal) hexVal.textContent = hex;
+        popover.remove();
+        schedulePreviewUpdate();
+      }
+    });
+    custom.appendChild(applyBtn);
+    popover.appendChild(custom);
+
+    // Position fixed relative to swatch, append to body so it's not clipped
+    const rect = swatchEl.getBoundingClientRect();
+    popover.style.position = 'fixed';
+    popover.style.top = (rect.bottom + 4) + 'px';
+    popover.style.left = Math.max(8, rect.left - 160) + 'px';
+    popover.style.zIndex = '9999';
+    document.body.appendChild(popover);
+
+    // Close on outside click
+    setTimeout(() => {
+      const closeHandler = (e) => {
+        if (!popover.contains(e.target) && e.target !== swatchEl) {
+          popover.remove();
+          document.removeEventListener('click', closeHandler);
+        }
+      };
+      document.addEventListener('click', closeHandler);
+    }, 10);
+  }
+
+  document.querySelectorAll('.color-swatch[data-token]').forEach(swatchEl => {
+    swatchEl.addEventListener('click', () => {
+      openColorPalette(swatchEl, swatchEl.dataset.token);
+    });
+  });
+
+  // Asset inputs
+  const assetFields = {
+    'f-logoUrl': 'logoUrl',
+    'f-beforePhotoUrl': 'beforePhotoUrl',
+    'f-afterPhotoUrl': 'afterPhotoUrl'
+  };
+  Object.entries(assetFields).forEach(([id, key]) => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', e => {
+      state.assets[key] = e.target.value;
+      const type = id.includes('logo') ? 'logo' : id.includes('before') ? 'before' : 'after';
+      updateAssetPreview(type, e.target.value);
+      updateAdAssets();
+      schedulePreviewUpdate();
+    });
+  });
+
+  // Timing sliders
+  const sliders = {
+    'sl-duration': (v) => {
+      state.timing.duration = parseFloat(v);
+      updateSliderVal('sv-duration', v + 's');
+    },
+    'sl-logoDelay': v => { state.timing.logoDelay = parseFloat(v); updateSliderVal('sv-logoDelay', v + 's'); },
+    'sl-badgeDelay': v => { state.timing.badgeDelay = parseFloat(v); updateSliderVal('sv-badgeDelay', v + 's'); },
+    'sl-headlineDelay': v => { state.timing.headlineDelay = parseFloat(v); updateSliderVal('sv-headlineDelay', v + 's'); },
+    'sl-photoDelay': v => { state.timing.photoDelay = parseFloat(v); updateSliderVal('sv-photoDelay', v + 's'); },
+    'sl-supportDelay': v => { state.timing.supportDelay = parseFloat(v); updateSliderVal('sv-supportDelay', v + 's'); },
+    'sl-ctaDelay': v => { state.timing.ctaDelay = parseFloat(v); updateSliderVal('sv-ctaDelay', v + 's'); },
+    'sl-voiceSpeed': v => { state.voiceover.speed = parseFloat(v); updateSliderVal('sv-voiceSpeed', parseFloat(v).toFixed(1) + 'x'); }
+  };
+  Object.entries(sliders).forEach(([id, setter]) => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', e => { setter(e.target.value); schedulePreviewUpdate(); });
+  });
+
+  // FPS
+  document.getElementById('f-fps').addEventListener('change', e => {
+    state.timing.fps = parseInt(e.target.value);
+    schedulePreviewUpdate();
+  });
+
+  // Animation selectors
+  ['logo', 'badge', 'headline', 'photo', 'support', 'cta'].forEach(key => {
+    const el = document.getElementById('anim-' + key);
+    if (el) el.addEventListener('change', e => {
+      state.timing.animations[key] = e.target.value;
+      schedulePreviewUpdate();
+    });
+  });
+
+  // Voiceover
+  document.getElementById('f-voiceEnabled').addEventListener('change', e => {
+    state.voiceover.enabled = e.target.checked;
+    schedulePreviewUpdate();
+  });
+  document.getElementById('f-voiceScript').addEventListener('input', e => {
+    state.voiceover.script = e.target.value;
+    schedulePreviewUpdate();
+  });
+  document.getElementById('f-voice').addEventListener('change', e => {
+    state.voiceover.voice = e.target.value;
+    schedulePreviewUpdate();
+  });
+
+  // Transport (guarded — elements may not exist if iframe handles playback)
+  const btnPlay = document.getElementById('btn-play');
+  const btnRestart = document.getElementById('btn-restart');
+  if (btnPlay) btnPlay.addEventListener('click', togglePlay);
+  if (btnRestart) btnRestart.addEventListener('click', restart);
+
+  // Timeline scrubber (guarded)
+  const scrubber = document.getElementById('timeline-scrubber');
+  if (scrubber) {
+    scrubber.addEventListener('input', e => {
+      pause();
+      currentFrame = parseInt(e.target.value);
+      renderFrame(currentFrame);
+    });
+  }
+
+  // Tab switching
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      const tabId = 'tab-' + btn.dataset.tab;
+      const pane = document.getElementById(tabId);
+      if (pane) pane.classList.add('active');
+    });
+  });
+
+  // Template selector — sends message to templates.html iframe
+  document.querySelectorAll('.tmpl-btn').forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll('.tmpl-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.templateStyle = parseInt(btn.dataset.tmpl);
+      const iframe = document.getElementById('template-iframe');
+      if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage({ type: 'switchTemplate', templateId: state.templateStyle }, '*');
+      }
+      syncJsonEditor();
+    };
+  });
+
+  // JSON tab buttons
+  document.getElementById('btn-format').addEventListener('click', () => {
+    try {
+      const parsed = JSON.parse(document.getElementById('json-editor').value);
+      document.getElementById('json-editor').value = JSON.stringify(parsed, null, 2);
+      showToast('Formatted');
+    } catch (e) {
+      showToast('Invalid JSON', true);
+    }
+  });
+
+  document.getElementById('btn-import').addEventListener('click', () => {
+    try {
+      const parsed = JSON.parse(document.getElementById('json-editor').value);
+      importJSON(parsed);
+      showToast('Imported successfully');
+    } catch (e) {
+      showToast('Invalid JSON', true);
+    }
+  });
+
+  document.getElementById('btn-reset').addEventListener('click', () => {
+    state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+    syncFromState();
+    renderFrame(0);
+    showToast('Reset to default');
+  });
+
+  // Logo toggle
+  const toggleLogo = document.getElementById('toggle-logo');
+  if (toggleLogo) {
+    toggleLogo.addEventListener('change', () => {
+      state.showLogo = toggleLogo.checked;
+      const iframe = document.getElementById('template-iframe');
+      if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage({ type: 'toggleLogo', show: toggleLogo.checked }, '*');
+      }
+      syncJsonEditor();
+    });
+  }
+
+  // Reel config copy button
+  const btnCopyReel = document.getElementById('btn-copy-reel');
+  if (btnCopyReel) {
+    btnCopyReel.addEventListener('click', () => {
+      const val = document.getElementById('reel-editor')?.value || '';
+      copyToClipboard(val);
+      showToast('Reel config copied');
+    });
+  }
+
+  // Live editing — when user edits static JSON, apply changes to preview
+  const jsonEditor = document.getElementById('json-editor');
+  if (jsonEditor) {
+    let jsonDebounce;
+    jsonEditor.addEventListener('input', () => {
+      clearTimeout(jsonDebounce);
+      jsonDebounce = setTimeout(() => {
+        try {
+          const parsed = JSON.parse(jsonEditor.value);
+          importJSON(parsed);
+        } catch(e) { /* invalid JSON, ignore until valid */ }
+      }, 500);
+    });
+  }
+
+  // Live editing — when user edits reel config, apply style/copy changes
+  const reelEditor = document.getElementById('reel-editor');
+  if (reelEditor) {
+    let reelDebounce;
+    reelEditor.addEventListener('input', () => {
+      clearTimeout(reelDebounce);
+      reelDebounce = setTimeout(() => {
+        try {
+          const parsed = JSON.parse(reelEditor.value);
+          if (parsed.defaultProps) {
+            if (parsed.defaultProps.copy) Object.assign(state.copy, parsed.defaultProps.copy);
+            if (parsed.defaultProps.designTokens) Object.assign(state.designTokens, parsed.defaultProps.designTokens);
+            if (parsed.defaultProps.assets) Object.assign(state.assets, parsed.defaultProps.assets);
+            if (parsed.defaultProps.brandContext) Object.assign(state.brandContext, parsed.defaultProps.brandContext);
+          }
+          if (parsed.style) Object.assign(state.style, parsed.style);
+          syncFromState();
+          updateJSONEditor(); // sync the other editor
+        } catch(e) { /* invalid JSON, ignore until valid */ }
+      }, 500);
+    });
+  }
+
+  // Export buttons
+  document.getElementById('btn-export-json').addEventListener('click', () => {
+    const json = JSON.stringify(buildExportState(), null, 2);
+    copyToClipboard(json);
+    showToast('JSON copied to clipboard');
+  });
+
+  document.getElementById('btn-export-remotion').addEventListener('click', () => {
+    const config = buildRemotionConfig();
+    copyToClipboard(JSON.stringify(config, null, 2));
+    showToast('Remotion config copied');
+  });
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', e => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+    if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
+    if (e.key === 'r' || e.key === 'R') { restart(); }
+  });
+
+  // Style tab sliders
+  const styleSliders = [
+    { id: 'slider-hl-size', val: 'val-hl-size', key: 'headlineFontSize', unit: 'px' },
+    { id: 'slider-support-size', val: 'val-support-size', key: 'supportFontSize', unit: 'px' },
+    { id: 'slider-cta-size', val: 'val-cta-size', key: 'ctaFontSize', unit: 'px' },
+    { id: 'slider-badge-size', val: 'val-badge-size', key: 'badgeFontSize', unit: 'px' },
+    { id: 'slider-photo-height', val: 'val-photo-height', key: 'photoHeight', unit: '%' },
+    { id: 'slider-cta-width', val: 'val-cta-width', key: 'ctaWidth', unit: '%' },
+    { id: 'slider-cta-height', val: 'val-cta-height', key: 'ctaHeight', unit: 'px' },
+    { id: 'slider-cta-radius', val: 'val-cta-radius', key: 'ctaRadius', unit: 'px' },
+    { id: 'slider-logo-size', val: 'val-logo-size', key: 'logoSize', unit: 'px' },
+    { id: 'slider-content-pad', val: 'val-content-pad', key: 'contentPadding', unit: 'px' },
+    { id: 'slider-element-gap', val: 'val-element-gap', key: 'elementGap', unit: 'px' },
+  ];
+
+  styleSliders.forEach(({ id, val, key, unit }) => {
+    const slider = document.getElementById(id);
+    const display = document.getElementById(val);
+    if (slider && display) {
+      slider.addEventListener('input', () => {
+        state.style[key] = parseInt(slider.value);
+        display.textContent = slider.value + unit;
+        schedulePreviewUpdate();
+        updateJSONEditor();
+      });
+    }
+  });
+
+  // Segmented controls
+  document.querySelectorAll('.seg-group').forEach(group => {
+    group.querySelectorAll('.seg-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        group.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const val = btn.dataset.val;
+        const groupId = group.id;
+        if (groupId === 'seg-hl-weight') { state.style.headlineFontWeight = parseInt(val); }
+        else if (groupId === 'seg-hl-transform') { state.style.headlineTextTransform = val; }
+        else if (groupId === 'seg-support-weight') { state.style.supportFontWeight = parseInt(val); }
+        else if (groupId === 'seg-cta-weight') { state.style.ctaFontWeight = parseInt(val); }
+        schedulePreviewUpdate();
+        updateJSONEditor();
+      });
+    });
+  });
+}
+
+function autoUpdateVoiceScript() {
+  const existing = state.voiceover.script;
+  const autoScript = (state.copy.headline || '') + ' ' + (state.copy.support || '');
+  if (!existing || existing === state._lastAutoScript) {
+    state.voiceover.script = autoScript.trim();
+    state._lastAutoScript = autoScript.trim();
+    const el = document.getElementById('f-voiceScript');
+    if (el) el.value = state.voiceover.script;
+  }
+}
+
+function importJSON(parsed) {
+  // Merge parsed into state, preserving timing/voiceover if not present
+  if (parsed.copy) state.copy = { ...state.copy, ...parsed.copy };
+  if (parsed.designTokens) state.designTokens = { ...state.designTokens, ...parsed.designTokens };
+  if (parsed.assets) state.assets = { ...state.assets, ...parsed.assets };
+  if (parsed.brandContext) state.brandContext = { ...state.brandContext, ...parsed.brandContext };
+  if (parsed.templateId) state.templateId = parsed.templateId;
+  if (parsed.source) state.source = parsed.source;
+  if (parsed.timing) state.timing = { ...state.timing, ...parsed.timing };
+  if (parsed.voiceover) state.voiceover = { ...state.voiceover, ...parsed.voiceover };
+
+  syncFromState();
+  renderFrame(Math.floor(currentFrame));
+}
+
+function buildRemotionConfig() {
+  const fps = state.timing.fps;
+  const durationFrames = totalFrames();
+
+  const toFrame = seconds => Math.round(seconds * fps);
+  const sceneDuration = 30;
+
+  return {
+    compositionId: "ad-reel",
+    width: 1080,
+    height: 1920,
+    fps,
+    durationInFrames: durationFrames,
+    defaultProps: buildExportState(),
+    scenes: [
+      { id: "logo", startFrame: toFrame(state.timing.logoDelay), durationFrames: sceneDuration, animation: state.timing.animations.logo },
+      { id: "badge", startFrame: toFrame(state.timing.badgeDelay), durationFrames: 20, animation: state.timing.animations.badge },
+      { id: "headline", startFrame: toFrame(state.timing.headlineDelay), durationFrames: 45, animation: state.timing.animations.headline },
+      { id: "photo", startFrame: toFrame(state.timing.photoDelay), durationFrames: Math.round(fps * 0.8), animation: state.timing.animations.photo },
+      { id: "support", startFrame: toFrame(state.timing.supportDelay), durationFrames: sceneDuration, animation: state.timing.animations.support },
+      { id: "cta", startFrame: toFrame(state.timing.ctaDelay), durationFrames: sceneDuration, animation: state.timing.animations.cta }
+    ],
+    voiceover: {
+      enabled: state.voiceover.enabled,
+      script: state.voiceover.script || ((state.copy.headline || '') + ' ' + (state.copy.support || '')).trim(),
+      voice: state.voiceover.voice,
+      speed: state.voiceover.speed
+    }
+  };
+}
+
+// ═══════════════════════════════════════════════════════════
+//  Utilities
+// ═══════════════════════════════════════════════════════════
+
+function copyToClipboard(text) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
+  } else {
+    fallbackCopy(text);
+  }
+}
+
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  document.execCommand('copy');
+  document.body.removeChild(ta);
+}
+
+let toastTimer = null;
+function showToast(msg, isError = false) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.toggle('error', isError);
+  toast.classList.add('visible');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('visible'), 2200);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  Init
+// ═══════════════════════════════════════════════════════════
+
+function init() {
+  wireInputs();
+  sizePhoneFrame();
+  syncFromState();
+  syncJsonEditor(); // populate both JSON editors
+  switchTemplate(state.templateStyle || 1);
+  renderFrame(0);
+  updateSceneMarkers();
+
+  // Auto-set voice script
+  state.voiceover.script = ((state.copy.headline || '') + ' ' + (state.copy.support || '')).trim();
+  state._lastAutoScript = state.voiceover.script;
+  document.getElementById('f-voiceScript').value = state.voiceover.script;
+
+  // Responsive resize
+  const ro = new ResizeObserver(() => {
+    sizePhoneFrame();
+    if (!isPlaying) renderFrame(Math.floor(currentFrame));
+  });
+  ro.observe(document.getElementById('preview-container'));
+
+  // Auto-play after short delay
+  setTimeout(play, 400);
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
