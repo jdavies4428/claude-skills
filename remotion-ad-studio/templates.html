@@ -337,7 +337,6 @@
       <button class="tmpl-tab" data-tmpl="6">6 &middot; Peel</button>
       <!-- Blinds removed: doesn't render photos -->
 
-      <button class="tmpl-tab" data-tmpl="8">8 &middot; Orbit</button>
       <button class="tmpl-tab" data-tmpl="9">9 &middot; Film</button>
       <!-- Mosaic removed: doesn't render faces -->
 
@@ -349,6 +348,7 @@
       <button class="tmpl-tab" data-tmpl="16">16 &middot; Warmth Returns</button>
       <button class="tmpl-tab" data-tmpl="17">17 &middot; Opening Album</button>
       <button class="tmpl-tab" data-tmpl="18">18 &middot; Face to Face</button>
+      <button class="tmpl-tab" data-tmpl="19">19 &middot; Triple</button>
     </div>
   </div>
 
@@ -587,8 +587,8 @@ const TEMPLATES = {
   4: {
     name: "The Magazine Cover",
     subtitle: "Editorial \u00b7 Bold \u00b7 High-Fashion",
-    duration: "8s \u00b7 30fps \u00b7 240 frames",
-    totalFrames: 240,
+    duration: "8.7s \u00b7 30fps \u00b7 260 frames",
+    totalFrames: 260,
     desc: "Editorial, high-fashion magazine-cover aesthetic. Bold typography overlays dramatic imagery revealed via a center-line clip. A colored bar sweeps in behind the headline for graphic punch.",
     features: [
       "Clip-path reveal from center line outward",
@@ -603,8 +603,8 @@ const TEMPLATES = {
   5: {
     name: "The Glitch",
     subtitle: "Digital \u00b7 Cyberpunk \u00b7 Tech",
-    duration: "7s \u00b7 30fps \u00b7 210 frames",
-    totalFrames: 210,
+    duration: "9.7s \u00b7 30fps \u00b7 290 frames",
+    totalFrames: 290,
     desc: "Digital, tech, cyberpunk aesthetic. RGB splitting, scan lines, and data corruption. The text scrambles like a departures board before resolving, and the CTA assembles from pixel blocks.",
     features: [
       "RGB split (red/green/blue offset copies)",
@@ -674,34 +674,6 @@ Object.assign(TEMPLATES, {
       { label: "Support strips", start: 140, end: 180, color: "#d26739" },
       { label: "CTA strip", start: 170, end: 210, color: "#7c3aed" },
       { label: "Wave settle", start: 210, end: 240, color: "#a855f7" }
-    ]
-  },
-  8: {
-    name: "The Orbit",
-    desc: "Everything revolves around a central point. Elements spiral inward from orbital paths, snapping into position. Cosmic and mesmerizing.",
-    duration: 300,
-    fps: 30,
-    features: [
-      "Pulsing central glowing dot",
-      "Logo orbits inward with afterimage trail",
-      "Badge spirals in from wide radius",
-      "Headline words orbit in from different angles",
-      "Flash burst on highlight word arrival",
-      "Photo morphs circle to rectangle",
-      "Support text vortex entry",
-      "CTA assembles from orbiting particles",
-      "Ambient orbital float on hold"
-    ],
-    packages: ["@remotion/core", "@remotion/motion-blur"],
-    scenes: [
-      { label: "Pulse dot", start: 0, end: 30, color: "#d26739" },
-      { label: "Logo orbit", start: 20, end: 60, color: "#a855f7" },
-      { label: "Badge spiral", start: 50, end: 90, color: "#d26739" },
-      { label: "Headline orbit", start: 80, end: 140, color: "#c084fc" },
-      { label: "Photo morph", start: 130, end: 170, color: "#7c3aed" },
-      { label: "Support vortex", start: 160, end: 200, color: "#d26739" },
-      { label: "CTA particles", start: 200, end: 250, color: "#f97316" },
-      { label: "Ambient float", start: 250, end: 300, color: "#8b5cf6" }
     ]
   },
   9: {
@@ -1017,6 +989,43 @@ Object.assign(TEMPLATES, {
       { label: "CTA gentle", start: 200, end: 240, color: "#C5A059" },
       { label: "Hold \u2014 peace", start: 240, end: 270, color: "#8b7040" }
     ]
+  },
+  19: {
+    name: "The Triple Restore",
+    subtitle: "Three Snaps \u00b7 Reveal \u00b7 Fan",
+    duration: 330,
+    fps: 30,
+    desc: "Three polaroids drop one by one with camera flash snaps. Each photo starts sepia-faded and is swept to full color by a warm amber light bridge. They fan out into a warm wooden-table arrangement \u2014 the emotional payoff of three restorations at once.",
+    features: [
+      "Camera emoji pulses (scale sin-wave) then fades at each flash",
+      "Full-screen white flash spike at each camera snap",
+      "Three polaroids drop from above with spring bounce",
+      "Each polaroid: white frame, sepia BEFORE photo + 'Before' label",
+      "Amber light-bridge sweeps left\u2192right over each photo",
+      "Sepia filter dissolves to full color as bridge passes",
+      "'Before' label cross-fades to 'After' on restore",
+      "Fan-out: three polaroids spring to final positions (-8\u00b0, 0\u00b0, +8\u00b0)",
+      "Connecting amber glow line at base of fan",
+      "10 sparkle particles drift along the connecting line",
+      "Headline fades word-by-word with golden highlight pill",
+      "Badge pill, support text, warm-gold CTA",
+      "Hold: subtle sin-wave float on all three polaroids + warm particles"
+    ],
+    packages: ["@remotion/core", "spring()", "interpolate()", "seededRand", "easeInOut"],
+    scenes: [
+      { label: "Camera pulse", start: 0, end: 30, color: "#C5A059" },
+      { label: "Flash 1 + Drop 1", start: 25, end: 75, color: "#a07030" },
+      { label: "Restore 1", start: 55, end: 75, color: "#C5A059" },
+      { label: "Flash 2 + Drop 2", start: 70, end: 120, color: "#8b7040" },
+      { label: "Restore 2", start: 95, end: 115, color: "#C5A059" },
+      { label: "Flash 3 + Drop 3", start: 115, end: 170, color: "#a07030" },
+      { label: "Restore 3", start: 140, end: 160, color: "#C5A059" },
+      { label: "Fan-out", start: 165, end: 200, color: "#8b7040" },
+      { label: "Logo + Headline", start: 195, end: 240, color: "#C5A059" },
+      { label: "Badge + Support", start: 225, end: 260, color: "#a07030" },
+      { label: "CTA rises", start: 250, end: 290, color: "#C5A059" },
+      { label: "Hold \u2014 warm float", start: 290, end: 330, color: "#8b7040" }
+    ]
   }
 });
 
@@ -1026,6 +1035,7 @@ Object.assign(TEMPLATES, {
 let currentTemplate = 1;
 let frame = 0;
 let showLogo = true;
+let useBrandName = false;
 let isPlaying = false;
 let rafId = null;
 let lastTime = null;
@@ -1154,7 +1164,6 @@ function renderTemplate(id, f) {
     case 5: renderT5(f); break;
     case 6: renderTemplate6(f); break;
     case 7: renderTemplate7(f); break;
-    case 8: renderTemplate8(f); break;
     case 9: renderTemplate9(f); break;
     case 10: renderTemplate10(f); break;
     case 11: renderTemplate11(f); break;
@@ -1165,6 +1174,7 @@ function renderTemplate(id, f) {
     case 16: renderTemplate16(f); break;
     case 17: renderTemplate17(f); break;
     case 18: renderTemplate18(f); break;
+    case 19: renderTemplate19(f); break;
   }
 }
 
@@ -1180,7 +1190,6 @@ function buildTemplate(id) {
     case 5: buildT5(); break;
     case 6: initTemplate6(canvas); break;
     case 7: initTemplate7(canvas); break;
-    case 8: initTemplate8(canvas); break;
     case 9: initTemplate9(canvas); break;
     case 10: initTemplate10(canvas); break;
     case 11: initTemplate11(canvas); break;
@@ -1191,6 +1200,7 @@ function buildTemplate(id) {
     case 16: initTemplate16(canvas); break;
     case 17: initTemplate17(canvas); break;
     case 18: initTemplate18(canvas); break;
+    case 19: initTemplate19(canvas); break;
   }
 }
 
@@ -1233,11 +1243,14 @@ function getBeforePhotoUrl() {
 
 // Create a logo element — image if URL exists, text fallback
 function logoEl(styles = {}) {
+  if (useBrandName) {
+    return div({ fontWeight:'800', letterSpacing:'0.12em', color:T.badge_text, whiteSpace:'nowrap', ...styles }, B.brandName.toUpperCase());
+  }
   const url = getLogoUrl();
   if (url) {
     return img(url, { maxWidth:'100%', maxHeight:'100%', objectFit:'contain', ...styles });
   }
-  return div({ fontWeight:'800', letterSpacing:'0.12em', color:T.badge_text, ...styles }, B.brandName.toUpperCase());
+  return div({ fontWeight:'800', letterSpacing:'0.12em', color:T.badge_text, whiteSpace:'nowrap', ...styles }, B.brandName.toUpperCase());
 }
 
 // Create a photo element — image if URL exists, gradient fallback
@@ -1908,12 +1921,10 @@ function buildT3() {
   canvas.appendChild(particlesContainer);
   t3Els.particles = particles;
 
-  // Logo
+  // Logo — centered between headline and badge
   const logo = div({
-    position:'absolute', top:'165px', left:'50%',
-    transform:'translateX(-50%)',
+    position:'absolute', top:'140px', left:'0px', width:'260px', height:'55px',
     opacity:'0',
-    width:'80px', height:'32px',
     display:'flex', alignItems:'center', justifyContent:'center'
   });
   logo.appendChild(logoEl({ maxHeight:'30px', filter:'drop-shadow(0 2px 6px rgba(0,0,0,0.5))' }));
@@ -1996,7 +2007,7 @@ function renderT3(f) {
   particles.forEach((p, i) => {
     const pProg = interpolate(f, [155, 185], [0, 1], { clamp: true });
     const angle = parseFloat(p.dataset.angle);
-    const dist = pProg * 60;
+    const dist = pProg * 30;
     const px2 = Math.cos(angle) * dist;
     const py2 = Math.sin(angle) * dist;
     const pOp = interpolate(pProg, [0, 0.2, 1], [0, 1, 0]);
@@ -2007,7 +2018,7 @@ function renderT3(f) {
   // Logo fade (60-80) — appears centered between headline and photo
   const logoDrift = interpolate(f, [60, 80], [8, 0], { clamp: true });
   logo.style.opacity = interpolate(f, [60, 80], [0, 1], { clamp: true });
-  logo.style.transform = `translateX(-50%) translateY(${logoDrift}px)`;
+  logo.style.transform = `translateY(${logoDrift}px)`;
 
   // Floating oscillation (230-270)
   const floatY = f >= 230 ? Math.sin((f - 230) * 0.15) * 3 : 0;
@@ -2227,39 +2238,42 @@ function renderT4(f) {
   const topClip = Math.max(0, 50 - revealPct/2);
   const bottomClip = Math.max(0, 50 - revealPct/2);
   photo.style.clipPath = `inset(${topClip}% 0 ${bottomClip}% 0)`;
-  overlay.style.opacity = interpolate(f, [30, 55], [0, 1], { clamp: true });
+  // Overlay: darken 50-75, hold, lighten 220-230
+  const overlayIn = interpolate(f, [50, 75], [0, 1], { clamp: true });
+  const overlayOut = interpolate(f, [220, 230], [1, 0.15], { clamp: true });
+  overlay.style.opacity = f < 220 ? overlayIn : overlayOut;
 
-  // Ken Burns (170-200 and beyond)
-  const kbScale = interpolate(f, [170, 240], [1.1, 1.15], { clamp: true });
-  const kbX = interpolate(f, [170, 240], [0, 2], { clamp: true });
+  // Ken Burns (190-260 and beyond)
+  const kbScale = interpolate(f, [190, 260], [1.1, 1.15], { clamp: true });
+  const kbX = interpolate(f, [190, 260], [0, 2], { clamp: true });
   photo.style.transform = `scale(${kbScale}) translateX(${kbX}px)`;
 
-  // Masthead (35-65)
-  const mastheadProg = Math.max(0, f - 35);
+  // Masthead (55-75)
+  const mastheadProg = Math.max(0, f - 55);
   const mastheadSpring = spring(mastheadProg, { damping: 14, stiffness: 100 });
   const mastheadY = interpolate(mastheadSpring, [0, 1], [-8, 0]);
-  masthead.style.opacity = interpolate(f, [35, 55], [0, 1], { clamp: true });
+  masthead.style.opacity = interpolate(f, [55, 75], [0, 1], { clamp: true });
   masthead.style.transform = `translateY(${mastheadY}px)`;
 
-  // Color bar slides in (55-85)
-  const barX = interpolate(f, [55, 85], [-100, 0], { clamp: true });
+  // Color bar slides in (75-105)
+  const barX = interpolate(f, [75, 105], [-100, 0], { clamp: true });
   colorBar.style.left = barX + '%';
 
-  // Headline slides in from right (65-95)
-  const hlProg = Math.max(0, f - 65);
+  // Headline slides in from right (85-115)
+  const hlProg = Math.max(0, f - 85);
   const hlSpring = spring(hlProg, { damping: 12, stiffness: 150 });
   const hlX = interpolate(hlSpring, [0, 1], [300, 0]);
   headline.style.transform = `translateX(${hlX}px)`;
 
-  // Badge sticker pop (80-110)
-  const badgeProg = Math.max(0, f - 80);
+  // Badge sticker pop (100-130)
+  const badgeProg = Math.max(0, f - 100);
   const badgeSpring = spring(badgeProg, { damping: 10, stiffness: 250, mass: 0.7 });
   const badgeScale = interpolate(badgeSpring, [0, 1], [0, 1]);
   badgeSticker.style.transform = `rotate(-12deg) scale(${badgeScale})`;
 
-  // Support text (100-140)
+  // Support text (120-160)
   supportEls.forEach((se, i) => {
-    const seStart = 100 + i * 10;
+    const seStart = 120 + i * 10;
     const seProg = Math.max(0, f - seStart);
     const seSpring = spring(seProg, { damping: 14, stiffness: 120 });
     const seY = interpolate(seSpring, [0, 1], [6, 0]);
@@ -2267,15 +2281,15 @@ function renderT4(f) {
     se.style.transform = `translateY(${seY}px)`;
   });
 
-  // CTA slides in from right (130-170)
-  const ctaProg = Math.max(0, f - 130);
+  // CTA slides in from right (150-185)
+  const ctaProg = Math.max(0, f - 150);
   const ctaSpring = spring(ctaProg, { damping: 12, stiffness: 120 });
   const ctaX = interpolate(ctaSpring, [0, 1], [200, -14]);
   cta.style.right = 'auto';
   cta.style.left = 'auto';
   cta.style.transform = `translateX(${ctaX}px) translateX(100%)`;
   // Simpler: just animate right
-  const ctaRight = interpolate(f, [130, 165], [-200, 14], { clamp: true });
+  const ctaRight = interpolate(f, [150, 185], [-200, 14], { clamp: true });
   cta.style.right = ctaRight + 'px';
   cta.style.left = 'auto';
   cta.style.transform = '';
@@ -2283,22 +2297,19 @@ function renderT4(f) {
   // Arrow animate
   const arrowEl = document.getElementById('t4Arrow');
   if (arrowEl) {
-    const arrowOp = interpolate(f, [160, 175], [0, 1], { clamp: true });
-    const arrowX = interpolate(f, [160, 175], [-8, 0], { clamp: true });
+    const arrowOp = interpolate(f, [180, 195], [0, 1], { clamp: true });
+    const arrowX = interpolate(f, [180, 195], [-8, 0], { clamp: true });
     arrowEl.style.opacity = arrowOp;
     arrowEl.style.transform = `translateX(${arrowX}px)`;
   }
 
-  // White flash (200-202)
-  const flashOp = f >= 200 && f <= 202 ? interpolate(f, [200, 201, 202], [0, 0.8, 0]) : 0;
+  // White flash (220-222)
+  const flashOp = f >= 220 && f <= 222 ? interpolate(f, [220, 221, 222], [0, 0.8, 0]) : 0;
   flash.style.opacity = flashOp;
 
-  // Vignette darkening (203+)
-  vignette.style.opacity = interpolate(f, [203, 218], [0, 1], { clamp: true });
+  // Vignette: skip — goes bright too fast for vignette to matter
+  vignette.style.opacity = interpolate(f, [220, 230], [0, 0], { clamp: true });
 
-  // Bottom logo (205+)
-  bottomLogo.style.opacity = interpolate(f, [205, 225], [0, 1], { clamp: true });
-  // But hide cta in outro if overlapping
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -2644,7 +2655,9 @@ function renderT5(f) {
     words.forEach((word, wi) => {
       const isHl = hlWords.some(hw => origWords[wi] && origWords[wi].toLowerCase().includes(hw));
       if (isHl && scrambleProg >= 0.95) {
-        const rgbSplit = interpolate(f, [125, 135], [0, 1], { clamp: true });
+        const rgbIn = interpolate(f, [125, 135], [0, 1], { clamp: true });
+        const rgbOut = interpolate(f, [185, 200], [1, 0], { clamp: true });
+        const rgbSplit = f < 185 ? rgbIn : rgbOut;
         html += `<span style="position:relative;color:${T.primary};text-shadow:${rgbSplit*3}px 0 ${T.badge_bg}, ${-rgbSplit*3}px 0 ${T.gradient_to}">${word}</span>`;
       } else {
         html += word;
@@ -2722,10 +2735,10 @@ function initTemplate6(canvas) {
         <!-- paper texture overlay -->
         <div style="position:absolute;inset:0;background:repeating-radial-gradient(circle at 1px 1px,rgba(255,255,255,0.04) 1px,transparent 1px) 0 0/4px 4px;pointer-events:none;"></div>
         <!-- logo watermark -->
-        <div id="t6-wm" style="position:absolute;bottom:20px;right:16px;font-size:11px;font-weight:700;letter-spacing:1px;color:#fff;opacity:0.15;">${BRAND}</div>
-        <!-- photo area -->
-        <div style="position:absolute;inset:40px;border-radius:10px;background:linear-gradient(45deg,${T.surface},${T.gradient_to});overflow:hidden;">
-          ${getPhotoUrl() ? `<img src="${getPhotoUrl()}" style="width:100%;height:100%;object-fit:cover;">` : `<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.15);font-size:11px;">Photo</div>`}
+        <div id="t6-wm" style="position:absolute;bottom:20px;right:16px;font-size:11px;font-weight:900;letter-spacing:1px;color:#fff;opacity:0.25;">${BRAND}</div>
+        <!-- photo area — before (old) photo, portrait orientation -->
+        <div style="position:absolute;top:100px;left:20px;right:20px;height:200px;border-radius:12px;background:linear-gradient(45deg,${T.surface},${T.gradient_to});overflow:hidden;">
+          ${(getBeforePhotoUrl() || getPhotoUrl()) ? `<img src="${getBeforePhotoUrl() || getPhotoUrl()}" style="width:100%;height:100%;object-fit:cover;">` : `<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.15);font-size:11px;">Photo</div>`}
         </div>
       </div>
       <!-- back of peel (lighter) -->
@@ -2735,10 +2748,10 @@ function initTemplate6(canvas) {
     </div>
 
     <!-- Content underneath -->
-    <div id="t6-content" style="position:absolute;inset:0;display:flex;flex-direction:column;padding:24px 20px;gap:12px;">
+    <div id="t6-content" style="position:absolute;inset:0;display:flex;flex-direction:column;padding:24px 20px;gap:12px;opacity:0;">
       <div id="t6-logo" style="opacity:0;height:36px;display:flex;align-items:center;">${getLogoUrl() ? `<img src="${getLogoUrl()}" style="max-height:32px;object-fit:contain;filter:drop-shadow(0 1px 4px rgba(0,0,0,0.4));">` : `<span style="font-size:12px;font-weight:800;letter-spacing:1.5px;color:${T.badge_text};">${BRAND}</span>`}</div>
       <div id="t6-badge" style="display:inline-flex;align-items:center;padding:4px 12px;background:${T.badge_bg};border-radius:20px;font-size:10px;font-weight:700;color:${T.badge_text};letter-spacing:0.5px;transform:translateX(60px);opacity:0;align-self:flex-start;">${C.badge}</div>
-      <div id="t6-photo-small" style="width:100%;height:140px;border-radius:12px;background:linear-gradient(135deg,${T.surface},${T.gradient_to});overflow:hidden;opacity:0;transform:scale(0.95);margin-top:4px;">
+      <div id="t6-photo-small" style="width:100%;height:200px;border-radius:12px;background:linear-gradient(135deg,${T.surface},${T.gradient_to});overflow:hidden;opacity:0;transform:scale(0.95);margin-top:4px;">
         ${getPhotoUrl() ? `<img src="${getPhotoUrl()}" style="width:100%;height:100%;object-fit:cover;">` : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.2);font-size:10px;">Photo</div>`}
       </div>
       <div id="t6-headline-wrap" style="overflow:hidden;position:relative;margin-top:4px;">
@@ -2768,6 +2781,10 @@ function initTemplate6(canvas) {
 
 function renderTemplate6(frame) {
   const f = frame;
+
+  // Fade in content underneath as peel progresses
+  const contentEl = document.getElementById('t6-content');
+  if (contentEl) contentEl.style.opacity = interpolate(f, [60, 100], [0, 1], { clamp: true });
 
   // Photo peel
   const peelProgress = interpolate(f, [30, 140], [0, 1], { clamp: true, easing: easeInOut });
@@ -2973,302 +2990,6 @@ function renderTemplate7(frame) {
   }
 }
 
-// ── Template 8: The Orbit ────────────────────────────────────────────────────
-function initTemplate8(canvas) {
-  const cx = 135; // center x of phone (270/2)
-  const cy = 292; // center y of phone (585/2)
-
-  canvas.innerHTML = `
-    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,${T.gradient_to} 0%,${T.gradient_from} 70%);"></div>
-
-    <!-- Ambient star dots -->
-    <div id="t8-stars" style="position:absolute;inset:0;overflow:hidden;"></div>
-
-    <!-- Orbit trail ghosts -->
-    <div id="t8-logo-ghost1" style="position:absolute;font-size:10px;font-weight:800;letter-spacing:1px;color:${T.primary};opacity:0;transform:translate(-50%,-50%);white-space:nowrap;">${BRAND}</div>
-    <div id="t8-logo-ghost2" style="position:absolute;font-size:10px;font-weight:800;letter-spacing:1px;color:${T.primary};opacity:0;transform:translate(-50%,-50%);white-space:nowrap;">${BRAND}</div>
-    <div id="t8-logo-ghost3" style="position:absolute;font-size:10px;font-weight:800;letter-spacing:1px;color:${T.primary};opacity:0;transform:translate(-50%,-50%);white-space:nowrap;">${BRAND}</div>
-
-    <!-- Central dot -->
-    <div id="t8-dot" style="position:absolute;left:${cx}px;top:${cy}px;width:12px;height:12px;background:${T.primary};border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 20px ${T.primary},0 0 40px ${rgba(T.primary,0.4)};opacity:0;"></div>
-
-    <!-- Logo orbiting element -->
-    <div id="t8-logo" style="position:absolute;opacity:0;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;">${getLogoUrl() ? `<img src="${getLogoUrl()}" style="max-height:28px;object-fit:contain;filter:drop-shadow(0 0 12px rgba(0,0,0,0.5));">` : `<span style="font-size:11px;font-weight:800;letter-spacing:1.5px;color:${T.badge_text}">${BRAND}</span>`}</div>
-
-    <!-- Badge -->
-    <div id="t8-badge" style="position:absolute;padding:5px 14px;background:${T.badge_bg};border-radius:20px;font-size:10px;font-weight:700;color:${T.badge_text};opacity:0;transform:translate(-50%,-50%);white-space:nowrap;">${C.badge}</div>
-
-    <!-- Headline words (split) -->
-    <div id="t8-hl-wrap" style="position:absolute;left:16px;right:16px;top:200px;opacity:0;">
-      <div id="t8-headline" style="font-size:16px;font-weight:800;color:${T.headline_text};line-height:1.35;"></div>
-    </div>
-    <div id="t8-hl-flash" style="position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;border-radius:24px;"></div>
-
-    <!-- Individual word elements for orbit -->
-    <div id="t8-words-layer" style="position:absolute;inset:0;"></div>
-
-    <!-- Photo morph -->
-    <div id="t8-photo" style="position:absolute;left:${cx}px;top:${cy - 20}px;width:0;height:0;background:linear-gradient(135deg,${T.surface},${T.gradient_to});border-radius:50%;transform:translate(-50%,-50%) rotate(-15deg);overflow:hidden;opacity:0;">
-      ${getPhotoUrl() ? `<img src="${getPhotoUrl()}" style="width:100%;height:100%;object-fit:cover;">` : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.2);font-size:9px;">Photo</div>`}
-    </div>
-
-    <!-- Support text -->
-    <div id="t8-support" style="position:absolute;left:16px;right:16px;bottom:120px;font-size:10px;color:${T.support_text};line-height:1.6;opacity:0;text-align:center;"></div>
-
-    <!-- CTA particles layer -->
-    <div id="t8-particles" style="position:absolute;left:16px;right:16px;bottom:50px;height:44px;"></div>
-    <!-- CTA button -->
-    <div id="t8-cta" style="position:absolute;left:16px;right:16px;bottom:50px;height:44px;background:${T.cta_bg};border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:${T.cta_text};opacity:0;transform:scale(0.9);">${C.cta}</div>
-
-    <!-- Logo bottom -->
-    <div id="t8-logo-bottom" style="position:absolute;bottom:14px;left:0;right:0;text-align:center;opacity:0;display:flex;justify-content:center;">${getLogoUrl() ? `<img src="${getLogoUrl()}" style="max-height:24px;object-fit:contain;">` : `<span style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:${T.badge_text}">${BRAND}</span>`}</div>
-  `;
-
-  // Generate star dots
-  const stars = document.getElementById('t8-stars');
-  for (let i = 0; i < 30; i++) {
-    const d = document.createElement('div');
-    const x = Math.random() * 270;
-    const y = Math.random() * 585;
-    const s = Math.random() * 2 + 1;
-    d.style.cssText = `position:absolute;left:${x}px;top:${y}px;width:${s}px;height:${s}px;background:rgba(255,255,255,${0.1 + Math.random()*0.2});border-radius:50%;`;
-    stars.appendChild(d);
-  }
-
-  // Generate CTA particles
-  const particlesEl = document.getElementById('t8-particles');
-  for (let i = 0; i < 20; i++) {
-    const d = document.createElement('div');
-    d.id = `t8-p-${i}`;
-    const angle = (i / 20) * Math.PI * 2;
-    const r = 60 + Math.random() * 40;
-    const px = 119 + Math.cos(angle) * r; // center of particles layer
-    const py = 22 + Math.sin(angle) * r;
-    d.style.cssText = `position:absolute;left:${px}px;top:${py}px;width:5px;height:5px;background:${T.primary};border-radius:50%;transform:translate(-50%,-50%);opacity:0;`;
-    d.dataset.angle = angle;
-    d.dataset.r = r;
-    particlesEl.appendChild(d);
-  }
-}
-
-function renderTemplate8(frame) {
-  const cx = 135, cy = 292;
-
-  // Central dot pulse
-  const dot = document.getElementById('t8-dot');
-  if (dot) {
-    dot.style.opacity = interpolate(frame, [0, 10], [0, 1], { clamp: true });
-    const pulse = 0.8 + 0.4 * Math.sin(frame * 0.4);
-    dot.style.transform = `translate(-50%,-50%) scale(${pulse})`;
-    dot.style.opacity = interpolate(frame, [50, 70], [1, 0], { clamp: true });
-  }
-
-  // Logo orbit inward (frame 20-60)
-  const logoEl = document.getElementById('t8-logo');
-  if (logoEl) {
-    if (frame < 20) {
-      logoEl.style.opacity = 0;
-    } else if (frame <= 60) {
-      const t = easeOut((frame - 20) / 40);
-      const r = interpolate(t, [0, 1], [130, 0], { clamp: false });
-      const angle = -Math.PI / 2 + (1 - t) * Math.PI * 3; // spiral
-      const px = cx + Math.cos(angle) * r;
-      const py = cy + Math.sin(angle) * r;
-      logoEl.style.left = px + 'px';
-      logoEl.style.top = py + 'px';
-      logoEl.style.opacity = clamp(t * 2, 0, 1);
-    } else if (frame <= 250) {
-      // Settle at top
-      const floatY = Math.sin(frame * 0.05) * 2;
-      logoEl.style.left = cx + 'px';
-      logoEl.style.top = (38 + floatY) + 'px';
-      logoEl.style.opacity = 1;
-    } else {
-      logoEl.style.opacity = 0;
-    }
-  }
-
-  // Orbit trail ghosts
-  for (let g = 1; g <= 3; g++) {
-    const ghost = document.getElementById(`t8-logo-ghost${g}`);
-    if (!ghost) continue;
-    if (frame >= 20 && frame <= 65) {
-      const backF = frame - g * 5;
-      if (backF >= 20 && backF <= 60) {
-        const t = easeOut((backF - 20) / 40);
-        const r = interpolate(t, [0, 1], [130, 0], { clamp: false });
-        const angle = -Math.PI / 2 + (1 - t) * Math.PI * 3;
-        ghost.style.left = (cx + Math.cos(angle) * r) + 'px';
-        ghost.style.top = (cy + Math.sin(angle) * r) + 'px';
-        ghost.style.opacity = 0.3 - g * 0.08;
-      } else {
-        ghost.style.opacity = 0;
-      }
-    } else {
-      ghost.style.opacity = 0;
-    }
-  }
-
-  // Badge orbit (frame 50-90)
-  const badgeEl = document.getElementById('t8-badge');
-  if (badgeEl) {
-    if (frame < 50) {
-      badgeEl.style.opacity = 0;
-    } else if (frame <= 90) {
-      const t = easeOut((frame - 50) / 40);
-      const r = interpolate(t, [0, 1], [200, 0], { clamp: false });
-      const angle = Math.PI / 4 + (1 - t) * Math.PI * 1.5;
-      const px = cx + Math.cos(angle) * r;
-      const py = cy + Math.sin(angle) * r;
-      badgeEl.style.left = px + 'px';
-      badgeEl.style.top = py + 'px';
-      badgeEl.style.opacity = clamp(t * 3, 0, 1);
-    } else {
-      // Final position: top area
-      const floatY = Math.sin(frame * 0.05 + 1) * 2;
-      badgeEl.style.left = cx + 'px';
-      badgeEl.style.top = (68 + floatY) + 'px';
-      badgeEl.style.opacity = 1;
-    }
-  }
-
-  // Headline words orbit in (frame 80-140)
-  const wordsLayer = document.getElementById('t8-words-layer');
-  const hlWrap = document.getElementById('t8-hl-wrap');
-  const words = C.headline.split(' ');
-  if (wordsLayer && frame >= 80) {
-    // After all words arrive, show wrapped headline
-    if (frame >= 145) {
-      wordsLayer.style.opacity = 0;
-      if (hlWrap) {
-        hlWrap.style.opacity = 1;
-        const hl = document.getElementById('t8-headline');
-        if (hl && !hl.dataset.set) {
-          hl.innerHTML = C.headline.replace(C.highlight, `<span style="color:${T.badge_bg};">${C.highlight}</span>`);
-          hl.dataset.set = '1';
-        }
-      }
-    } else {
-      wordsLayer.style.opacity = 1;
-      if (hlWrap) hlWrap.style.opacity = 0;
-      // Clear and re-render words
-      if (!wordsLayer.dataset.init) {
-        wordsLayer.dataset.init = '1';
-        wordsLayer.innerHTML = words.map((w, i) =>
-          `<div id="t8-word-${i}" style="position:absolute;font-size:15px;font-weight:800;color:${i === words.indexOf(C.highlight.split(' ')[0]) ? T.badge_bg : T.headline_text};opacity:0;transform:translate(-50%,-50%);white-space:nowrap;">${w}</div>`
-        ).join('');
-      }
-      words.forEach((w, i) => {
-        const wordEl = document.getElementById(`t8-word-${i}`);
-        if (!wordEl) return;
-        const wordStart = 80 + i * 7;
-        if (frame < wordStart) { wordEl.style.opacity = 0; return; }
-        const t = easeOut(clamp((frame - wordStart) / 25, 0, 1));
-        const r = interpolate(t, [0, 1], [160, 0], { clamp: false });
-        const angle = (i / words.length) * Math.PI * 2 - Math.PI / 2;
-        const targetX = 16 + (i % 3) * 70 + 35;
-        const targetY = 200 + Math.floor(i / 3) * 25 + 12;
-        const px = cx + Math.cos(angle) * r * (1 - t) + targetX * t;
-        const py = cy + Math.sin(angle) * r * (1 - t) + targetY * t;
-        wordEl.style.left = px + 'px';
-        wordEl.style.top = py + 'px';
-        wordEl.style.opacity = clamp(t * 2, 0, 1);
-
-        // Flash on highlight word
-        const hlFlash = document.getElementById('t8-hl-flash');
-        if (hlFlash && i === words.length - 1 && frame >= wordStart && frame <= wordStart + 3) {
-          hlFlash.style.opacity = (0.7 - (frame - wordStart) * 0.25) + '';
-        } else if (hlFlash && (frame > wordStart + 3 || i !== words.length - 1)) {
-          if (i === words.length - 1) hlFlash.style.opacity = 0;
-        }
-      });
-    }
-  }
-
-  // Photo morph (frame 130-170)
-  const photoEl = document.getElementById('t8-photo');
-  if (photoEl) {
-    if (frame < 130) {
-      photoEl.style.opacity = 0;
-    } else {
-      const t = spring(frame - 130, { damping: 12, stiffness: 80 });
-      const w = interpolate(t, [0, 1], [0, 220], { clamp: false });
-      const h = interpolate(t, [0, 1], [0, 130], { clamp: false });
-      const br = interpolate(t, [0, 1], [50, 12], { clamp: false });
-      const rot = interpolate(t, [0, 1], [-15, 0], { clamp: false });
-      photoEl.style.width = w + 'px';
-      photoEl.style.height = h + 'px';
-      photoEl.style.borderRadius = br + '%';
-      photoEl.style.left = (cx - w/2) + 'px';
-      photoEl.style.top = (cy - 100 - h/2) + 'px';
-      photoEl.style.transform = `rotate(${rot}deg)`;
-      photoEl.style.opacity = clamp(t * 3, 0, 1);
-    }
-  }
-
-  // Support text vortex (frame 160-200)
-  const supportEl = document.getElementById('t8-support');
-  if (supportEl) {
-    const sv = spring(frame - 160, { damping: 14, stiffness: 90 });
-    supportEl.style.opacity = clamp(sv * 2, 0, 1);
-    supportEl.style.transform = `translateY(${interpolate(sv, [0,1], [20, 0], {clamp:false})}px)`;
-    if (!supportEl.dataset.set) {
-      supportEl.textContent = C.support;
-      supportEl.dataset.set = '1';
-    }
-  }
-
-  // CTA particles converge then button appears (frame 200-250)
-  const ctaEl = document.getElementById('t8-cta');
-  if (ctaEl) {
-    if (frame < 200) {
-      ctaEl.style.opacity = 0;
-    } else if (frame <= 240) {
-      const t = clamp((frame - 200) / 40, 0, 1);
-      // Show particles converging, then button
-      for (let i = 0; i < 20; i++) {
-        const p = document.getElementById(`t8-p-${i}`);
-        if (!p) continue;
-        const angle = parseFloat(p.dataset.angle);
-        const r0 = parseFloat(p.dataset.r);
-        const r = r0 * (1 - easeInOut(t));
-        const px = 119 + Math.cos(angle) * r;
-        const py = 22 + Math.sin(angle) * r;
-        p.style.left = px + 'px';
-        p.style.top = py + 'px';
-        p.style.opacity = t < 0.9 ? clamp(t * 3, 0, 0.9) : interpolate(frame, [235, 242], [0.9, 0], { clamp: true });
-      }
-      if (t > 0.85) {
-        const bt = spring(frame - 236, { damping: 12, stiffness: 180 });
-        ctaEl.style.opacity = clamp(bt * 4, 0, 1);
-        ctaEl.style.transform = `scale(${interpolate(bt, [0,1], [0.9, 1], {clamp:false})})`;
-      }
-    } else {
-      ctaEl.style.opacity = 1;
-      ctaEl.style.transform = 'scale(1)';
-    }
-  }
-
-  // Logo bottom (frame 250+)
-  const logoBottom = document.getElementById('t8-logo-bottom');
-  if (logoBottom) {
-    logoBottom.style.opacity = interpolate(frame, [250, 265], [0, 1], { clamp: true });
-    if (logoEl) logoEl.style.opacity = interpolate(frame, [250, 260], [1, 0], { clamp: true });
-  }
-
-  // Ambient float on all settled elements (frame 270+)
-  if (frame >= 270) {
-    const floatEls = ['t8-badge', 't8-cta', 't8-support', 't8-hl-wrap'];
-    floatEls.forEach((id, i) => {
-      const el = document.getElementById(id);
-      if (!el) return;
-      const dy = Math.sin(frame * 0.04 + i * 1.2) * 1.5;
-      const dx = Math.cos(frame * 0.03 + i * 0.8) * 0.8;
-      el.style.transform = (el.style.transform || '').replace(/translateZ\([^)]*\)/g, '') +
-        ` translateX(${dx}px) translateY(${dy}px)`;
-    });
-  }
-}
 
 // ── Template 9: The Filmstrip ────────────────────────────────────────────────
 function initTemplate9(canvas) {
@@ -3323,7 +3044,7 @@ function initTemplate9(canvas) {
       <div id="t9-logo" style="display:none;"></div>
 
       <!-- Photo film frame -->
-      <div id="t9-photo-wrap" style="flex:0 0 150px;position:relative;overflow:hidden;opacity:0;transform:translateX(100%);">
+      <div id="t9-photo-wrap" style="flex:0 0 200px;position:relative;overflow:hidden;opacity:0;transform:translateX(100%);">
         <!-- Film frame borders -->
         <div style="position:absolute;inset:0;border:3px solid #000;z-index:2;pointer-events:none;"></div>
         <div style="position:absolute;inset:0;background:linear-gradient(135deg,${T.surface},${T.gradient_to});z-index:0;"></div>
@@ -3345,32 +3066,23 @@ function initTemplate9(canvas) {
         </div>
       </div>
 
-      <!-- Headline (line by line with flicker) -->
-      <div id="t9-headline" style="font-size:15px;font-weight:800;color:${T.headline_text};line-height:1.4;text-align:center;">
-        ${C.headline.split(' ').reduce((acc, w, i) => {
-          const line = Math.floor(i / 3);
-          if (!acc[line]) acc[line] = [];
-          acc[line].push(w);
-          return acc;
-        }, []).map((line, li) =>
-          `<div id="t9-hl-line-${li}" style="opacity:0;">${line.join(' ')}</div>`
-        ).join('')}
-      </div>
+      <!-- Headline scrolls up like movie credits (absolutely positioned) -->
+      <div id="t9-headline" style="position:absolute;left:20px;right:20px;top:70%;font-size:15px;font-weight:800;color:${T.headline_text};line-height:1.4;text-align:center;opacity:0;">${C.headline}</div>
 
       <!-- Support credits scroll -->
       <div id="t9-support-wrap" style="overflow:hidden;height:40px;position:relative;margin-top:8px;">
         <div id="t9-support" style="position:absolute;left:0;right:0;top:50px;font-size:10px;color:${T.support_text};line-height:1.6;text-align:center;">${C.support}</div>
       </div>
 
-      <!-- CTA with spotlight -->
-      <div id="t9-cta-wrap" style="margin-top:auto;position:relative;">
-        <div id="t9-spotlight" style="position:absolute;inset:-30px;background:radial-gradient(ellipse at 50% 50%,rgba(255,255,255,0.15) 0%,transparent 60%);opacity:0;pointer-events:none;transform:translateX(-150%);"></div>
-        <div id="t9-cta" style="padding:12px 16px;background:${T.cta_bg};border-radius:8px;font-size:12px;font-weight:700;color:${T.cta_text};text-align:center;opacity:0;">${C.cta}</div>
+      <!-- Try Free flash (above CTA) -->
+      <div id="t9-fin" style="text-align:center;opacity:0;margin-top:auto;">
+        <div style="font-size:14px;font-weight:900;font-style:italic;color:#fff;letter-spacing:2px;">Try Free</div>
       </div>
 
-      <!-- FIN + logo bottom -->
-      <div id="t9-fin" style="text-align:center;opacity:0;">
-        <div style="font-size:22px;font-weight:900;font-style:italic;font-family:serif;color:#fff;letter-spacing:3px;">TEST FREE!</div>
+      <!-- CTA with spotlight -->
+      <div id="t9-cta-wrap" style="position:relative;">
+        <div id="t9-spotlight" style="position:absolute;inset:-30px;background:radial-gradient(ellipse at 50% 50%,rgba(255,255,255,0.15) 0%,transparent 60%);opacity:0;pointer-events:none;transform:translateX(-150%);"></div>
+        <div id="t9-cta" style="padding:12px 16px;background:${T.cta_bg};border-radius:8px;font-size:12px;font-weight:700;color:${T.cta_text};text-align:center;opacity:0;">${C.cta}</div>
       </div>
       <div id="t9-logo-bottom" style="opacity:0;text-align:center;padding-bottom:4px;display:flex;justify-content:center;">${getLogoUrl() ? `<img src="${getLogoUrl()}" style="max-height:24px;object-fit:contain;">` : `<span style="font-size:10px;font-weight:700;letter-spacing:2px;color:${T.badge_text}">${BRAND}</span>`}</div>
     </div>
@@ -3473,28 +3185,38 @@ function renderTemplate9(frame) {
     }
   }
 
-  // Headline flicker reveal
-  const hlLineCount = 3; // approximate 3 lines
-  for (let li = 0; li < hlLineCount; li++) {
-    const lineEl = document.getElementById(`t9-hl-line-${li}`);
-    if (!lineEl) continue;
-    const lineStart = 100 + li * 15;
-    if (frame >= lineStart) {
-      const flickF = frame - lineStart;
-      if (flickF < 6) {
-        // Flicker: on/off rapidly
-        lineEl.style.opacity = (flickF % 2 < 1) ? '0.9' : '0.1';
-      } else {
-        lineEl.style.opacity = '1';
-      }
+  // Headline scrolls up like movie credits
+  const headlineEl = document.getElementById('t9-headline');
+  if (headlineEl) {
+    if (frame >= 80) {
+      headlineEl.style.opacity = interpolate(frame, [80, 90], [0, 1], { clamp: true });
+      const pct = interpolate(frame, [80, 130], [70, 52], { clamp: true });
+      headlineEl.style.top = pct + '%';
+    } else {
+      headlineEl.style.opacity = '0';
+      headlineEl.style.top = '70%';
     }
   }
 
-  // Support text scrolling credits
+  // Support text — position wrapper absolutely below headline
+  const supportWrap = document.getElementById('t9-support-wrap');
   const supportEl = document.getElementById('t9-support');
-  if (supportEl && frame >= 140) {
-    const scrollY = interpolate(frame, [140, 200], [50, 0], { clamp: true, easing: easeOut });
-    supportEl.style.top = scrollY + 'px';
+  if (supportWrap) {
+    supportWrap.style.position = 'absolute';
+    supportWrap.style.left = '20px';
+    supportWrap.style.right = '20px';
+    supportWrap.style.top = '66%';
+    supportWrap.style.height = '60px';
+  }
+  if (supportEl) {
+    if (frame >= 170) {
+      supportEl.style.opacity = interpolate(frame, [170, 180], [0, 1], { clamp: true });
+      const scrollY = interpolate(frame, [170, 230], [60, 0], { clamp: true, easing: easeOut });
+      supportEl.style.top = scrollY + 'px';
+    } else {
+      supportEl.style.opacity = '0';
+      supportEl.style.top = '60px';
+    }
   }
 
   // Spotlight + CTA
@@ -3511,10 +3233,10 @@ function renderTemplate9(frame) {
     }
   }
 
-  // FIN text flash
+  // "Try Free" text flash
   const finEl = document.getElementById('t9-fin');
   if (finEl) {
-    if (frame >= 210 && frame < 225) {
+    if (frame >= 200 && frame < 250) {
       finEl.style.opacity = (frame % 3 < 2) ? '1' : '0.2';
     } else {
       finEl.style.opacity = '0';
@@ -4235,7 +3957,7 @@ function initTemplate14(canvas) {
       return isHl ? `<span id="t14-hl-word" style="color:${AMBER};">${w}</span>` : w;
     }).join(' ')}</div>
     <div id="t14-support" style="position:absolute;bottom:96px;left:20px;right:20px;font-size:10px;color:rgba(239,231,219,0.6);line-height:1.6;text-align:center;font-family:Georgia,serif;opacity:0;z-index:40;">${C.support}</div>
-    <div id="t14-badge" style="position:absolute;top:44px;right:14px;background:rgba(197,160,89,0.15);border:1px solid rgba(197,160,89,0.35);color:rgba(197,160,89,0.85);padding:3px 8px;border-radius:4px;font-size:9px;font-weight:600;letter-spacing:0.5px;opacity:0;z-index:40;">${C.badge}</div>
+    <div id="t14-badge" style="position:absolute;top:44px;left:14px;background:rgba(197,160,89,0.15);border:1px solid rgba(197,160,89,0.35);color:rgba(197,160,89,0.85);padding:3px 8px;border-radius:4px;font-size:9px;font-weight:600;letter-spacing:0.5px;opacity:0;z-index:40;">${C.badge}</div>
     <div id="t14-cta" style="position:absolute;bottom:26px;left:24px;right:24px;background:${T.cta_bg};color:${T.cta_text};padding:12px 20px;border-radius:999px;font-size:13px;font-weight:700;text-align:center;opacity:0;z-index:40;box-shadow:0 4px 24px rgba(197,160,89,0.3);">${C.cta}</div>
     <div id="t14-particles" style="position:absolute;inset:0;z-index:35;pointer-events:none;">${particleHtml}</div>
   `;
@@ -4480,7 +4202,7 @@ function initTemplate16(canvas) {
     <div id="t16-glow" style="position:absolute;top:40px;left:4px;right:4px;height:230px;border-radius:18px;box-shadow:0 0 0px rgba(197,160,89,0);pointer-events:none;"></div>
 
     <!-- Logo at top, warm gold -->
-    <div id="t16-logo" style="position:absolute;top:12px;left:50%;transform:translateX(-50%);opacity:0;height:28px;display:flex;align-items:center;justify-content:center;">
+    <div id="t16-logo" style="position:absolute;top:453px;left:50%;transform:translateX(-50%);opacity:0;height:28px;display:flex;align-items:center;justify-content:center;">
       ${getLogoUrl() ? `<img src="${getLogoUrl()}" style="max-height:24px;max-width:100px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(197,160,89,0.6));">` : `<span style="font-size:11px;font-weight:800;letter-spacing:1.5px;color:#C5A059;">${BRAND}</span>`}
     </div>
 
@@ -4629,7 +4351,7 @@ function initTemplate17(canvas) {
     <div id="t17-badge" style="position:absolute;top:378px;left:50%;transform:translateX(-50%) rotate(-2deg);opacity:0;padding:4px 12px;background:rgba(197,160,89,0.2);border:1px solid rgba(139,111,71,0.5);border-radius:4px;font-size:9px;font-weight:700;color:#8B6F47;letter-spacing:0.5px;white-space:nowrap;">${C.badge}</div>
 
     <!-- Logo (subtle, on the page) -->
-    <div id="t17-logo" style="position:absolute;bottom:56px;left:50%;transform:translateX(-50%);opacity:0;height:24px;display:flex;align-items:center;justify-content:center;">
+    <div id="t17-logo" style="position:absolute;top:444px;left:50%;transform:translateX(-50%);opacity:0;height:24px;display:flex;align-items:center;justify-content:center;">
       ${getLogoUrl() ? `<img src="${getLogoUrl()}" style="max-height:20px;max-width:90px;object-fit:contain;filter:sepia(0.5) saturate(0.7) brightness(0.6);">` : `<span style="font-size:10px;font-weight:700;letter-spacing:1px;color:#8B6F47;">${BRAND}</span>`}
     </div>
 
@@ -4887,6 +4609,446 @@ function renderTemplate18(frame) {
 }
 
 
+// ── Template 19: The Triple Restore ──────────────────────────────────────────
+// Three polaroids drop with camera snaps. Each sepia photo is swept to full
+// color by an amber light bridge. They fan out like photos on a warm table.
+// 330 frames / 11s @ 30fps.
+
+const T19_SPARKS = (() => {
+  const rng = seededRand(19);
+  return Array.from({ length: 10 }, (_, i) => ({
+    pct: rng() * 100,          // position along connecting line (0-100%)
+    offY: (rng() - 0.5) * 10, // vertical jitter from line center
+    sz: 1.5 + rng() * 2,
+    phase: rng() * Math.PI * 2,
+    speed: 0.15 + rng() * 0.25,
+  }));
+})();
+
+const T19_HOLD_PARTICLES = (() => {
+  const rng = seededRand(191);
+  return Array.from({ length: 18 }, () => ({
+    x: 5 + rng() * 90,
+    y: 10 + rng() * 75,
+    size: 1.2 + rng() * 2.2,
+    vx: (rng() - 0.5) * 0.07,
+    vy: -0.05 - rng() * 0.07,
+    phase: rng() * Math.PI * 2,
+    color: ['rgba(197,160,89,0.55)','rgba(212,168,75,0.45)','rgba(245,240,224,0.35)'][Math.floor(rng() * 3)],
+  }));
+})();
+
+function initTemplate19(canvas) {
+  const AMBER = '#C5A059';
+  const photoUrl = getPhotoUrl();
+  const logoUrl  = getLogoUrl();
+
+  // Extended photo schema: AD.assets.photos[] with {before, after} pairs,
+  // or fall back to the single afterPhotoUrl with different object-position crops.
+  const photos = AD.assets.photos || [
+    { before: photoUrl, after: photoUrl, pos: 'center 30%' },
+    { before: photoUrl, after: photoUrl, pos: 'center center' },
+    { before: photoUrl, after: photoUrl, pos: 'center 70%' },
+  ];
+  // Ensure each entry has a position for fallback mode
+  const positions = ['center 30%', 'center center', 'center 70%'];
+  const ph = photos.map((p, i) => ({
+    before: p.before || photoUrl,
+    after:  p.after  || photoUrl,
+    pos:    p.pos    || positions[i],
+  }));
+
+  const words = C.headline.split(' ');
+  const hlIdx = words.findIndex(w => w.toLowerCase().includes(C.highlight.toLowerCase().split(' ')[0]));
+
+  // Build sparkle HTML for the connecting line
+  let sparkHtml = '';
+  T19_SPARKS.forEach((s, i) => {
+    sparkHtml += `<div id="t19-spark-${i}" style="position:absolute;width:${s.sz.toFixed(1)}px;height:${s.sz.toFixed(1)}px;border-radius:50%;background:rgba(255,220,120,0.85);opacity:0;pointer-events:none;"></div>`;
+  });
+
+  // Build hold-particle HTML
+  let holdPHtml = '';
+  T19_HOLD_PARTICLES.forEach((p, i) => {
+    holdPHtml += `<div id="t19-hp-${i}" style="position:absolute;width:${p.size.toFixed(1)}px;height:${p.size.toFixed(1)}px;border-radius:50%;background:${p.color};left:${p.x.toFixed(1)}%;top:${p.y.toFixed(1)}%;opacity:0;pointer-events:none;"></div>`;
+  });
+
+  // Inline photo helper — image or gradient fallback
+  const photoHtml = (url, pos, filter) => url
+    ? `<img src="${url}" style="width:100%;height:100%;object-fit:cover;object-position:${pos};filter:${filter};">`
+    : `<div style="width:100%;height:100%;background:linear-gradient(135deg,#3a2510,#1e1008);"></div>`;
+
+  canvas.innerHTML = `
+    <!-- Warm dark background -->
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,#1e1408 0%,#0e0a04 55%,#080502 100%);"></div>
+
+    <!-- Full-screen flash overlay (spikes at each snap) -->
+    <div id="t19-flash" style="position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:80;"></div>
+
+    <!-- Camera emoji -->
+    <div id="t19-camera" style="position:absolute;top:200px;left:50%;transform:translateX(-50%) scale(1);font-size:50px;opacity:0;z-index:70;user-select:none;pointer-events:none;">&#128247;</div>
+
+    <!-- ── POLAROID 1 (left, -5deg) ── -->
+    <div id="t19-pol-1" style="position:absolute;top:70px;left:50%;transform:translateX(-50%) translateY(-500px) rotate(-5deg);opacity:0;z-index:20;">
+      <!-- White polaroid frame -->
+      <div style="background:#faf8f5;padding:8px 8px 28px;box-shadow:0 10px 36px rgba(0,0,0,0.75),0 2px 8px rgba(0,0,0,0.45);border-radius:2px;">
+        <!-- Photo area -->
+        <div style="position:relative;width:82px;height:82px;overflow:hidden;border-radius:1px;">
+          <!-- Before (sepia) -->
+          <div id="t19-ph1-before" style="position:absolute;inset:0;">
+            ${photoHtml(ph[0].before, ph[0].pos, 'grayscale(0.4) sepia(0.8) brightness(0.7)')}
+          </div>
+          <!-- After (full color, revealed by sweep clip) -->
+          <div id="t19-ph1-after" style="position:absolute;inset:0;clip-path:inset(0 100% 0 0);">
+            ${photoHtml(ph[0].after, ph[0].pos, 'none')}
+          </div>
+          <!-- Amber sweep overlay -->
+          <div id="t19-sweep-1" style="position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(212,168,75,0.55) 40%,rgba(255,230,140,0.75) 50%,rgba(212,168,75,0.55) 60%,transparent 100%);transform:translateX(-150%);pointer-events:none;z-index:5;"></div>
+        </div>
+        <!-- Label -->
+        <div id="t19-lbl-1" style="margin-top:6px;text-align:center;font-size:7px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#888;font-family:-apple-system,sans-serif;">Before</div>
+      </div>
+    </div>
+
+    <!-- ── POLAROID 2 (right, +5deg) ── -->
+    <div id="t19-pol-2" style="position:absolute;top:70px;left:50%;transform:translateX(-50%) translateY(-500px) rotate(5deg);opacity:0;z-index:21;">
+      <div style="background:#faf8f5;padding:8px 8px 28px;box-shadow:0 10px 36px rgba(0,0,0,0.75),0 2px 8px rgba(0,0,0,0.45);border-radius:2px;">
+        <div style="position:relative;width:82px;height:82px;overflow:hidden;border-radius:1px;">
+          <div id="t19-ph2-before" style="position:absolute;inset:0;">
+            ${photoHtml(ph[1].before, ph[1].pos, 'grayscale(0.4) sepia(0.8) brightness(0.7)')}
+          </div>
+          <div id="t19-ph2-after" style="position:absolute;inset:0;clip-path:inset(0 100% 0 0);">
+            ${photoHtml(ph[1].after, ph[1].pos, 'none')}
+          </div>
+          <div id="t19-sweep-2" style="position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(212,168,75,0.55) 40%,rgba(255,230,140,0.75) 50%,rgba(212,168,75,0.55) 60%,transparent 100%);transform:translateX(-150%);pointer-events:none;z-index:5;"></div>
+        </div>
+        <div id="t19-lbl-2" style="margin-top:6px;text-align:center;font-size:7px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#888;font-family:-apple-system,sans-serif;">Before</div>
+      </div>
+    </div>
+
+    <!-- ── POLAROID 3 (center hero, slightly larger) ── -->
+    <div id="t19-pol-3" style="position:absolute;top:70px;left:50%;transform:translateX(-50%) translateY(-500px) rotate(0deg);opacity:0;z-index:22;">
+      <div style="background:#faf8f5;padding:8px 8px 28px;box-shadow:0 14px 44px rgba(0,0,0,0.8),0 3px 10px rgba(0,0,0,0.5);border-radius:2px;transform:scale(1.1);transform-origin:center top;">
+        <div style="position:relative;width:82px;height:82px;overflow:hidden;border-radius:1px;">
+          <div id="t19-ph3-before" style="position:absolute;inset:0;">
+            ${photoHtml(ph[2].before, ph[2].pos, 'grayscale(0.4) sepia(0.8) brightness(0.7)')}
+          </div>
+          <div id="t19-ph3-after" style="position:absolute;inset:0;clip-path:inset(0 100% 0 0);">
+            ${photoHtml(ph[2].after, ph[2].pos, 'none')}
+          </div>
+          <div id="t19-sweep-3" style="position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(212,168,75,0.55) 40%,rgba(255,230,140,0.75) 50%,rgba(212,168,75,0.55) 60%,transparent 100%);transform:translateX(-150%);pointer-events:none;z-index:5;"></div>
+        </div>
+        <div id="t19-lbl-3" style="margin-top:6px;text-align:center;font-size:7px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#888;font-family:-apple-system,sans-serif;">Before</div>
+      </div>
+    </div>
+
+    <!-- Connecting amber glow line (appears at fan-out) — brighter, more prominent -->
+    <div id="t19-connect-line" style="position:absolute;top:215px;left:6%;right:6%;height:4px;background:linear-gradient(90deg,rgba(197,160,89,0.05),rgba(255,220,120,0.9),rgba(255,240,180,1),rgba(255,220,120,0.9),rgba(197,160,89,0.05));border-radius:3px;box-shadow:0 0 18px rgba(255,210,100,0.7),0 0 40px rgba(197,160,89,0.35);opacity:0;pointer-events:none;z-index:25;"></div>
+
+    <!-- Sparkles along connecting line -->
+    <div id="t19-sparks" style="position:absolute;top:208px;left:6%;right:6%;height:18px;pointer-events:none;z-index:26;">${sparkHtml}</div>
+
+    <!-- Headline (word-by-word, below line) -->
+    <div id="t19-headline" style="position:absolute;top:238px;left:14px;right:14px;font-size:12px;font-weight:700;line-height:1.35;font-family:Georgia,serif;text-align:center;color:#efe7db;">
+      ${words.map((w, i) => {
+        const isHl = i === hlIdx || (hlIdx >= 0 && C.highlight.split(' ').some(hw => w.toLowerCase().includes(hw.toLowerCase())));
+        return `<span id="t19-word-${i}" style="display:inline;opacity:0;">${isHl
+          ? `<span style="background:rgba(212,168,75,0.28);color:#D4A84B;border-radius:4px;padding:1px 4px;">${w}</span>`
+          : w}${i < words.length - 1 ? ' ' : ''}</span>`;
+      }).join('')}
+    </div>
+
+    <!-- Support text (under headline) -->
+    <div id="t19-support" style="position:absolute;top:295px;left:16px;right:16px;font-size:11px;font-style:italic;color:rgba(239,231,219,0.72);line-height:1.5;text-align:center;opacity:0;z-index:30;">${C.support}</div>
+
+    <!-- Badge pill -->
+    <div id="t19-badge" style="position:absolute;top:346px;left:50%;transform:translateX(-50%);background:${T.badge_bg};color:${T.badge_text};padding:3px 14px;border-radius:20px;font-size:9px;font-weight:700;letter-spacing:0.5px;white-space:nowrap;opacity:0;z-index:30;">${C.badge}</div>
+
+    <!-- Logo (centered between badge and CTA) -->
+    <div id="t19-logo" style="position:absolute;top:380px;left:50%;transform:translateX(-50%);opacity:0;height:32px;display:flex;align-items:center;justify-content:center;z-index:50;">
+      ${logoUrl ? `<img src="${logoUrl}" style="max-height:24px;max-width:90px;object-fit:contain;filter:drop-shadow(0 1px 6px rgba(0,0,0,0.6));">` : `<span style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:${AMBER};">${BRAND}</span>`}
+    </div>
+
+    <!-- CTA -->
+    <div id="t19-cta" style="position:absolute;top:460px;left:24px;right:24px;background:${T.cta_bg};color:${T.cta_text};padding:11px 16px;border-radius:999px;font-size:12px;font-weight:700;text-align:center;opacity:0;transform:translateY(15px);z-index:30;box-shadow:0 4px 24px rgba(197,160,89,0.3);">${C.cta}</div>
+
+    <!-- Vignette (deepens on hold) -->
+    <div id="t19-vignette" style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,transparent 35%,rgba(0,0,0,0.65) 100%);opacity:0;pointer-events:none;z-index:15;"></div>
+
+    <!-- Hold particles -->
+    <div id="t19-hold-particles" style="position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:16;">${holdPHtml}</div>
+  `;
+}
+
+function renderTemplate19(f) {
+  const AMBER = '#C5A059';
+
+  // ── Camera pulse (frames 0-30) ──────────────────────────────────────────────
+  const cam = document.getElementById('t19-camera');
+  if (cam) {
+    const camIn  = interpolate(f, [0, 10], [0, 1], { clamp: true, easing: easeInOut });
+    const camOut = interpolate(f, [22, 30], [0, 1], { clamp: true, easing: easeInOut });
+    cam.style.opacity = Math.max(0, camIn - camOut).toFixed(3);
+    const pulse = 1.0 + 0.18 * Math.abs(Math.sin(f * 0.28));
+    cam.style.transform = `translateX(-50%) scale(${pulse.toFixed(3)})`;
+  }
+
+  // ── Flash helper ───────────────────────────────────────────────────────────
+  const flash = document.getElementById('t19-flash');
+  if (flash) {
+    // Flash 1: frame 25 spike 0→0.8 in 2 frames, then 0.8→0 over 6 frames
+    const f1in  = interpolate(f, [25, 27], [0, 0.8], { clamp: true });
+    const f1out = interpolate(f, [27, 33], [0.8, 0], { clamp: true });
+    // Flash 2: frame 70, opacity 0.6
+    const f2in  = interpolate(f, [70, 72], [0, 0.6], { clamp: true });
+    const f2out = interpolate(f, [72, 78], [0.6, 0], { clamp: true });
+    // Flash 3: frame 115, opacity 0.5
+    const f3in  = interpolate(f, [115, 117], [0, 0.5], { clamp: true });
+    const f3out = interpolate(f, [117, 123], [0.5, 0], { clamp: true });
+
+    let fo = 0;
+    if (f >= 25 && f < 33)  fo = f <= 27 ? f1in  : f1out;
+    if (f >= 70 && f < 78)  fo = f <= 72 ? f2in  : f2out;
+    if (f >= 115 && f < 123) fo = f <= 117 ? f3in  : f3out;
+    flash.style.opacity = fo.toFixed(3);
+  }
+
+  // ── Polaroid drop helper ───────────────────────────────────────────────────
+  // Returns [translateX%, translateY_px, rotate_deg] given current frame
+  // during initial drop phase and fan-out phase.
+  //
+  // Initial drop positions (centered on canvas, shifted left/right/center):
+  //   pol1: drop origin above-left  → land at x=-60px
+  //   pol2: drop origin above-right → land at x=+60px
+  //   pol3: drop origin top-center  → land at x=0px
+  //
+  // Fan-out target positions (as translateX from left:50% anchor):
+  //   pol1: translateX(-50%) → left=15% means translateX = -(50-15)% of canvas ≈ -91px (canvas 260px)
+  //   pol2: right=85%       → translateX ≈ +91px
+  //   pol3: center stays    → translateX = 0px
+  //
+  // We animate from landed x → fan x using spring(f-165, {damping:15})
+
+  const canvasW = 260; // fixed canvas width
+
+  // Fan-out spring (frames 165-200)
+  const fanProg = Math.max(0, f - 165);
+  const fanSpring = spring(fanProg, { damping: 15, stiffness: 120, mass: 1 });
+
+  // ── Polaroid 1 (left, -5deg → fan -8deg) ──────────────────────────────────
+  const pol1 = document.getElementById('t19-pol-1');
+  if (pol1) {
+    const dropProg = Math.max(0, f - 30);
+    const dropS = spring(dropProg, { damping: 10, stiffness: 100, mass: 1.3 });
+    const dropY  = interpolate(dropS, [0, 1], [-500, 0]);
+    const dropOp = interpolate(f, [30, 42], [0, 1], { clamp: true });
+
+    // Landed x offset from center: -60px (shifted left)
+    // Fan x offset: left=15% of 260px = 39px, center anchor at 130px → offset = -(130-39) = -91px
+    const landX = -60;
+    const fanX  = -91;
+    const curX  = interpolate(fanSpring, [0, 1], [landX, fanX]);
+
+    // Rotate: -5deg → -8deg on fan
+    const landRot = -5;
+    const fanRot  = -8;
+    const curRot  = interpolate(fanSpring, [0, 1], [landRot, fanRot]);
+
+    pol1.style.opacity   = dropOp.toFixed(3);
+    pol1.style.transform = `translateX(calc(-50% + ${curX.toFixed(1)}px)) translateY(${dropY.toFixed(1)}px) rotate(${curRot.toFixed(2)}deg)`;
+  }
+
+  // ── Polaroid 2 (right, +5deg → fan +8deg) ─────────────────────────────────
+  const pol2 = document.getElementById('t19-pol-2');
+  if (pol2) {
+    const dropProg = Math.max(0, f - 75);
+    const dropS = spring(dropProg, { damping: 10, stiffness: 100, mass: 1.3 });
+    const dropY  = interpolate(dropS, [0, 1], [-500, 0]);
+    const dropOp = interpolate(f, [75, 87], [0, 1], { clamp: true });
+
+    const landX = 60;
+    const fanX  = 91;
+    const curX  = interpolate(fanSpring, [0, 1], [landX, fanX]);
+
+    const landRot = 5;
+    const fanRot  = 8;
+    const curRot  = interpolate(fanSpring, [0, 1], [landRot, fanRot]);
+
+    pol2.style.opacity   = dropOp.toFixed(3);
+    pol2.style.transform = `translateX(calc(-50% + ${curX.toFixed(1)}px)) translateY(${dropY.toFixed(1)}px) rotate(${curRot.toFixed(2)}deg)`;
+  }
+
+  // ── Polaroid 3 (center hero, 0deg → fan 0deg, y=20%) ──────────────────────
+  const pol3 = document.getElementById('t19-pol-3');
+  if (pol3) {
+    const dropProg = Math.max(0, f - 120);
+    const dropS = spring(dropProg, { damping: 10, stiffness: 100, mass: 1.3 });
+    const dropY  = interpolate(dropS, [0, 1], [-500, 0]);
+    const dropOp = interpolate(f, [120, 132], [0, 1], { clamp: true });
+
+    // Center stays at x=0, but we add a slight fan-upward: top: 25% → 20% maps to translateY 0→-28px approx
+    const fanUpY = interpolate(fanSpring, [0, 1], [0, -14]);
+    const curX = 0;
+
+    pol3.style.opacity   = dropOp.toFixed(3);
+    pol3.style.transform = `translateX(calc(-50% + ${curX}px)) translateY(${(dropY + fanUpY).toFixed(1)}px) rotate(0deg)`;
+  }
+
+  // ── Light-bridge sweep helper ──────────────────────────────────────────────
+  // sweepEl: the amber gradient overlay div inside the photo
+  // afterEl: the after-photo div with clip-path
+  // lblEl:   the label div
+  // startF, endF: frame range of the sweep
+  const doSweep = (sweepId, afterId, lblId, startF, endF) => {
+    const sweepEl = document.getElementById(sweepId);
+    const afterEl = document.getElementById(afterId);
+    const lblEl   = document.getElementById(lblId);
+
+    if (sweepEl && f >= startF) {
+      // Sweep position: translateX from -150% to +150%
+      const sp = interpolate(f, [startF, endF], [0, 1], { clamp: true, easing: easeInOut });
+      const tx = interpolate(sp, [0, 1], [-150, 150]);
+      sweepEl.style.transform = `translateX(${tx.toFixed(1)}%)`;
+      // Fade out sweep overlay as it exits right
+      const sweepOp = f < (startF + endF) / 2 ? 1 : interpolate(f, [(startF + endF) / 2, endF + 6], [1, 0], { clamp: true });
+      sweepEl.style.opacity = sweepOp.toFixed(3);
+    }
+
+    if (afterEl && f >= startF) {
+      // As sweep passes, reveal the after photo — clip from right edge recedes
+      const revealP = interpolate(f, [startF, endF], [0, 1], { clamp: true, easing: easeInOut });
+      const revealPct = interpolate(revealP, [0, 1], [100, 0]);
+      afterEl.style.clipPath = `inset(0 ${revealPct.toFixed(1)}% 0 0)`;
+    }
+
+    if (lblEl && f >= startF) {
+      // Cross-fade label: Before→After
+      const lblP = interpolate(f, [startF + 8, endF], [0, 1], { clamp: true, easing: easeInOut });
+      if (lblP < 0.5) {
+        lblEl.textContent = 'Before';
+        lblEl.style.color = `rgba(136,136,136,${1 - lblP * 2})`;
+      } else {
+        lblEl.textContent = 'After';
+        lblEl.style.color = `rgba(197,160,89,${(lblP - 0.5) * 2})`;
+      }
+    }
+  };
+
+  // Sweep 1: frames 55-75
+  doSweep('t19-sweep-1', 't19-ph1-after', 't19-lbl-1', 55, 75);
+  // Sweep 2: frames 95-115
+  doSweep('t19-sweep-2', 't19-ph2-after', 't19-lbl-2', 95, 115);
+  // Sweep 3: frames 140-160
+  doSweep('t19-sweep-3', 't19-ph3-after', 't19-lbl-3', 140, 160);
+
+  // ── Hold float: subtle sin-wave on all three polaroids (frames 290+) ────────
+  if (f >= 290) {
+    const hf = f - 290;
+    [
+      { id: 't19-pol-1', phase: 0,          xBase: -91, rot: -8 },
+      { id: 't19-pol-2', phase: Math.PI * 0.66, xBase: 91,  rot: 8  },
+      { id: 't19-pol-3', phase: Math.PI * 1.33, xBase: 0,   rot: 0  },
+    ].forEach(({ id, phase, xBase, rot }) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const floatY = Math.sin(hf * 0.06 + phase) * 2.5;
+      const floatRot = rot + Math.sin(hf * 0.04 + phase) * 0.5;
+      // pol3 has a -14px fan-up baked in
+      const baseY = (id === 't19-pol-3') ? -14 : 0;
+      el.style.transform = `translateX(calc(-50% + ${xBase}px)) translateY(${(baseY + floatY).toFixed(2)}px) rotate(${floatRot.toFixed(3)}deg)`;
+    });
+  }
+
+  // ── Connecting line (appears at fan-out: frames 165-185) ──────────────────
+  const connLine = document.getElementById('t19-connect-line');
+  if (connLine) {
+    connLine.style.opacity = interpolate(f, [165, 185], [0, 1], { clamp: true, easing: easeInOut }).toFixed(3);
+    // Pulse on hold
+    if (f >= 290) {
+      const p = 0.7 + 0.3 * Math.sin((f - 290) * 0.1);
+      connLine.style.opacity = p.toFixed(3);
+    }
+  }
+
+  // ── Sparkles along connecting line (frames 175+) ──────────────────────────
+  if (f >= 175) {
+    const sparksWrap = document.getElementById('t19-sparks');
+    if (sparksWrap) {
+      const wrapWidth = sparksWrap.offsetWidth || 220;
+      T19_SPARKS.forEach((s, i) => {
+        const sp = document.getElementById(`t19-spark-${i}`);
+        if (!sp) return;
+        const sf = f - 175;
+        const x = ((s.pct + sf * s.speed * 60) % 100);
+        const y = 7 + s.offY + Math.sin(sf * 0.08 + s.phase) * 2;
+        const fadeIn = interpolate(f, [175, 195], [0, 1], { clamp: true });
+        const flicker = 0.5 + 0.5 * Math.sin(sf * 0.25 + s.phase);
+        sp.style.left    = `${x.toFixed(1)}%`;
+        sp.style.top     = `${y.toFixed(1)}px`;
+        sp.style.opacity = (fadeIn * flicker * 0.85).toFixed(3);
+      });
+    }
+  }
+
+  // ── Logo (frames 195-215) ─────────────────────────────────────────────────
+  const logo19 = document.getElementById('t19-logo');
+  if (logo19) {
+    logo19.style.opacity = interpolate(f, [195, 215], [0, 1], { clamp: true, easing: easeInOut }).toFixed(3);
+  }
+
+  // ── Headline words (frames 200-230, stagger per word) ─────────────────────
+  const words19 = C.headline.split(' ');
+  words19.forEach((_, i) => {
+    const wordEl = document.getElementById(`t19-word-${i}`);
+    if (!wordEl) return;
+    const startF = 200 + i * 8;
+    wordEl.style.opacity = interpolate(f, [startF, startF + 14], [0, 1], { clamp: true, easing: easeInOut }).toFixed(3);
+  });
+
+  // ── Badge (frames 225-245) ────────────────────────────────────────────────
+  const badge19 = document.getElementById('t19-badge');
+  if (badge19) {
+    badge19.style.opacity = interpolate(f, [225, 245], [0, 1], { clamp: true, easing: easeInOut }).toFixed(3);
+  }
+
+  // ── Support text (frames 235-255) ────────────────────────────────────────
+  const sup19 = document.getElementById('t19-support');
+  if (sup19) {
+    sup19.style.opacity = interpolate(f, [235, 255], [0, 1], { clamp: true, easing: easeInOut }).toFixed(3);
+  }
+
+  // ── CTA (frames 250-280, gentle rise, no bounce) ──────────────────────────
+  const cta19 = document.getElementById('t19-cta');
+  if (cta19) {
+    const ctaOp = interpolate(f, [250, 272], [0, 1], { clamp: true, easing: easeInOut });
+    const ctaY  = interpolate(f, [250, 278], [15, 0], { clamp: true, easing: easeInOut });
+    cta19.style.opacity   = ctaOp.toFixed(3);
+    cta19.style.transform = `translateY(${ctaY.toFixed(2)}px)`;
+  }
+
+  // ── Vignette deepens on hold (frames 290-330) ─────────────────────────────
+  const vig19 = document.getElementById('t19-vignette');
+  if (vig19) {
+    vig19.style.opacity = interpolate(f, [290, 320], [0, 0.55], { clamp: true, easing: easeInOut }).toFixed(3);
+  }
+
+  // ── Hold particles drift upward (frames 290+) ────────────────────────────
+  if (f >= 290) {
+    T19_HOLD_PARTICLES.forEach((p, i) => {
+      const dot = document.getElementById(`t19-hp-${i}`);
+      if (!dot) return;
+      const af = f - 290;
+      const x = p.x + p.vx * af + Math.sin(af * 0.05 + p.phase) * 0.7;
+      const y = p.y + p.vy * af;
+      const gone = y < -2;
+      const fadeIn = clamp(af / 12, 0, 1);
+      dot.style.left    = `${x.toFixed(2)}%`;
+      dot.style.top     = `${y.toFixed(2)}%`;
+      dot.style.opacity = gone ? '0' : (fadeIn * 0.65).toFixed(3);
+    });
+  }
+}
+
 // ─── POSTMESSAGE API (for iframe embedding in editor) ────────────────────────
 
 const isEmbedded = window.parent !== window;
@@ -4897,7 +5059,7 @@ window.addEventListener('message', (e) => {
 
   if (msg.type === 'switchTemplate') {
     const id = msg.templateId;
-    if (id >= 1 && id <= 18) {
+    if (id >= 1 && id <= 19) {
       document.querySelectorAll('.tmpl-tab').forEach(t => t.classList.remove('active'));
       const btn = document.querySelector(`.tmpl-tab[data-tmpl="${id}"]`);
       if (btn) btn.classList.add('active');
@@ -4940,7 +5102,10 @@ window.addEventListener('message', (e) => {
     if (L.logo) {
       applyPos(t1Els.logo, L.logo);
       applyPos(t2Els.logo, L.logo);
-      applyPos(t3Els.logo, L.logo);
+      // T3 logo uses full-width flex centering — only apply Y override
+      if (t3Els.logo && L.logo.y !== undefined) {
+        t3Els.logo.style.top = (L.logo.y / 100 * ch) + 'px';
+      }
       if (t4Els.masthead) applyPos(t4Els.masthead, L.logo);
     }
     if (L.badge) {
@@ -5135,6 +5300,17 @@ window.addEventListener('message', (e) => {
     applyLogoVisibility();
   }
 
+  if (msg.type === 'toggleBrandName') {
+    useBrandName = msg.show;
+    // Rebuild current template to regenerate logos
+    const wasPlaying = isPlaying;
+    pause();
+    buildTemplate(currentTemplate);
+    applyLogoVisibility();
+    setFrame(0);
+    if (wasPlaying) play();
+  }
+
   if (msg.type === 'play') play();
   if (msg.type === 'pause') pause();
   if (msg.type === 'restart') restart();
@@ -5147,7 +5323,7 @@ function applyLogoVisibility() {
                      't8-logo','t8-logo-bottom','t8-logo-ghost1','t8-logo-ghost2','t8-logo-ghost3',
                      't9-logo','t9-logo-bottom','t10-logo-area',
                      't11-logo','t12-logo','t12-ornline','t13-logo','t14-logo',
-                     't15-logo','t16-logo','t17-logo','t18-logo'];
+                     't15-logo','t16-logo','t17-logo','t18-logo','t19-logo'];
     const show = showLogo;
     logoIds.forEach(id => {
       const el = document.getElementById(id);

@@ -928,7 +928,6 @@
     <button class="tmpl-btn" data-tmpl="6">6 · Peel</button>
     <!-- Blinds removed: doesn't render photos -->
 
-    <button class="tmpl-btn" data-tmpl="8">8 · Orbit</button>
     <button class="tmpl-btn" data-tmpl="9">9 · Film</button>
     <!-- Mosaic removed: doesn't render faces well for photo restoration -->
 
@@ -940,6 +939,7 @@
     <button class="tmpl-btn" data-tmpl="16">16 · Warmth</button>
     <button class="tmpl-btn" data-tmpl="17">17 · Album</button>
     <button class="tmpl-btn" data-tmpl="18">18 · Face to Face</button>
+    <button class="tmpl-btn" data-tmpl="19">19 · Triple</button>
   </div>
 
   <!-- Main area -->
@@ -1013,6 +1013,13 @@
               <label class="toggle-track" for="toggle-logo"></label>
             </div>
             <label for="toggle-logo" style="font-weight:600">Show Logo</label>
+          </div>
+          <div class="toggle-row" style="margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)">
+            <div class="toggle">
+              <input type="checkbox" id="toggle-brandname">
+              <label class="toggle-track" for="toggle-brandname"></label>
+            </div>
+            <label for="toggle-brandname" style="font-weight:600">Use Brand Name</label>
           </div>
           <div class="section-header" style="margin-top:0">Text Colors</div>
           <div class="color-row"><label>Headline Text</label><span class="hex-val" id="hv-headline_text">#d26739</span><div class="color-swatch" id="sw-headline_text" data-token="headline_text"></div></div>
@@ -1443,7 +1450,7 @@
     <!-- Right Panel — iframe to templates.html -->
     <div id="right-panel">
       <div id="preview-container">
-        <iframe id="template-iframe" src="templates.html?v=10" style="width:100%;height:100%;border:none;border-radius:12px;"></iframe>
+        <iframe id="template-iframe" src="templates.html?v=30" style="width:100%;height:100%;border:none;border-radius:12px;"></iframe>
       </div>
     </div>
 
@@ -1901,17 +1908,6 @@ function getTemplateConfig(templateId) {
       supportAnim: 'fade', supportDelay: 3.0,
       ctaAnim: 'fade', ctaDelay: 4.0,
       photoClip: 'blinds',
-    },
-    8: { // The Orbit — elements scale up from center
-      name: 'The Orbit',
-      bgGradient: '180deg',
-      logoAnim: 'spring', logoDelay: 0.5,
-      badgeAnim: 'spring', badgeDelay: 1.5,
-      headlineAnim: 'spring', headlineDelay: 2.0,
-      photoAnim: 'spring', photoDelay: 3.0,
-      supportAnim: 'spring', supportDelay: 4.0,
-      ctaAnim: 'spring', ctaDelay: 5.0,
-      orbit: true,
     },
     9: { // Filmstrip — slide in from right, projector flicker
       name: 'Filmstrip',
@@ -3768,6 +3764,19 @@ function wireInputs() {
       const iframe = document.getElementById('template-iframe');
       if (iframe && iframe.contentWindow) {
         iframe.contentWindow.postMessage({ type: 'toggleLogo', show: toggleLogo.checked }, '*');
+      }
+      syncJsonEditor();
+    });
+  }
+
+  // Brand name toggle
+  const toggleBrand = document.getElementById('toggle-brandname');
+  if (toggleBrand) {
+    toggleBrand.addEventListener('change', () => {
+      state.useBrandName = toggleBrand.checked;
+      const iframe = document.getElementById('template-iframe');
+      if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage({ type: 'toggleBrandName', show: toggleBrand.checked }, '*');
       }
       syncJsonEditor();
     });
