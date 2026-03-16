@@ -1,0 +1,26 @@
+{
+  "sourceUrl": "https://github.com/remotion-dev/skills",
+  "sourceUrls": [
+    "https://github.com/remotion-dev/skills",
+    "https://www.remotion.dev/prompts",
+    "https://www.remotion.dev/docs/the-fundamentals"
+  ],
+  "sourceType": "multi-source",
+  "detectionStrategy": "smart-diff",
+  "slug": "remotion-ad-studio",
+  "name": "Remotion Ad Studio",
+  "createdAt": "2026-03-15T21:00:00.000Z",
+  "lastChecked": "2026-03-15T21:00:00.000Z",
+  "lastChanged": null,
+  "contentHashes": {
+    "https://github.com/remotion-dev/skills": null,
+    "https://www.remotion.dev/prompts": null,
+    "https://www.remotion.dev/docs/the-fundamentals": null
+  },
+  "artifacts": [
+    "SKILL.md",
+    "editor.html",
+    "remotion-best-practices.md",
+    "rules/"
+  ]
+}

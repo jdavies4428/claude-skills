@@ -1,0 +1,20 @@
+{
+  "skillName": "Skills",
+  "skillSlug": "skills",
+  "sourceType": "detect-only",
+  "sourceUrl": "https://github.com/remotion-dev/skills",
+  "monitorConfig": {
+    "strategy": "http-head",
+    "lastKnownLinks": [],
+    "lastETag": null,
+    "lastModified": null
+  },
+  "userContext": {
+    "purpose": "Understand and use the data from Skills",
+    "features": [],
+    "outputFormat": "markdown"
+  },
+  "lastCheckTime": "2026-03-15T18:45:54.835Z",
+  "lastRefreshTime": "2026-03-15T18:45:54.835Z",
+  "contentHash": "490677fa432be750"
+}

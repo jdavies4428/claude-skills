@@ -11,6 +11,14 @@ import { Template7Blinds } from "./templates/Template7Blinds";
 import { Template8Orbit } from "./templates/Template8Orbit";
 import { Template9Film } from "./templates/Template9Film";
 import { Template10Mosaic } from "./templates/Template10Mosaic";
+import { Template11MemoryReturns } from "./templates/Template11MemoryReturns";
+import { Template12LegacyUnlocked } from "./templates/Template12LegacyUnlocked";
+import { Template13ThroughGenerations } from "./templates/Template13ThroughGenerations";
+import { Template14FaceReturns } from "./templates/Template14FaceReturns";
+import { Template15DustOfTime } from "./templates/Template15DustOfTime";
+import { Template16WarmthReturns } from "./templates/Template16WarmthReturns";
+import { Template17OpeningAlbum } from "./templates/Template17OpeningAlbum";
+import { Template18FaceToFace } from "./templates/Template18FaceToFace";
 
 export const RemotionRoot: React.FC = () => (
   <>
@@ -108,6 +116,86 @@ export const RemotionRoot: React.FC = () => (
       <Composition
         id="MosaicAssemble"
         component={Template10Mosaic}
+        durationInFrames={270}
+        fps={30}
+        width={1080}
+        height={1920}
+        schema={AdReelSchema}
+        defaultProps={DEFAULT_PROPS}
+      />
+      <Composition
+        id="MemoryReturns"
+        component={Template11MemoryReturns}
+        durationInFrames={300}
+        fps={30}
+        width={1080}
+        height={1920}
+        schema={AdReelSchema}
+        defaultProps={DEFAULT_PROPS}
+      />
+      <Composition
+        id="LegacyUnlocked"
+        component={Template12LegacyUnlocked}
+        durationInFrames={270}
+        fps={30}
+        width={1080}
+        height={1920}
+        schema={AdReelSchema}
+        defaultProps={DEFAULT_PROPS}
+      />
+      <Composition
+        id="ThroughGenerations"
+        component={Template13ThroughGenerations}
+        durationInFrames={330}
+        fps={30}
+        width={1080}
+        height={1920}
+        schema={AdReelSchema}
+        defaultProps={DEFAULT_PROPS}
+      />
+      <Composition
+        id="FaceReturns"
+        component={Template14FaceReturns}
+        durationInFrames={300}
+        fps={30}
+        width={1080}
+        height={1920}
+        schema={AdReelSchema}
+        defaultProps={DEFAULT_PROPS}
+      />
+      <Composition
+        id="DustOfTime"
+        component={Template15DustOfTime}
+        durationInFrames={300}
+        fps={30}
+        width={1080}
+        height={1920}
+        schema={AdReelSchema}
+        defaultProps={DEFAULT_PROPS}
+      />
+      <Composition
+        id="WarmthReturns"
+        component={Template16WarmthReturns}
+        durationInFrames={300}
+        fps={30}
+        width={1080}
+        height={1920}
+        schema={AdReelSchema}
+        defaultProps={DEFAULT_PROPS}
+      />
+      <Composition
+        id="OpeningTheAlbum"
+        component={Template17OpeningAlbum}
+        durationInFrames={330}
+        fps={30}
+        width={1080}
+        height={1920}
+        schema={AdReelSchema}
+        defaultProps={DEFAULT_PROPS}
+      />
+      <Composition
+        id="FaceToFace"
+        component={Template18FaceToFace}
         durationInFrames={270}
         fps={30}
         width={1080}

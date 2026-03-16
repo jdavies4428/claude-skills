@@ -1266,9 +1266,9 @@ function buildT1() {
 
   // Shutter icon
   const shutter = div({
-    position:'absolute', top:'30px', left:'50%',
+    position:'absolute', top:'200px', left:'50%',
     transform:'translateX(-50%)',
-    fontSize:'22px', opacity:'0',
+    fontSize:'60px', opacity:'0',
     userSelect:'none'
   }, '📷');
   canvas.appendChild(shutter);
@@ -1429,7 +1429,7 @@ function renderT1(f) {
 
   // Shutter pulse (frame 0-30)
   const shutterOp = interpolate(f, [0, 10], [0, 0.6]) - interpolate(f, [20, 30], [0, 0.6]);
-  const shutterScale = 0.8 + 0.4 * Math.abs(Math.sin(f * 0.3));
+  const shutterScale = 1.0 + 0.3 * Math.abs(Math.sin(f * 0.3));
   shutter.style.opacity = Math.max(0, shutterOp);
   shutter.style.transform = `translateX(-50%) scale(${shutterScale})`;
 
@@ -1543,15 +1543,15 @@ function buildT2() {
   });
   canvas.appendChild(bg);
 
-  // Logo
+  // Logo — appended later so it renders on top of photo container
   const logo = div({
     position:'absolute', top:'44px', left:'14px',
-    opacity:'0', zIndex:'10',
-    width:'60px', height:'30px',
+    opacity:'0', zIndex:'50',
+    width:'80px', height:'30px',
     display:'flex', alignItems:'center'
   });
-  logo.appendChild(logoEl({ maxHeight:'28px', filter:'drop-shadow(0 2px 8px rgba(0,0,0,0.5))' }));
-  canvas.appendChild(logo);
+  logo.appendChild(logoEl({ maxHeight:'26px', filter:'drop-shadow(0 2px 8px rgba(0,0,0,0.6))' }));
+  // (appended after photoContainer below)
   t2Els.logo = logo;
 
   // Badge
@@ -1570,8 +1570,8 @@ function buildT2() {
   // Photo container
   const photoContainer = div({
     position:'absolute',
-    top:'80px', left:'12px', right:'12px',
-    height:'210px',
+    top:'90px', left:'12px', right:'12px',
+    height:'200px',
     borderRadius:'8px',
     overflow:'hidden',
     boxShadow:'0 8px 30px rgba(0,0,0,0.5)'
@@ -1645,6 +1645,7 @@ function buildT2() {
   t2Els.divider = divider;
 
   canvas.appendChild(photoContainer);
+  canvas.appendChild(logo); // Logo on top of photo
 
   // Headline
   const headlineWrap = div({
@@ -1704,7 +1705,7 @@ function renderT2(f) {
   const logoSpring = spring(Math.max(0, f), { damping: 12, stiffness: 100 });
   logo.style.opacity = interpolate(f, [0, 20], [0, 1], { clamp: true });
   const logoScale = interpolate(logoSpring, [0, 1], [0.8, 1]);
-  logo.style.transform = `translateX(-50%) scale(${logoScale})`;
+  logo.style.transform = `scale(${logoScale})`;
 
   // Badge pop (20-50)
   const badgeProg = Math.max(0, f - 20);
@@ -1909,10 +1910,10 @@ function buildT3() {
 
   // Logo
   const logo = div({
-    position:'absolute', top:'180px', left:'50%',
-    transform:'translateX(-50%) translateY(0px)',
+    position:'absolute', top:'165px', left:'50%',
+    transform:'translateX(-50%)',
     opacity:'0',
-    width:'70px', height:'30px',
+    width:'80px', height:'32px',
     display:'flex', alignItems:'center', justifyContent:'center'
   });
   logo.appendChild(logoEl({ maxHeight:'30px', filter:'drop-shadow(0 2px 6px rgba(0,0,0,0.5))' }));
@@ -2003,8 +2004,8 @@ function renderT3(f) {
     p.style.opacity = pOp;
   });
 
-  // Logo fade (60-80) — appears under headline before badge
-  const logoDrift = interpolate(f, [60, 80], [10, 0], { clamp: true });
+  // Logo fade (60-80) — appears centered between headline and photo
+  const logoDrift = interpolate(f, [60, 80], [8, 0], { clamp: true });
   logo.style.opacity = interpolate(f, [60, 80], [0, 1], { clamp: true });
   logo.style.transform = `translateX(-50%) translateY(${logoDrift}px)`;
 
@@ -2778,9 +2779,9 @@ function renderTemplate6(frame) {
     const scaleX = interpolate(peelProgress, [0, 1], [1, 0.6], { clamp: false });
     if (f < 140) {
       photoEl.style.transform = `perspective(600px) rotateX(${rotX}deg) rotateY(${rotY}deg) scaleX(${scaleX})`;
-      photoEl.style.opacity = interpolate(f, [140, 170], [1, 0], { clamp: true });
+      photoEl.style.opacity = interpolate(f, [120, 140], [1, 0], { clamp: true });
     } else {
-      photoEl.style.opacity = interpolate(f, [140, 170], [1, 0], { clamp: true });
+      photoEl.style.opacity = '0';
     }
     shadowEl.style.opacity = interpolate(peelProgress, [0, 0.5, 1], [0, 0.8, 0], { clamp: false });
   }
@@ -2816,7 +2817,7 @@ function renderTemplate6(frame) {
   // Small photo appear
   const smallPhoto = document.getElementById('t6-photo-small');
   if (smallPhoto) {
-    const sp = spring(f - 145, { damping: 12, stiffness: 100 });
+    const sp = spring(f - 155, { damping: 12, stiffness: 100 });
     smallPhoto.style.opacity = clamp(sp, 0, 1);
     smallPhoto.style.transform = `scale(${interpolate(sp, [0,1], [0.92, 1], {clamp:false})})`;
   }
