@@ -10,7 +10,7 @@ import { AdPhoto } from "../components/AdPhoto";
 import { AdBadge } from "../components/AdBadge";
 import { seededRandom } from "../helpers";
 
-// 210 frames @ 30fps — Digital Glitch / Cyberpunk
+// 290 frames @ 30fps — Digital Glitch / Cyberpunk
 export const Template5Glitch: React.FC<AdReelProps> = ({
   copy,
   designTokens: T,
@@ -170,7 +170,9 @@ export const Template5Glitch: React.FC<AdReelProps> = ({
   const hlWords = copy.highlight.toLowerCase().split(" ");
   const headlineWords = scrambledText.split(" ");
   const origWords = copy.headline.split(" ");
-  const rgbSplit = interpolate(frame, [125, 135], [0, 1], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
+  const rgbIn = interpolate(frame, [125, 135], [0, 1], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
+  const rgbOut = interpolate(frame, [185, 200], [1, 0], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
+  const rgbSplit = frame < 185 ? rgbIn : rgbOut;
   const cursorBlink = Math.floor(frame / 6) % 2 === 0 ? 1 : 0;
 
   // ── Support terminal typing (120-150) ──────────────────────────────────

@@ -166,7 +166,7 @@ export const Template6Peel: React.FC<AdReelProps> = ({
           <div
             style={{
               width: "100%",
-              height: 420,
+              height: 600,
               borderRadius: 36,
               overflow: "hidden",
               opacity: smallPhotoOpacity,
@@ -337,25 +337,28 @@ export const Template6Peel: React.FC<AdReelProps> = ({
                 bottom: 60,
                 right: 48,
                 fontSize: 33,
-                fontWeight: 700,
+                fontWeight: 900,
                 letterSpacing: "3px",
                 color: "white",
-                opacity: 0.15,
+                opacity: 0.25,
               }}
             >
               {brandContext.brandName.toUpperCase()}
             </div>
-            {/* Inset photo */}
+            {/* Inset photo — before (old) photo, landscape orientation */}
             <div
               style={{
                 position: "absolute",
-                inset: 120,
+                top: 300,
+                left: 60,
+                right: 60,
+                height: 600,
                 borderRadius: 30,
                 overflow: "hidden",
               }}
             >
               <AdPhoto
-                photoUrl={assets.afterPhotoUrl}
+                photoUrl={assets.beforePhotoUrl || assets.afterPhotoUrl}
                 fallbackGradient={`linear-gradient(45deg, ${T.surface}, ${T.gradient_to})`}
                 style={{ width: "100%", height: "100%" }}
                 imgStyle={{ objectFit: "cover" }}

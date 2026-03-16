@@ -140,19 +140,23 @@ export const Template9Film: React.FC<AdReelProps> = ({
       ? interpolate(leakT, [0, 0.3, 0.7, 1], [0, 0.6, 0.6, 0])
       : 0;
 
-  // ── Headline flicker reveal, each line (100 + li*15) ─────────────────────
-  function lineOpacity(li: number): number {
-    const lineStart = 100 + li * 15;
-    if (frame < lineStart) return 0;
-    const flickF = frame - lineStart;
-    if (flickF < 6) return flickF % 2 < 1 ? 0.9 : 0.1;
-    return 1;
-  }
+  // ── Headline scroll up like movie credits (80-130) ───────────────────────
+  const headlineOpacity = interpolate(frame, [80, 90], [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+  const headlineTop =
+    frame >= 80
+      ? interpolate(frame, [80, 130], [H * 0.62, H * 0.46], {
+          extrapolateLeft: "clamp",
+          extrapolateRight: "clamp",
+        })
+      : H * 0.62;
 
-  // ── Support credits scroll up (140-190) ──────────────────────────────────
+  // ── Support credits scroll up (170-220) ──────────────────────────────────
   const supportTop =
-    frame >= 140
-      ? interpolate(frame, [140, 190], [H * 0.72, H * 0.58], {
+    frame >= 170
+      ? interpolate(frame, [170, 220], [H * 0.72, H * 0.58], {
           extrapolateLeft: "clamp",
           extrapolateRight: "clamp",
         })
@@ -171,9 +175,9 @@ export const Template9Film: React.FC<AdReelProps> = ({
     extrapolateRight: "clamp",
   });
 
-  // ── "TEST FREE!" flicker (210-240) ────────────────────────────────────────
+  // ── "Try Free" flicker (200-250) ─────────────────────────────────────────
   const finOpacity =
-    frame >= 210 && frame < 225
+    frame >= 200 && frame < 250
       ? frame % 3 < 2
         ? 1
         : 0.2
@@ -331,7 +335,7 @@ export const Template9Film: React.FC<AdReelProps> = ({
         <div
           style={{
             position: "relative",
-            height: 520,
+            height: 680,
             flexShrink: 0,
             overflow: "hidden",
             opacity: photoOpacity,
@@ -461,10 +465,15 @@ export const Template9Film: React.FC<AdReelProps> = ({
           </div>
         )}
 
-        {/* Headline with projector flicker */}
+        {/* Headline scrolls up like movie credits */}
         <div
           style={{
-            flexShrink: 0,
+            position: "absolute",
+            left: SPROCKET_W + 40,
+            right: SPROCKET_W + 40,
+            top: headlineTop,
+            opacity: headlineOpacity,
+            textAlign: "center",
           }}
         >
           {hlLines.map((line, li) => (
@@ -475,7 +484,6 @@ export const Template9Film: React.FC<AdReelProps> = ({
                 fontWeight: 800,
                 color: T.headline_text,
                 lineHeight: 1.35,
-                opacity: lineOpacity(li),
               }}
             >
               {line}
@@ -499,10 +507,31 @@ export const Template9Film: React.FC<AdReelProps> = ({
           {copy.support}
         </div>
 
+        {/* "Try Free" flash — above CTA */}
+        <div
+          style={{
+            textAlign: "center",
+            opacity: finOpacity,
+            flexShrink: 0,
+            marginTop: "auto",
+          }}
+        >
+          <div
+            style={{
+              fontSize: 52,
+              fontWeight: 900,
+              fontStyle: "italic",
+              color: "#fff",
+              letterSpacing: "0.12em",
+            }}
+          >
+            Try Free
+          </div>
+        </div>
+
         {/* CTA with spotlight */}
         <div
           style={{
-            marginTop: "auto",
             position: "relative",
             flexShrink: 0,
           }}
@@ -535,27 +564,6 @@ export const Template9Film: React.FC<AdReelProps> = ({
             }}
           >
             {copy.cta}
-          </div>
-        </div>
-
-        {/* "TEST FREE!" flash */}
-        <div
-          style={{
-            textAlign: "center",
-            opacity: finOpacity,
-            flexShrink: 0,
-          }}
-        >
-          <div
-            style={{
-              fontSize: 84,
-              fontWeight: 900,
-              fontStyle: "italic",
-              color: "#fff",
-              letterSpacing: "0.12em",
-            }}
-          >
-            TEST FREE!
           </div>
         </div>
 

@@ -8,7 +8,6 @@ import { Template4Magazine } from "./templates/Template4Magazine";
 import { Template5Glitch } from "./templates/Template5Glitch";
 import { Template6Peel } from "./templates/Template6Peel";
 import { Template7Blinds } from "./templates/Template7Blinds";
-import { Template8Orbit } from "./templates/Template8Orbit";
 import { Template9Film } from "./templates/Template9Film";
 import { Template10Mosaic } from "./templates/Template10Mosaic";
 import { Template11MemoryReturns } from "./templates/Template11MemoryReturns";
@@ -56,7 +55,7 @@ export const RemotionRoot: React.FC = () => (
       <Composition
         id="MagazineCover"
         component={Template4Magazine}
-        durationInFrames={240}
+        durationInFrames={260}
         fps={30}
         width={1080}
         height={1920}
@@ -66,7 +65,7 @@ export const RemotionRoot: React.FC = () => (
       <Composition
         id="TheGlitch"
         component={Template5Glitch}
-        durationInFrames={210}
+        durationInFrames={290}
         fps={30}
         width={1080}
         height={1920}
@@ -87,16 +86,6 @@ export const RemotionRoot: React.FC = () => (
         id="VenetianBlinds"
         component={Template7Blinds}
         durationInFrames={240}
-        fps={30}
-        width={1080}
-        height={1920}
-        schema={AdReelSchema}
-        defaultProps={DEFAULT_PROPS}
-      />
-      <Composition
-        id="TheOrbit"
-        component={Template8Orbit}
-        durationInFrames={300}
         fps={30}
         width={1080}
         height={1920}

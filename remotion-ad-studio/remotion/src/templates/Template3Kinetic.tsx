@@ -305,7 +305,7 @@ export const Template3Kinetic: React.FC<AdReelProps> = ({
               extrapolateLeft: "clamp",
               extrapolateRight: "clamp",
             });
-            const dist = pProg * 60;
+            const dist = pProg * 30;
             const px = Math.cos(angle) * dist;
             const py = Math.sin(angle) * dist;
             const pOp = interpolate(pProg, [0, 0.2, 1], [0, 1, 0]);
@@ -326,16 +326,16 @@ export const Template3Kinetic: React.FC<AdReelProps> = ({
           })}
         </div>
 
-        {/* Logo fades in at bottom (190-230) */}
+        {/* Logo fades in between headline and badge */}
         <div
           style={{
             position: "absolute",
-            bottom: 20,
-            left: "50%",
-            transform: `translateX(-50%) translateY(${logoDrift}px)`,
+            top: 476,
+            left: 0,
+            right: 0,
+            height: 187,
+            transform: `translateY(${logoDrift}px)`,
             opacity: logoOp,
-            width: 70,
-            height: 30,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",

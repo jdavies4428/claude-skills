@@ -29,7 +29,7 @@ export const Template17OpeningAlbum: React.FC<AdReelProps> = ({
       <div style={{ position: "absolute", inset: 16, border: "2px solid rgba(139,111,71,0.25)", borderRadius: 10 }} />
 
       <div style={{ position: "absolute", inset: 0, transform: `scale(${zoom}) translateY(${breathe}px)`, transformOrigin: "center 45%" }}>
-        <div style={{ position: "absolute", top: 48, left: "50%", transform: "translateX(-50%)", opacity: logoOpacity }}>
+        <div style={{ position: "absolute", top: 1510, left: "50%", transform: "translateX(-50%)", opacity: logoOpacity }}>
           <AdLogo logoUrl={assets.logoUrl} brandName={brandContext.brandName} maxHeight={20} style={{ filter: "sepia(0.5) saturate(0.7) brightness(0.6)" }} color="#8B6F47" />
         </div>
 

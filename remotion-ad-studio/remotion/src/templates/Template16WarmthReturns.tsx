@@ -58,7 +58,7 @@ export const Template16WarmthReturns: React.FC<AdReelProps> = ({
         />
       </div>
 
-      <div style={{ position: "absolute", top: 34, left: "50%", transform: "translateX(-50%)", opacity: logoOpacity }}>
+      <div style={{ position: "absolute", top: 1540, left: "50%", transform: "translateX(-50%)", opacity: logoOpacity }}>
         <AdLogo logoUrl={assets.logoUrl} brandName={brandContext.brandName} maxHeight={24} style={{ filter: "drop-shadow(0 0 4px rgba(197,160,89,0.6))" }} color="#C5A059" />
       </div>
 

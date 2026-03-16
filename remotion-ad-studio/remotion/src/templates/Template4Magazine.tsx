@@ -14,7 +14,7 @@ import { AdBadge } from "../components/AdBadge";
 import { AdCta } from "../components/AdCta";
 import { springVal } from "../helpers";
 
-// 240 frames @ 30fps — Magazine Cover
+// 260 frames @ 30fps — Magazine Cover
 export const Template4Magazine: React.FC<AdReelProps> = ({
   copy,
   designTokens: T,
@@ -33,52 +33,50 @@ export const Template4Magazine: React.FC<AdReelProps> = ({
   const bottomClip = Math.max(0, 50 - revealPct / 2);
   const photoClipPath = `inset(${topClip}% 0 ${bottomClip}% 0)`;
 
-  // ── Ken Burns zoom on photo (170-240) ───────────────────────────────────
-  const kbScale = interpolate(frame, [170, 240], [1.1, 1.15], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const kbX = interpolate(frame, [170, 240], [0, 10], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  // ── Ken Burns zoom on photo (190-260) ───────────────────────────────────
+  const kbScale = interpolate(frame, [190, 260], [1.1, 1.15], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const kbX = interpolate(frame, [190, 260], [0, 10], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const photoTransform = `scale(${kbScale}) translateX(${kbX}px)`;
 
-  // Overlay darkens as photo reveals
-  const overlayOpacity = interpolate(frame, [30, 55], [0, 1], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
+  // Overlay darkens as photo reveals, lightens at end
+  const overlayOpacity = interpolate(frame, [50, 75, 220, 230], [0, 1, 1, 0.15], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
 
-  // ── Masthead logo (35-65) ────────────────────────────────────────────────
-  const mastheadOpacity = interpolate(frame, [35, 55], [0, 1], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
-  const mastheadSpring = springVal(frame, fps, 35, { damping: 14, stiffness: 100 });
+  // ── Masthead logo (55-75) ────────────────────────────────────────────────
+  const mastheadOpacity = interpolate(frame, [55, 75], [0, 1], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
+  const mastheadSpring = springVal(frame, fps, 55, { damping: 14, stiffness: 100 });
   const mastheadY = interpolate(mastheadSpring, [0, 1], [-20, 0]);
 
-  // ── Color bar slides from left (55-85) ──────────────────────────────────
-  const barX = interpolate(frame, [55, 85], [-100, 0], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
+  // ── Color bar slides from left (75-105) ─────────────────────────────────
+  const barX = interpolate(frame, [75, 105], [-100, 0], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
 
-  // ── Headline slides from right (65-95) ──────────────────────────────────
-  const hlSpring = springVal(frame, fps, 65, { damping: 12, stiffness: 150 });
+  // ── Headline slides from right (85-115) ─────────────────────────────────
+  const hlSpring = springVal(frame, fps, 85, { damping: 12, stiffness: 150 });
   const hlX = interpolate(hlSpring, [0, 1], [300, 0]);
 
-  // ── Badge sticker pop at -12deg (80-110) ────────────────────────────────
-  const badgeSpring = springVal(frame, fps, 80, { damping: 10, stiffness: 250, mass: 0.7 });
+  // ── Badge sticker pop at -12deg (100-130) ───────────────────────────────
+  const badgeSpring = springVal(frame, fps, 100, { damping: 10, stiffness: 250, mass: 0.7 });
   const badgeScale = interpolate(badgeSpring, [0, 1], [0, 1]);
 
-  // ── Support text lines staggered fade-in (100-140) ──────────────────────
+  // ── Support text lines staggered fade-in (120-160) ──────────────────────
   const supportLines = copy.support
     .split(/[.,]/)
     .map((s) => s.trim())
     .filter(Boolean);
 
-  // ── CTA pill slides from right (130-170) + arrow fade ───────────────────
-  const ctaRight = interpolate(frame, [130, 165], [-300, 60], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
-  const arrowOpacity = interpolate(frame, [160, 175], [0, 1], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
-  const arrowX = interpolate(frame, [160, 175], [-20, 0], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
+  // ── CTA pill slides from right (150-185) + arrow fade ───────────────────
+  const ctaRight = interpolate(frame, [150, 185], [-300, 60], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
+  const arrowOpacity = interpolate(frame, [180, 195], [0, 1], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
+  const arrowX = interpolate(frame, [180, 195], [-20, 0], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
 
-  // ── White flash (200-202) ────────────────────────────────────────────────
+  // ── White flash (220-222) ────────────────────────────────────────────────
   const flashOpacity =
-    frame >= 200 && frame <= 202
-      ? interpolate(frame, [200, 201, 202], [0, 0.85, 0])
+    frame >= 220 && frame <= 222
+      ? interpolate(frame, [220, 221, 222], [0, 0.85, 0])
       : 0;
 
-  // ── Vignette (203+) ─────────────────────────────────────────────────────
-  const vignetteOpacity = interpolate(frame, [203, 218], [0, 1], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
+  // ── Vignette — disabled, image goes bright at end ───────────────────────
+  const vignetteOpacity = 0;
 
-  // ── Bottom logo (205+) ──────────────────────────────────────────────────
-  const bottomLogoOpacity = interpolate(frame, [205, 225], [0, 1], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
 
   const hlWords = copy.headline.split(" ").slice(0, 5).join(" ").toUpperCase();
 
@@ -226,7 +224,7 @@ export const Template4Magazine: React.FC<AdReelProps> = ({
         }}
       >
         {supportLines.map((line, i) => {
-          const seStart = 100 + i * 12;
+          const seStart = 120 + i * 12;
           const lineSpring = springVal(frame, fps, seStart, { damping: 14, stiffness: 120 });
           const lineY = interpolate(lineSpring, [0, 1], [18, 0]);
           const lineOpacity = interpolate(frame, [seStart, seStart + 12], [0, 1], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
@@ -307,25 +305,6 @@ export const Template4Magazine: React.FC<AdReelProps> = ({
         }}
       />
 
-      {/* Bold logo at bottom */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: 42,
-          left: "50%",
-          transform: "translateX(-50%)",
-          opacity: bottomLogoOpacity,
-          zIndex: 16,
-        }}
-      >
-        <AdLogo
-          logoUrl={assets.logoUrl}
-          brandName={brandContext.brandName}
-          maxHeight={68}
-          color={T.badge_text || "#efe7db"}
-          style={{ filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.6))" }}
-        />
-      </div>
     </AbsoluteFill>
   );
 };

@@ -55,7 +55,7 @@ export const Template14FaceReturns: React.FC<AdReelProps> = ({
         <AdLogo logoUrl={assets.logoUrl} brandName={brandContext.brandName} maxHeight={22} style={{ filter: "drop-shadow(0 0 3px rgba(197,160,89,0.4)) brightness(0.9)" }} color="rgba(197,160,89,0.7)" />
       </div>
 
-      <div style={{ position: "absolute", top: 54, right: 34, opacity: badgeOpacity }}>
+      <div style={{ position: "absolute", top: 54, left: 34, opacity: badgeOpacity }}>
         <AdBadge text={copy.badge} bgColor="rgba(197,160,89,0.18)" textColor="#D4A84B" style={{ borderRadius: 999, border: "1px solid rgba(197,160,89,0.45)", boxShadow: "none" }} fontSize={16} />
       </div>
 
