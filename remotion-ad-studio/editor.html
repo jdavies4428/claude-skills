@@ -930,6 +930,14 @@
     <button class="tmpl-btn" data-tmpl="8">8 · Orbit</button>
     <button class="tmpl-btn" data-tmpl="9">9 · Film</button>
     <button class="tmpl-btn" data-tmpl="10">10 · Mosaic</button>
+    <button class="tmpl-btn" data-tmpl="11">11 · Memory</button>
+    <button class="tmpl-btn" data-tmpl="12">12 · Legacy</button>
+    <button class="tmpl-btn" data-tmpl="13">13 · Generations</button>
+    <button class="tmpl-btn" data-tmpl="14">14 · The Face</button>
+    <button class="tmpl-btn" data-tmpl="15">15 · Dust</button>
+    <button class="tmpl-btn" data-tmpl="16">16 · Warmth</button>
+    <button class="tmpl-btn" data-tmpl="17">17 · Album</button>
+    <button class="tmpl-btn" data-tmpl="18">18 · Face to Face</button>
   </div>
 
   <!-- Main area -->
@@ -943,6 +951,7 @@
         <button class="tab-btn" data-tab="style">Style</button>
         <button class="tab-btn" data-tab="assets">Assets</button>
         <button class="tab-btn" data-tab="timing">Timing</button>
+        <button class="tab-btn" data-tab="layout">Layout</button>
         <button class="tab-btn" data-tab="voiceover">Voice</button>
         <button class="tab-btn" data-tab="json">JSON</button>
       </div>
@@ -1249,6 +1258,126 @@
           </div>
         </div>
 
+        <!-- LAYOUT TAB -->
+        <div class="tab-pane" id="tab-layout">
+          <div class="section-header" style="margin-top:0">Element Positions</div>
+
+          <div class="field">
+            <label>Logo</label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+              <div class="slider-row" style="margin-bottom:6px">
+                <div class="slider-label"><span>X</span><span class="slider-val" id="val-logo-x">50%</span></div>
+                <input type="range" min="0" max="100" value="50" id="slider-logo-x">
+              </div>
+              <div class="slider-row" style="margin-bottom:6px">
+                <div class="slider-label"><span>Y</span><span class="slider-val" id="val-logo-y">8%</span></div>
+                <input type="range" min="0" max="100" value="8" id="slider-logo-y">
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Badge</label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+              <div class="slider-row" style="margin-bottom:6px">
+                <div class="slider-label"><span>X</span><span class="slider-val" id="val-badge-x">50%</span></div>
+                <input type="range" min="0" max="100" value="50" id="slider-badge-x">
+              </div>
+              <div class="slider-row" style="margin-bottom:6px">
+                <div class="slider-label"><span>Y</span><span class="slider-val" id="val-badge-y">40%</span></div>
+                <input type="range" min="0" max="100" value="40" id="slider-badge-y">
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Photo</label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+              <div class="slider-row" style="margin-bottom:6px">
+                <div class="slider-label"><span>X</span><span class="slider-val" id="val-photo-x">50%</span></div>
+                <input type="range" min="0" max="100" value="50" id="slider-photo-x">
+              </div>
+              <div class="slider-row" style="margin-bottom:6px">
+                <div class="slider-label"><span>Y</span><span class="slider-val" id="val-photo-y">25%</span></div>
+                <input type="range" min="0" max="100" value="25" id="slider-photo-y">
+              </div>
+              <div class="slider-row" style="margin-bottom:6px">
+                <div class="slider-label"><span>Scale</span><span class="slider-val" id="val-photo-scale">100%</span></div>
+                <input type="range" min="50" max="150" value="100" id="slider-photo-scale">
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Headline</label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+              <div class="slider-row" style="margin-bottom:6px">
+                <div class="slider-label"><span>X</span><span class="slider-val" id="val-hl-x">50%</span></div>
+                <input type="range" min="0" max="100" value="50" id="slider-hl-x">
+              </div>
+              <div class="slider-row" style="margin-bottom:6px">
+                <div class="slider-label"><span>Y</span><span class="slider-val" id="val-hl-y">48%</span></div>
+                <input type="range" min="0" max="100" value="48" id="slider-hl-y">
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Support Text</label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+              <div class="slider-row" style="margin-bottom:6px">
+                <div class="slider-label"><span>X</span><span class="slider-val" id="val-sup-x">50%</span></div>
+                <input type="range" min="0" max="100" value="50" id="slider-sup-x">
+              </div>
+              <div class="slider-row" style="margin-bottom:6px">
+                <div class="slider-label"><span>Y</span><span class="slider-val" id="val-sup-y">65%</span></div>
+                <input type="range" min="0" max="100" value="65" id="slider-sup-y">
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>CTA Button</label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+              <div class="slider-row" style="margin-bottom:6px">
+                <div class="slider-label"><span>X</span><span class="slider-val" id="val-cta-x">50%</span></div>
+                <input type="range" min="0" max="100" value="50" id="slider-cta-x">
+              </div>
+              <div class="slider-row" style="margin-bottom:6px">
+                <div class="slider-label"><span>Y</span><span class="slider-val" id="val-cta-y">85%</span></div>
+                <input type="range" min="0" max="100" value="85" id="slider-cta-y">
+              </div>
+            </div>
+          </div>
+
+          <div class="section-header">Scene Timing</div>
+
+          <div class="slider-row">
+            <div class="slider-label"><span>Logo entrance</span><span class="slider-val" id="val-t-logo">0.5s</span></div>
+            <input type="range" min="0" max="70" value="5" step="1" id="slider-t-logo">
+          </div>
+          <div class="slider-row">
+            <div class="slider-label"><span>Badge entrance</span><span class="slider-val" id="val-t-badge">1.5s</span></div>
+            <input type="range" min="0" max="70" value="15" step="1" id="slider-t-badge">
+          </div>
+          <div class="slider-row">
+            <div class="slider-label"><span>Photo entrance</span><span class="slider-val" id="val-t-photo">2.0s</span></div>
+            <input type="range" min="0" max="70" value="20" step="1" id="slider-t-photo">
+          </div>
+          <div class="slider-row">
+            <div class="slider-label"><span>Headline entrance</span><span class="slider-val" id="val-t-headline">3.0s</span></div>
+            <input type="range" min="0" max="70" value="30" step="1" id="slider-t-headline">
+          </div>
+          <div class="slider-row">
+            <div class="slider-label"><span>Support entrance</span><span class="slider-val" id="val-t-support">4.5s</span></div>
+            <input type="range" min="0" max="70" value="45" step="1" id="slider-t-support">
+          </div>
+          <div class="slider-row">
+            <div class="slider-label"><span>CTA entrance</span><span class="slider-val" id="val-t-cta">5.5s</span></div>
+            <input type="range" min="0" max="70" value="55" step="1" id="slider-t-cta">
+          </div>
+        </div>
+
         <!-- VOICEOVER TAB -->
         <div class="tab-pane" id="tab-voiceover">
           <div class="note-text">
@@ -1312,7 +1441,7 @@
     <!-- Right Panel — iframe to templates.html -->
     <div id="right-panel">
       <div id="preview-container">
-        <iframe id="template-iframe" src="templates.html?v=7" style="width:100%;height:100%;border:none;border-radius:12px;"></iframe>
+        <iframe id="template-iframe" src="templates.html?v=9" style="width:100%;height:100%;border:none;border-radius:12px;"></iframe>
       </div>
     </div>
 
@@ -1404,6 +1533,15 @@ const DEFAULT_STATE = {
       support: "fade",
       cta: "bounce"
     }
+  },
+  layout: {
+    logo: { x: 50, y: 8 },
+    badge: { x: 50, y: 40 },
+    photo: { x: 50, y: 25, scale: 100 },
+    headline: { x: 50, y: 48 },
+    support: { x: 50, y: 65 },
+    cta: { x: 50, y: 85 },
+    timing: { logo: 5, badge: 15, photo: 20, headline: 30, support: 45, cta: 55 }
   },
   voiceover: {
     enabled: false,
@@ -3119,6 +3257,7 @@ function schedulePreviewUpdate() {
     updateSceneMarkers();
     syncIframeData();
     syncIframeStyle();
+    syncIframeLayout();
   }, 100);
 }
 
@@ -3141,6 +3280,16 @@ function syncIframeStyle() {
     iframe.contentWindow.postMessage({
       type: 'updateStyle',
       style: state.style
+    }, '*');
+  }
+}
+
+function syncIframeLayout() {
+  const iframe = document.getElementById('template-iframe');
+  if (iframe && iframe.contentWindow) {
+    iframe.contentWindow.postMessage({
+      type: 'updateLayout',
+      layout: state.layout
     }, '*');
   }
 }
@@ -3201,7 +3350,8 @@ function buildReelConfig() {
       assets: state.assets,
       brandContext: state.brandContext
     },
-    style: state.style
+    style: state.style,
+    layout: state.layout
   };
 }
 
@@ -3713,6 +3863,59 @@ function wireInputs() {
         display.textContent = slider.value + unit;
         schedulePreviewUpdate();
         updateJSONEditor();
+      });
+    }
+  });
+
+  // Layout position sliders
+  const layoutPosSliders = [
+    { id: 'slider-logo-x', val: 'val-logo-x', key: 'logo', axis: 'x', unit: '%' },
+    { id: 'slider-logo-y', val: 'val-logo-y', key: 'logo', axis: 'y', unit: '%' },
+    { id: 'slider-badge-x', val: 'val-badge-x', key: 'badge', axis: 'x', unit: '%' },
+    { id: 'slider-badge-y', val: 'val-badge-y', key: 'badge', axis: 'y', unit: '%' },
+    { id: 'slider-photo-x', val: 'val-photo-x', key: 'photo', axis: 'x', unit: '%' },
+    { id: 'slider-photo-y', val: 'val-photo-y', key: 'photo', axis: 'y', unit: '%' },
+    { id: 'slider-photo-scale', val: 'val-photo-scale', key: 'photo', axis: 'scale', unit: '%' },
+    { id: 'slider-hl-x', val: 'val-hl-x', key: 'headline', axis: 'x', unit: '%' },
+    { id: 'slider-hl-y', val: 'val-hl-y', key: 'headline', axis: 'y', unit: '%' },
+    { id: 'slider-sup-x', val: 'val-sup-x', key: 'support', axis: 'x', unit: '%' },
+    { id: 'slider-sup-y', val: 'val-sup-y', key: 'support', axis: 'y', unit: '%' },
+    { id: 'slider-cta-x', val: 'val-cta-x', key: 'cta', axis: 'x', unit: '%' },
+    { id: 'slider-cta-y', val: 'val-cta-y', key: 'cta', axis: 'y', unit: '%' },
+  ];
+
+  layoutPosSliders.forEach(({ id, val, key, axis, unit }) => {
+    const slider = document.getElementById(id);
+    const display = document.getElementById(val);
+    if (slider && display) {
+      slider.addEventListener('input', () => {
+        if (!state.layout[key]) state.layout[key] = {};
+        state.layout[key][axis] = parseInt(slider.value);
+        display.textContent = slider.value + unit;
+        schedulePreviewUpdate();
+      });
+    }
+  });
+
+  // Layout timing sliders (values in 10ths of seconds)
+  const layoutTimingSliders = [
+    { id: 'slider-t-logo', val: 'val-t-logo', key: 'logo' },
+    { id: 'slider-t-badge', val: 'val-t-badge', key: 'badge' },
+    { id: 'slider-t-photo', val: 'val-t-photo', key: 'photo' },
+    { id: 'slider-t-headline', val: 'val-t-headline', key: 'headline' },
+    { id: 'slider-t-support', val: 'val-t-support', key: 'support' },
+    { id: 'slider-t-cta', val: 'val-t-cta', key: 'cta' },
+  ];
+
+  layoutTimingSliders.forEach(({ id, val, key }) => {
+    const slider = document.getElementById(id);
+    const display = document.getElementById(val);
+    if (slider && display) {
+      slider.addEventListener('input', () => {
+        if (!state.layout.timing) state.layout.timing = {};
+        state.layout.timing[key] = parseInt(slider.value);
+        display.textContent = (parseInt(slider.value) / 10).toFixed(1) + 's';
+        schedulePreviewUpdate();
       });
     }
   });

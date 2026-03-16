@@ -339,6 +339,14 @@
       <button class="tmpl-tab" data-tmpl="8">8 &middot; Orbit</button>
       <button class="tmpl-tab" data-tmpl="9">9 &middot; Film</button>
       <button class="tmpl-tab" data-tmpl="10">10 &middot; Mosaic</button>
+      <button class="tmpl-tab" data-tmpl="11">11 &middot; Memory</button>
+      <button class="tmpl-tab" data-tmpl="12">12 &middot; Legacy</button>
+      <button class="tmpl-tab" data-tmpl="13">13 &middot; Generations</button>
+      <button class="tmpl-tab" data-tmpl="14">14 &middot; The Face</button>
+      <button class="tmpl-tab" data-tmpl="15">15 &middot; Dust of Time</button>
+      <button class="tmpl-tab" data-tmpl="16">16 &middot; Warmth Returns</button>
+      <button class="tmpl-tab" data-tmpl="17">17 &middot; Opening Album</button>
+      <button class="tmpl-tab" data-tmpl="18">18 &middot; Face to Face</button>
     </div>
   </div>
 
@@ -754,6 +762,259 @@ Object.assign(TEMPLATES, {
       { label: "CTA explosion", start: 200, end: 240, color: "#f97316" },
       { label: "Wave hold", start: 240, end: 270, color: "#7c3aed" }
     ]
+  },
+  11: {
+    name: "The Memory Returns",
+    subtitle: "Slow \u00b7 Warm \u00b7 Contemplative",
+    duration: 300,
+    fps: 30,
+    desc: "Dust particles fall away as a blurred photo slowly sharpens into clarity. A meditative, emotional reveal designed for older adults who remember the original moment.",
+    features: [
+      "30-40 warm amber dust particles drifting downward",
+      "Photo blur-to-sharp reveal (20px \u2192 0) over 40 frames",
+      "Warm golden glow radiates from photo edges",
+      "Logo fades in softly with no bounce",
+      "Headline words stagger in with 8-frame gaps",
+      "Highlight word gets a self-drawing golden underline",
+      "Badge scales gently 0.9 \u2192 1.0",
+      "Support text fades as full block over 40 frames",
+      "CTA rises gently: translateY 10px \u2192 0",
+      "Warm vignette deepens on hold"
+    ],
+    packages: ["@remotion/core", "interpolate()", "easeInOut"],
+    scenes: [
+      { label: "Dust falls", start: 0, end: 30, color: "#C5A059" },
+      { label: "Photo reveals", start: 20, end: 90, color: "#a07030" },
+      { label: "Golden glow", start: 50, end: 120, color: "#C5A059" },
+      { label: "Logo fades", start: 80, end: 120, color: "#8b7040" },
+      { label: "Headline words", start: 110, end: 150, color: "#C5A059" },
+      { label: "Badge appears", start: 140, end: 180, color: "#a07030" },
+      { label: "Support fades", start: 170, end: 220, color: "#8b7040" },
+      { label: "CTA rises", start: 210, end: 260, color: "#C5A059" },
+      { label: "Hold & breathe", start: 260, end: 300, color: "#a07030" }
+    ]
+  },
+  12: {
+    name: "Legacy Unlocked",
+    subtitle: "Ceremonial \u00b7 Golden \u00b7 Ornamental",
+    duration: 270,
+    fps: 30,
+    desc: "A golden ornamental lock dissolves into fragments revealing the restored photo with a ceremonial radial wipe. Handwritten-style annotation gives it the feeling of a found heirloom.",
+    features: [
+      "Golden ornamental frame border fades in",
+      "CSS lock icon pulses with amber glow",
+      "Lock breaks into 8 drifting fragments",
+      "Radial clip-path wipe: circle 0% \u2192 100%",
+      "Ornamental line draws itself under logo",
+      "Headline letter-by-letter with golden text-shadow",
+      "Italic handwritten-style annotation fades in",
+      "Badge appears as circular seal with slight rotation",
+      "CTA warm gold background fade-in",
+      "Golden shimmer pulse on hold"
+    ],
+    packages: ["@remotion/core", "interpolate()", "clip-path", "easeInOut"],
+    scenes: [
+      { label: "Frame border", start: 0, end: 20, color: "#C5A059" },
+      { label: "Lock pulses", start: 15, end: 50, color: "#a07030" },
+      { label: "Lock dissolves", start: 40, end: 80, color: "#C5A059" },
+      { label: "Radial reveal", start: 70, end: 120, color: "#8b7040" },
+      { label: "Logo + line", start: 110, end: 150, color: "#C5A059" },
+      { label: "Headline letters", start: 140, end: 180, color: "#a07030" },
+      { label: "Annotation", start: 170, end: 200, color: "#8b7040" },
+      { label: "Badge seal", start: 190, end: 230, color: "#C5A059" },
+      { label: "CTA fades", start: 220, end: 260, color: "#a07030" },
+      { label: "Shimmer hold", start: 260, end: 270, color: "#C5A059" }
+    ]
+  },
+  13: {
+    name: "Through the Generations",
+    subtitle: "Then & Now \u00b7 Connected \u00b7 Bridge",
+    duration: 330,
+    fps: 30,
+    desc: "Two photos — past and present — sit side by side connected by a warm light bridge. They slowly drift toward each other as if drawn by memory. The most conceptually rich of the emotional templates.",
+    features: [
+      "Two framed photo panels side by side",
+      "Left photo: sepia + slight blur for vintage feel",
+      "Right photo: full color, sharp",
+      "Then / Now labels fade in beneath each photo",
+      "Horizontal amber light beam grows between photos",
+      "Particle sparkles drift along the light bridge",
+      "Photos slowly drift toward center (10px over 50 frames)",
+      "Light bridge intensifies as photos converge",
+      "Headline fades in centered below the pair",
+      "CTA rises gently at bottom"
+    ],
+    packages: ["@remotion/core", "interpolate()", "easeInOut"],
+    scenes: [
+      { label: "Frame outlines", start: 0, end: 30, color: "#C5A059" },
+      { label: "Left photo", start: 20, end: 60, color: "#8b7040" },
+      { label: "Right photo", start: 50, end: 90, color: "#C5A059" },
+      { label: "Light bridge", start: 80, end: 130, color: "#a07030" },
+      { label: "Logo + badge", start: 120, end: 160, color: "#C5A059" },
+      { label: "Photos drift", start: 150, end: 200, color: "#8b7040" },
+      { label: "Headline", start: 190, end: 240, color: "#C5A059" },
+      { label: "Support text", start: 230, end: 270, color: "#a07030" },
+      { label: "CTA", start: 260, end: 300, color: "#C5A059" },
+      { label: "Bridge pulses", start: 300, end: 330, color: "#8b7040" }
+    ]
+  },
+  14: {
+    name: "The Face Returns",
+    subtitle: "Intimate \u00b7 Blurred \u00b7 Sharp",
+    duration: 300,
+    fps: 30,
+    desc: "A full-bleed photo goes from completely blurred to sharp focus — watching a face emerge from the blur is the most emotionally powerful effect in this set. Everything else is minimized so the viewer can feel the moment.",
+    features: [
+      "Single pulsing warm light point on black open",
+      "Full-bleed photo enters at blur(30px)",
+      "Dramatic deblur over 60 frames (30px \u2192 0)",
+      "Ken Burns pull-back: scale 1.3 \u2192 1.0",
+      "Emotional hold at full clarity (40 frames)",
+      "Logo enters very small and subtle",
+      "Single-line headline with highlight golden shimmer",
+      "Support text fades in gently below",
+      "Badge as a corner tag \u2014 unobtrusive",
+      "Slow final zoom 1.0 \u2192 0.98 with deepening vignette"
+    ],
+    packages: ["@remotion/core", "interpolate()", "filter:blur", "easeInOut"],
+    scenes: [
+      { label: "Black + pulse", start: 0, end: 20, color: "#C5A059" },
+      { label: "Photo enters blurred", start: 15, end: 50, color: "#8b7040" },
+      { label: "Dramatic deblur", start: 40, end: 100, color: "#C5A059" },
+      { label: "Emotional hold", start: 90, end: 130, color: "#a07030" },
+      { label: "Logo subtle", start: 120, end: 160, color: "#8b7040" },
+      { label: "Headline shimmer", start: 150, end: 190, color: "#C5A059" },
+      { label: "Support fades", start: 180, end: 220, color: "#a07030" },
+      { label: "Badge corner", start: 210, end: 250, color: "#8b7040" },
+      { label: "CTA warm", start: 240, end: 280, color: "#C5A059" },
+      { label: "Slow zoom hold", start: 280, end: 300, color: "#a07030" }
+    ]
+  },
+  15: {
+    name: "Dust of Time",
+    subtitle: "Slow \u00b7 Warm \u00b7 Ascending",
+    duration: 300,
+    fps: 30,
+    desc: "Warm amber particles drift upward like memories rising, lifting the dust of time away to reveal a restored photo beneath. The photo is revealed as the particles clear, with a grounded logo at the bottom.",
+    features: [
+      "50+ upward-drifting amber/gold particles (sizes 2-6px)",
+      "Photo revealed underneath as particles clear",
+      "Warm glow radiates around photo on full reveal",
+      "Logo at bottom \u2014 grounded, memorial plaque feel",
+      "Headline fades in word by word with 10-frame stagger",
+      "Highlight word gets soft gold text-shadow",
+      "Badge fades in near logo at bottom",
+      "Support text in italic warm style",
+      "CTA gentle opacity rise at very bottom",
+      "Lingering particles drift throughout hold"
+    ],
+    packages: ["@remotion/core", "interpolate()", "easeInOut"],
+    scenes: [
+      { label: "Dense particles", start: 0, end: 30, color: "#C5A059" },
+      { label: "Photo reveals", start: 20, end: 70, color: "#a07030" },
+      { label: "Photo full + glow", start: 60, end: 100, color: "#C5A059" },
+      { label: "Logo appears", start: 90, end: 130, color: "#8b7040" },
+      { label: "Headline words", start: 120, end: 160, color: "#C5A059" },
+      { label: "Badge fades", start: 150, end: 190, color: "#a07030" },
+      { label: "Support text", start: 180, end: 220, color: "#8b7040" },
+      { label: "CTA rises", start: 210, end: 260, color: "#C5A059" },
+      { label: "Hold \u2014 lingering", start: 260, end: 300, color: "#a07030" }
+    ]
+  },
+  16: {
+    name: "The Warmth Returns",
+    subtitle: "Desaturated \u00b7 Color Blooms \u00b7 Alive",
+    duration: 300,
+    fps: 30,
+    desc: "A black-and-white photo comes to life as a warm color wash spreads from the center outward — like a drop of warmth in still water. The most dramatic transformation effect in the set.",
+    features: [
+      "Photo starts fully desaturated (grayscale + sepia)",
+      "Color wash spreads from center: radial gradient overlay",
+      "Grayscale filter decreases 1\u21920 over 60 frames",
+      "Border transitions from faded to golden on colorization",
+      "Soft warm glow pulses once at full color",
+      "Logo fades in gold at top",
+      "Headline words materialize slowly below photo",
+      "Highlight word has warm golden pill background",
+      "Support text fades in small and warm",
+      "CTA with warm gold background at bottom"
+    ],
+    packages: ["@remotion/core", "interpolate()", "filter:grayscale", "easeInOut"],
+    scenes: [
+      { label: "Grayscale hold", start: 0, end: 30, color: "#888" },
+      { label: "Color starts center", start: 20, end: 40, color: "#C5A059" },
+      { label: "Color spreads", start: 30, end: 90, color: "#a07030" },
+      { label: "Full color + glow", start: 80, end: 120, color: "#C5A059" },
+      { label: "Logo fades", start: 110, end: 150, color: "#8b7040" },
+      { label: "Headline words", start: 140, end: 180, color: "#C5A059" },
+      { label: "Support text", start: 170, end: 210, color: "#a07030" },
+      { label: "Badge pill", start: 200, end: 240, color: "#8b7040" },
+      { label: "CTA warm", start: 230, end: 270, color: "#C5A059" },
+      { label: "Pulse glow hold", start: 270, end: 300, color: "#a07030" }
+    ]
+  },
+  17: {
+    name: "Opening the Album",
+    subtitle: "Tactile \u00b7 Reverent \u00b7 Handwritten",
+    duration: 330,
+    fps: 30,
+    desc: "A leather album cover opens in 3D to reveal a cream page with corner mounting brackets. The photo slides into place, and handwritten-style annotations appear below as if written in the moment.",
+    features: [
+      "Dark leather album cover with grain texture",
+      "3D cover opens: rotateY -90deg perspective transform",
+      "Cream album page revealed behind cover",
+      "4 corner photo mounting brackets fade in",
+      "Photo slides in from right into mounting brackets",
+      "Headline in italic handwritten style word by word",
+      "Caption/date in smaller handwritten style below",
+      "Badge as decorative stamp or sticker on page",
+      "Album page zooms in 1\u21921.05 to focus on content",
+      "CTA below album with warm inviting style"
+    ],
+    packages: ["@remotion/core", "interpolate()", "perspective", "rotateY", "easeInOut"],
+    scenes: [
+      { label: "Album cover", start: 0, end: 30, color: "#8B6F47" },
+      { label: "Cover opens 3D", start: 20, end: 60, color: "#a07030" },
+      { label: "Corner mounts", start: 50, end: 90, color: "#C5A059" },
+      { label: "Photo slides in", start: 80, end: 130, color: "#8b7040" },
+      { label: "Headline handwritten", start: 120, end: 160, color: "#C5A059" },
+      { label: "Caption fades", start: 150, end: 190, color: "#a07030" },
+      { label: "Badge stamp", start: 180, end: 220, color: "#8b7040" },
+      { label: "Page zoom focus", start: 210, end: 260, color: "#C5A059" },
+      { label: "CTA appears", start: 250, end: 290, color: "#a07030" },
+      { label: "Hold \u2014 settle", start: 290, end: 330, color: "#8B6F47" }
+    ]
+  },
+  18: {
+    name: "Face to Face",
+    subtitle: "Intimate \u00b7 Close-Up \u00b7 Pulling Back",
+    duration: 270,
+    fps: 30,
+    desc: "The most intimate template. A thin horizontal sliver of the photo opens like curtains revealing the eye area, then expands to show the full face. A slow zoom-out pulls from close-up to full composition, letting the viewer feel the restored details.",
+    features: [
+      "Black open, then horizontal sliver shows eyes",
+      "Sliver expands vertically: clip-path inset 45%\u21920%",
+      "Blur decreases simultaneously 20px\u21920",
+      "Full photo revealed zoomed in (scale 1.5) on face",
+      "Slow zoom-out 1.5\u21921.0 over 50 frames \u2014 the reveal",
+      "Logo appears very small at top \u2014 respectful",
+      "Headline at bottom third with warm fade",
+      "Highlight word gets a self-drawing underline",
+      "Support text fades in below headline",
+      "Gentle vignette with warm light particles on hold"
+    ],
+    packages: ["@remotion/core", "interpolate()", "clip-path:inset", "filter:blur", "easeInOut"],
+    scenes: [
+      { label: "Black open", start: 0, end: 20, color: "#111" },
+      { label: "Sliver opens", start: 15, end: 50, color: "#C5A059" },
+      { label: "Face reveal", start: 40, end: 80, color: "#a07030" },
+      { label: "Slow zoom-out", start: 70, end: 120, color: "#C5A059" },
+      { label: "Logo subtle", start: 110, end: 150, color: "#8b7040" },
+      { label: "Headline + underline", start: 140, end: 180, color: "#C5A059" },
+      { label: "Support fades", start: 170, end: 210, color: "#a07030" },
+      { label: "CTA gentle", start: 200, end: 240, color: "#C5A059" },
+      { label: "Hold \u2014 peace", start: 240, end: 270, color: "#8b7040" }
+    ]
   }
 });
 
@@ -894,6 +1155,14 @@ function renderTemplate(id, f) {
     case 8: renderTemplate8(f); break;
     case 9: renderTemplate9(f); break;
     case 10: renderTemplate10(f); break;
+    case 11: renderTemplate11(f); break;
+    case 12: renderTemplate12(f); break;
+    case 13: renderTemplate13(f); break;
+    case 14: renderTemplate14(f); break;
+    case 15: renderTemplate15(f); break;
+    case 16: renderTemplate16(f); break;
+    case 17: renderTemplate17(f); break;
+    case 18: renderTemplate18(f); break;
   }
 }
 
@@ -912,6 +1181,14 @@ function buildTemplate(id) {
     case 8: initTemplate8(canvas); break;
     case 9: initTemplate9(canvas); break;
     case 10: initTemplate10(canvas); break;
+    case 11: initTemplate11(canvas); break;
+    case 12: initTemplate12(canvas); break;
+    case 13: initTemplate13(canvas); break;
+    case 14: initTemplate14(canvas); break;
+    case 15: initTemplate15(canvas); break;
+    case 16: initTemplate16(canvas); break;
+    case 17: initTemplate17(canvas); break;
+    case 18: initTemplate18(canvas); break;
   }
 }
 
@@ -3521,6 +3798,1091 @@ function renderTemplate10(frame) {
 }
 
 
+// ── Template 11: The Memory Returns ──────────────────────────────────────────
+// Dust particles drift downward as a blurred photo slowly sharpens.
+// Warm, meditative, contemplative. 300 frames / 10s.
+
+function initTemplate11(canvas) {
+  const AMBER = '#C5A059';
+  const photoUrl = getPhotoUrl();
+  const logoUrl = getLogoUrl();
+
+  let dustHtml = '';
+  const rng = seededRand(42);
+  for (let i = 0; i < 35; i++) {
+    const x = rng() * 260;
+    const startY = rng() * 100 - 20;
+    const size = rng() * 3 + 1.5;
+    const opacity = rng() * 0.55 + 0.25;
+    const speed = rng() * 0.5 + 0.4;
+    dustHtml += `<div id="t11-dust-${i}" data-sy="${startY.toFixed(1)}" data-spd="${speed.toFixed(3)}" data-op="${opacity.toFixed(2)}" style="position:absolute;left:${x.toFixed(1)}px;top:${startY.toFixed(1)}px;width:${size.toFixed(1)}px;height:${size.toFixed(1)}px;border-radius:50%;background:${AMBER};opacity:0;pointer-events:none;"></div>`;
+  }
+
+  const words = C.headline.split(' ');
+  const hlHtml = words.map((w) => {
+    const isHl = C.highlight && w.replace(/[.,!?]/g,'') === C.highlight.replace(/[.,!?]/g,'');
+    const style = isHl
+      ? `position:relative;display:inline-block;color:${AMBER};margin-right:4px;`
+      : `display:inline-block;color:#efe7db;margin-right:4px;`;
+    return `<span style="${style}opacity:0;">${w}</span>`;
+  }).join('');
+
+  canvas.innerHTML = `
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 35%,#2a1a0a 0%,#150d05 60%,#0a0603 100%);"></div>
+    <div id="t11-vignette" style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,transparent 30%,rgba(0,0,0,0.85) 100%);opacity:0;pointer-events:none;z-index:40;"></div>
+    <div id="t11-dust-layer" style="position:absolute;inset:0;overflow:hidden;z-index:20;pointer-events:none;">${dustHtml}</div>
+    <div id="t11-photo-wrap" style="position:absolute;top:32px;left:14px;right:14px;height:320px;border-radius:10px;overflow:hidden;opacity:0;z-index:10;">
+      <div id="t11-photo-glow" style="position:absolute;inset:-8px;border-radius:18px;pointer-events:none;z-index:2;"></div>
+      ${photoUrl
+        ? `<img src="${photoUrl}" style="width:100%;height:100%;object-fit:cover;filter:blur(20px);transition:none;" id="t11-photo-img">`
+        : `<div style="width:100%;height:100%;background:linear-gradient(135deg,${T.gradient_from},${T.gradient_to});filter:blur(20px);" id="t11-photo-img"></div>`}
+    </div>
+    <div id="t11-logo" style="position:absolute;top:10px;left:50%;transform:translateX(-50%);width:90px;height:28px;display:flex;align-items:center;justify-content:center;opacity:0;z-index:30;">
+      ${logoUrl ? `<img src="${logoUrl}" style="max-height:26px;max-width:88px;object-fit:contain;filter:drop-shadow(0 1px 6px rgba(0,0,0,0.6));">` : `<span style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:${AMBER};">${BRAND}</span>`}
+    </div>
+    <div id="t11-headline-wrap" style="position:absolute;top:364px;left:14px;right:14px;font-size:16px;font-weight:700;line-height:1.4;font-family:Georgia,serif;z-index:30;">
+      ${hlHtml}
+      <svg id="t11-underline-svg" style="position:absolute;bottom:-6px;left:0;width:100%;height:8px;overflow:visible;opacity:0;" viewBox="0 0 240 8">
+        <path id="t11-underline-path" d="M0,5 Q30,1 60,5 Q90,9 120,5 Q150,1 180,5 Q210,9 240,5" fill="none" stroke="${AMBER}" stroke-width="2" stroke-linecap="round" stroke-dasharray="260" stroke-dashoffset="260"/>
+      </svg>
+    </div>
+    <div id="t11-badge" style="position:absolute;top:468px;left:50%;transform:translateX(-50%) scale(0.9);background:${T.badge_bg};color:${T.badge_text};padding:4px 14px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:0.5px;opacity:0;z-index:30;white-space:nowrap;">${C.badge}</div>
+    <div id="t11-support" style="position:absolute;top:492px;left:18px;right:18px;font-size:11px;color:rgba(239,231,219,0.72);line-height:1.65;text-align:center;font-family:Georgia,serif;opacity:0;z-index:30;">${C.support}</div>
+    <div id="t11-cta" style="position:absolute;bottom:28px;left:20px;right:20px;background:${T.cta_bg};color:${T.cta_text};padding:12px 20px;border-radius:999px;font-size:13px;font-weight:700;text-align:center;opacity:0;transform:translateY(10px);z-index:30;box-shadow:0 4px 24px rgba(197,160,89,0.3);">${C.cta}</div>
+  `;
+}
+
+function renderTemplate11(f) {
+  const AMBER = '#C5A059';
+
+  for (let i = 0; i < 35; i++) {
+    const p = document.getElementById(`t11-dust-${i}`);
+    if (!p) continue;
+    const startY = parseFloat(p.dataset.sy);
+    const spd    = parseFloat(p.dataset.spd);
+    const baseOp = parseFloat(p.dataset.op);
+    const appearedOp = interpolate(f, [0, 10], [0, baseOp], { clamp: true });
+    const driftY = f * spd * 1.2;
+    const fadeStart = 50 + (i % 5) * 8;
+    const fadeOp = i % 3 === 0 ? interpolate(f, [fadeStart, fadeStart + 30], [1, 0], { clamp: true }) : 1;
+    p.style.top     = ((startY + driftY) % 600) + 'px';
+    p.style.opacity = (appearedOp * fadeOp).toFixed(3);
+  }
+
+  const photoWrap = document.getElementById('t11-photo-wrap');
+  if (photoWrap) photoWrap.style.opacity = interpolate(f, [20, 45], [0, 1], { clamp: true, easing: easeInOut });
+
+  const photoImg = document.getElementById('t11-photo-img');
+  if (photoImg) {
+    const blurPx = interpolate(f, [20, 60], [20, 0], { clamp: true, easing: easeInOut });
+    photoImg.style.filter = `blur(${blurPx.toFixed(2)}px)`;
+  }
+
+  const photoGlow = document.getElementById('t11-photo-glow');
+  if (photoGlow) {
+    const g = interpolate(f, [50, 90], [0, 28], { clamp: true, easing: easeInOut });
+    photoGlow.style.boxShadow = `0 0 ${g.toFixed(1)}px rgba(197,160,89,${(g / 80).toFixed(3)})`;
+  }
+
+  const logo = document.getElementById('t11-logo');
+  if (logo) logo.style.opacity = interpolate(f, [80, 110], [0, 1], { clamp: true, easing: easeInOut });
+
+  const hlWrap = document.getElementById('t11-headline-wrap');
+  if (hlWrap) {
+    const spans = hlWrap.querySelectorAll('span[style]');
+    spans.forEach((sp, i) => {
+      const wStart = 110 + i * 8;
+      sp.style.opacity = interpolate(f, [wStart, wStart + 12], [0, 1], { clamp: true, easing: easeInOut });
+    });
+  }
+
+  const ulPath = document.getElementById('t11-underline-path');
+  const ulSvg  = document.getElementById('t11-underline-svg');
+  if (ulPath && ulSvg) {
+    ulPath.setAttribute('stroke-dashoffset', interpolate(f, [138, 168], [260, 0], { clamp: true, easing: easeInOut }).toFixed(1));
+    ulSvg.style.opacity = interpolate(f, [137, 143], [0, 1], { clamp: true });
+  }
+
+  const badge = document.getElementById('t11-badge');
+  if (badge) {
+    badge.style.transform = `translateX(-50%) scale(${interpolate(f, [140, 170], [0.9, 1.0], { clamp: true, easing: easeInOut }).toFixed(4)})`;
+    badge.style.opacity   = interpolate(f, [140, 158], [0, 1], { clamp: true, easing: easeInOut });
+  }
+
+  const support = document.getElementById('t11-support');
+  if (support) support.style.opacity = interpolate(f, [170, 210], [0, 1], { clamp: true, easing: easeInOut });
+
+  const cta = document.getElementById('t11-cta');
+  if (cta) {
+    cta.style.opacity   = interpolate(f, [210, 245], [0, 1], { clamp: true, easing: easeInOut });
+    cta.style.transform = `translateY(${interpolate(f, [210, 250], [10, 0], { clamp: true, easing: easeInOut }).toFixed(2)}px)`;
+  }
+
+  const vignette = document.getElementById('t11-vignette');
+  if (vignette) vignette.style.opacity = interpolate(f, [260, 300], [0, 0.55], { clamp: true, easing: easeInOut });
+}
+
+
+// ── Template 12: Legacy Unlocked ─────────────────────────────────────────────
+// Golden ornamental lock dissolves, photo reveals via radial clip-path.
+// Ceremonial, warm, heirloom-like. 270 frames / 9s.
+
+function initTemplate12(canvas) {
+  const AMBER = '#C5A059';
+  const photoUrl = getPhotoUrl();
+  const logoUrl  = getLogoUrl();
+
+  const fragRng = seededRand(17);
+  let fragHtml = '';
+  for (let i = 0; i < 8; i++) {
+    const angle = (i / 8) * Math.PI * 2;
+    const size  = fragRng() * 8 + 5;
+    const shape = i % 2 === 0 ? '50%' : '2px';
+    fragHtml += `<div id="t12-frag-${i}" data-angle="${angle.toFixed(4)}" style="position:absolute;left:50%;top:50%;width:${size.toFixed(0)}px;height:${size.toFixed(0)}px;background:${AMBER};border-radius:${shape};transform:translate(-50%,-50%);opacity:0;"></div>`;
+  }
+
+  const hlStart = C.highlight ? C.headline.indexOf(C.highlight) : -1;
+  const hlEnd   = hlStart >= 0 ? hlStart + C.highlight.length : -1;
+  const letterHtml = C.headline.split('').map((ch, i) => {
+    const inHl = hlStart >= 0 && i >= hlStart && i < hlEnd;
+    const gs = inHl ? `text-shadow:0 0 12px #C5A059,0 0 4px #C5A059;color:#C5A059;` : `color:#efe7db;`;
+    return `<span id="t12-l-${i}" style="display:inline;${gs}opacity:0;">${ch === ' ' ? '&nbsp;' : ch}</span>`;
+  }).join('');
+
+  canvas.innerHTML = `
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,#251508 0%,#120a03 65%,#080401 100%);"></div>
+    <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,0.012) 0px,rgba(255,255,255,0.012) 1px,transparent 1px,transparent 8px);pointer-events:none;"></div>
+    <div id="t12-frame" style="position:absolute;inset:10px;border:1.5px solid rgba(197,160,89,0);border-radius:6px;pointer-events:none;z-index:30;"></div>
+    <div id="t12-photo" style="position:absolute;top:80px;left:14px;right:14px;height:280px;border-radius:8px;overflow:hidden;clip-path:circle(0% at 50% 50%);z-index:10;">
+      ${photoUrl
+        ? `<img src="${photoUrl}" style="width:100%;height:100%;object-fit:cover;">`
+        : `<div style="width:100%;height:100%;background:linear-gradient(135deg,${T.gradient_from},${T.gradient_to});"></div>`}
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,10,2,0.3) 0%,transparent 40%,rgba(10,5,1,0.4) 100%);pointer-events:none;"></div>
+    </div>
+    <div id="t12-lock-wrap" style="position:absolute;top:160px;left:50%;transform:translate(-50%,-50%);z-index:20;pointer-events:none;opacity:0;">
+      <div style="position:relative;width:70px;height:70px;">
+        <div id="t12-lock-ring" style="width:70px;height:70px;border-radius:50%;border:3px solid ${AMBER};"></div>
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-30%);width:14px;height:26px;background:${AMBER};border-radius:7px 7px 2px 2px;"></div>
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-20%);width:8px;height:8px;background:#120a03;border-radius:50%;margin-top:2px;"></div>
+      </div>
+    </div>
+    <div id="t12-frags" style="position:absolute;top:160px;left:50%;transform:translate(-50%,-50%);width:70px;height:70px;z-index:25;pointer-events:none;">${fragHtml}</div>
+    <div id="t12-logo" style="position:absolute;top:38px;left:50%;transform:translateX(-50%);width:100px;height:28px;display:flex;align-items:center;justify-content:center;opacity:0;z-index:30;">
+      ${logoUrl ? `<img src="${logoUrl}" style="max-height:26px;max-width:96px;object-fit:contain;filter:drop-shadow(0 1px 6px rgba(0,0,0,0.5));">` : `<span style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:${AMBER};">${BRAND}</span>`}
+    </div>
+    <svg id="t12-ornline" style="position:absolute;top:70px;left:50%;transform:translateX(-50%);width:120px;height:6px;overflow:visible;opacity:0;z-index:30;" viewBox="0 0 120 6">
+      <path id="t12-ornline-path" d="M0,3 L120,3" fill="none" stroke="${AMBER}" stroke-width="1" stroke-linecap="round" stroke-dasharray="120" stroke-dashoffset="120"/>
+      <circle cx="0"   cy="3" r="2" fill="${AMBER}" opacity="0" id="t12-orn-dot-l"/>
+      <circle cx="120" cy="3" r="2" fill="${AMBER}" opacity="0" id="t12-orn-dot-r"/>
+    </svg>
+    <div id="t12-headline" style="position:absolute;top:374px;left:14px;right:14px;font-size:15px;font-weight:700;line-height:1.45;font-family:Georgia,serif;z-index:30;">${letterHtml}</div>
+    <div id="t12-annotation" style="position:absolute;top:462px;left:16px;right:16px;font-size:10px;font-style:italic;color:rgba(197,160,89,0.75);font-family:Georgia,serif;opacity:0;z-index:35;line-height:1.5;text-align:right;">${C.support}</div>
+    <div id="t12-badge" style="position:absolute;top:442px;left:50%;transform:translateX(-50%) rotate(-8deg) scale(0.7);background:${T.badge_bg};color:${T.badge_text};width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;letter-spacing:0.5px;text-align:center;padding:6px;opacity:0;z-index:30;box-shadow:0 2px 12px rgba(0,0,0,0.5),0 0 0 2px ${AMBER};line-height:1.2;">${C.badge}</div>
+    <div id="t12-cta" style="position:absolute;bottom:26px;left:20px;right:20px;background:${T.cta_bg};color:${T.cta_text};padding:12px 20px;border-radius:8px;font-size:13px;font-weight:700;text-align:center;opacity:0;z-index:30;box-shadow:0 4px 24px rgba(197,160,89,0.25);">${C.cta}</div>
+    <div id="t12-shimmer" style="position:absolute;inset:10px;border-radius:6px;pointer-events:none;z-index:35;opacity:0;"></div>
+  `;
+}
+
+function renderTemplate12(f) {
+  const AMBER = '#C5A059';
+
+  const frame12 = document.getElementById('t12-frame');
+  if (frame12) {
+    const op = interpolate(f, [0, 20], [0, 1], { clamp: true, easing: easeInOut });
+    frame12.style.borderColor = `rgba(197,160,89,${(op * 0.5).toFixed(3)})`;
+    frame12.style.boxShadow   = `0 0 ${(op * 10).toFixed(1)}px rgba(197,160,89,${(op * 0.12).toFixed(3)})`;
+  }
+
+  const lockWrap = document.getElementById('t12-lock-wrap');
+  const lockRing = document.getElementById('t12-lock-ring');
+  if (lockWrap) {
+    if (f < 40) {
+      lockWrap.style.opacity = interpolate(f, [15, 30], [0, 1], { clamp: true, easing: easeInOut });
+      if (lockRing && f >= 15) {
+        const p = Math.sin((f - 15) * 0.35) * 0.5 + 0.5;
+        lockRing.style.boxShadow = `0 0 ${(p * 16).toFixed(0)}px rgba(197,160,89,${(p * 0.6).toFixed(2)})`;
+      }
+    } else {
+      lockWrap.style.opacity = interpolate(f, [40, 55], [1, 0], { clamp: true, easing: easeInOut });
+    }
+  }
+
+  if (f >= 40) {
+    for (let i = 0; i < 8; i++) {
+      const frag = document.getElementById(`t12-frag-${i}`);
+      if (!frag) continue;
+      const angle = parseFloat(frag.dataset.angle);
+      const fragF = f - 40 - i * 2;
+      if (fragF < 0) { frag.style.opacity = 0; continue; }
+      const dist   = interpolate(fragF, [0, 35], [0, 45], { clamp: true, easing: easeOut });
+      const fragOp = interpolate(fragF, [0, 5, 30, 38], [0, 0.9, 0.7, 0]);
+      frag.style.transform = `translate(calc(-50% + ${(Math.cos(angle) * dist).toFixed(1)}px), calc(-50% + ${(Math.sin(angle) * dist).toFixed(1)}px))`;
+      frag.style.opacity   = Math.max(0, fragOp).toFixed(3);
+    }
+  }
+
+  const photo12 = document.getElementById('t12-photo');
+  if (photo12) photo12.style.clipPath = `circle(${interpolate(f, [70, 120], [0, 150], { clamp: true, easing: easeInOut }).toFixed(1)}% at 50% 50%)`;
+
+  const logo12 = document.getElementById('t12-logo');
+  if (logo12) logo12.style.opacity = interpolate(f, [110, 140], [0, 1], { clamp: true, easing: easeInOut });
+
+  const ornSvg  = document.getElementById('t12-ornline');
+  const ornPath = document.getElementById('t12-ornline-path');
+  const ornDotL = document.getElementById('t12-orn-dot-l');
+  const ornDotR = document.getElementById('t12-orn-dot-r');
+  if (ornSvg) {
+    ornSvg.style.opacity = interpolate(f, [118, 126], [0, 1], { clamp: true });
+    if (ornPath) ornPath.setAttribute('stroke-dashoffset', interpolate(f, [120, 150], [120, 0], { clamp: true, easing: easeInOut }).toFixed(1));
+    if (ornDotL) ornDotL.setAttribute('opacity', interpolate(f, [148, 155], [0, 1], { clamp: true }));
+    if (ornDotR) ornDotR.setAttribute('opacity', interpolate(f, [148, 155], [0, 1], { clamp: true }));
+  }
+
+  const lc = C.headline.length;
+  for (let i = 0; i < lc; i++) {
+    const lEl = document.getElementById(`t12-l-${i}`);
+    if (!lEl) continue;
+    lEl.style.opacity = interpolate(f, [140 + (i / Math.max(lc, 1)) * 40, 140 + (i / Math.max(lc, 1)) * 40 + 6], [0, 1], { clamp: true, easing: easeInOut });
+  }
+
+  const annot = document.getElementById('t12-annotation');
+  if (annot) annot.style.opacity = interpolate(f, [170, 200], [0, 1], { clamp: true, easing: easeInOut });
+
+  const badge12 = document.getElementById('t12-badge');
+  if (badge12) {
+    const bp = interpolate(f, [190, 225], [0, 1], { clamp: true, easing: easeInOut });
+    badge12.style.transform = `translateX(-50%) rotate(${(18 - bp * 26).toFixed(1)}deg) scale(${(0.5 + bp * 0.5).toFixed(4)})`;
+    badge12.style.opacity   = interpolate(f, [190, 208], [0, 1], { clamp: true });
+  }
+
+  const cta12 = document.getElementById('t12-cta');
+  if (cta12) cta12.style.opacity = interpolate(f, [220, 255], [0, 1], { clamp: true, easing: easeInOut });
+
+  const shimmer12 = document.getElementById('t12-shimmer');
+  if (shimmer12 && f >= 260) {
+    const shimF = f - 260;
+    const shimX = interpolate(shimF, [0, 10], [-20, 120], { clamp: true });
+    shimmer12.style.opacity    = interpolate(shimF, [0, 2, 8, 10], [0, 0.7, 0.7, 0]);
+    shimmer12.style.background = `linear-gradient(105deg,transparent ${shimX.toFixed(0)}%,rgba(197,160,89,0.1) ${(shimX+10).toFixed(0)}%,transparent ${(shimX+20).toFixed(0)}%)`;
+  }
+}
+
+
+// ── Template 13: Through the Generations ─────────────────────────────────────
+// Two photos side by side, connected by a warm light bridge.
+// Past and future drawn toward each other. 330 frames / 11s.
+
+function initTemplate13(canvas) {
+  const AMBER = '#C5A059';
+  const photoUrl = getPhotoUrl();
+  const logoUrl  = getLogoUrl();
+
+  const prng = seededRand(99);
+  let sparkHtml = '';
+  for (let i = 0; i < 20; i++) {
+    const relX = prng() * 100;
+    const offY = (prng() - 0.5) * 14;
+    const sz   = prng() * 2.5 + 1;
+    sparkHtml += `<div id="t13-spark-${i}" data-rx="${relX.toFixed(1)}" data-oy="${offY.toFixed(1)}" style="position:absolute;width:${sz.toFixed(1)}px;height:${sz.toFixed(1)}px;border-radius:50%;background:#fff;opacity:0;pointer-events:none;"></div>`;
+  }
+
+  canvas.innerHTML = `
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,#1e1105 0%,#0d0802 60%,#050302 100%);"></div>
+    <div id="t13-frame-l" style="position:absolute;top:68px;left:8px;width:114px;height:160px;border:1.5px solid rgba(197,160,89,0);border-radius:6px;z-index:20;pointer-events:none;"></div>
+    <div id="t13-frame-r" style="position:absolute;top:68px;right:8px;width:114px;height:160px;border:1.5px solid rgba(197,160,89,0);border-radius:6px;z-index:20;pointer-events:none;"></div>
+    <div id="t13-photo-l-wrap" style="position:absolute;top:68px;left:8px;width:114px;height:160px;border-radius:6px;overflow:hidden;opacity:0;z-index:10;">
+      ${photoUrl
+        ? `<img src="${photoUrl}" style="width:100%;height:100%;object-fit:cover;filter:sepia(0.75) blur(1.5px) brightness(0.85);">`
+        : `<div style="width:100%;height:100%;background:linear-gradient(135deg,#3a2510,#1e1008);"></div>`}
+    </div>
+    <div id="t13-label-l" style="position:absolute;top:236px;left:8px;width:114px;text-align:center;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(197,160,89,0.7);font-family:Georgia,serif;opacity:0;z-index:25;">Then</div>
+    <div id="t13-photo-r-wrap" style="position:absolute;top:68px;right:8px;width:114px;height:160px;border-radius:6px;overflow:hidden;opacity:0;z-index:10;">
+      ${photoUrl
+        ? `<img src="${photoUrl}" style="width:100%;height:100%;object-fit:cover;">`
+        : `<div style="width:100%;height:100%;background:linear-gradient(135deg,${T.gradient_from},${T.gradient_to});"></div>`}
+    </div>
+    <div id="t13-label-r" style="position:absolute;top:236px;right:8px;width:114px;text-align:center;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(197,160,89,0.7);font-family:Georgia,serif;opacity:0;z-index:25;">Now</div>
+    <div id="t13-bridge-wrap" style="position:absolute;top:68px;left:122px;width:26px;height:160px;display:flex;align-items:center;justify-content:center;z-index:15;pointer-events:none;">
+      <div id="t13-beam" style="width:0px;height:6px;background:linear-gradient(90deg,rgba(197,160,89,0.15),rgba(255,220,120,0.7),rgba(197,160,89,0.15));border-radius:3px;box-shadow:0 0 8px rgba(197,160,89,0.4);opacity:0;"></div>
+    </div>
+    <div id="t13-sparks" style="position:absolute;top:120px;left:122px;width:26px;height:60px;z-index:16;pointer-events:none;">${sparkHtml}</div>
+    <div id="t13-logo" style="position:absolute;top:22px;left:50%;transform:translateX(-50%);width:90px;height:28px;display:flex;align-items:center;justify-content:center;opacity:0;z-index:30;">
+      ${logoUrl ? `<img src="${logoUrl}" style="max-height:26px;max-width:88px;object-fit:contain;filter:drop-shadow(0 1px 6px rgba(0,0,0,0.6));">` : `<span style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:${AMBER};">${BRAND}</span>`}
+    </div>
+    <div id="t13-badge" style="position:absolute;top:254px;left:50%;transform:translateX(-50%);background:${T.badge_bg};color:${T.badge_text};padding:3px 12px;border-radius:20px;font-size:9px;font-weight:700;letter-spacing:0.5px;white-space:nowrap;opacity:0;z-index:30;">${C.badge}</div>
+    <div id="t13-headline" style="position:absolute;top:280px;left:14px;right:14px;font-size:15px;font-weight:700;line-height:1.4;font-family:Georgia,serif;text-align:center;color:#efe7db;opacity:0;z-index:30;">${C.headline.split(' ').map(w => {
+      const isHl = C.highlight && w.replace(/[.,!?]/g,'') === C.highlight.replace(/[.,!?]/g,'');
+      return isHl ? `<span style="color:${AMBER};text-shadow:0 0 10px rgba(197,160,89,0.5);">${w}</span>` : w;
+    }).join(' ')}</div>
+    <div id="t13-support" style="position:absolute;top:348px;left:18px;right:18px;font-size:11px;color:rgba(239,231,219,0.65);line-height:1.65;text-align:center;font-family:Georgia,serif;opacity:0;z-index:30;">${C.support}</div>
+    <div id="t13-cta" style="position:absolute;bottom:26px;left:20px;right:20px;background:${T.cta_bg};color:${T.cta_text};padding:12px 20px;border-radius:999px;font-size:13px;font-weight:700;text-align:center;opacity:0;transform:translateY(8px);z-index:30;box-shadow:0 4px 24px rgba(197,160,89,0.25);">${C.cta}</div>
+  `;
+}
+
+function renderTemplate13(f) {
+  const AMBER = '#C5A059';
+
+  ['t13-frame-l','t13-frame-r'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const op = interpolate(f, [0, 30], [0, 1], { clamp: true, easing: easeInOut });
+    el.style.borderColor = `rgba(197,160,89,${(op * 0.45).toFixed(3)})`;
+  });
+
+  const pLW = document.getElementById('t13-photo-l-wrap');
+  if (pLW) pLW.style.opacity = interpolate(f, [20, 60], [0, 1], { clamp: true, easing: easeInOut });
+  const lbL = document.getElementById('t13-label-l');
+  if (lbL) lbL.style.opacity = interpolate(f, [40, 70], [0, 1], { clamp: true, easing: easeInOut });
+  const pRW = document.getElementById('t13-photo-r-wrap');
+  if (pRW) pRW.style.opacity = interpolate(f, [50, 90], [0, 1], { clamp: true, easing: easeInOut });
+  const lbR = document.getElementById('t13-label-r');
+  if (lbR) lbR.style.opacity = interpolate(f, [70, 100], [0, 1], { clamp: true, easing: easeInOut });
+
+  const beam = document.getElementById('t13-beam');
+  if (beam) {
+    const bW  = interpolate(f, [80, 130], [0, 26], { clamp: true, easing: easeInOut });
+    const bOp = interpolate(f, [80, 105], [0, 1], { clamp: true, easing: easeInOut });
+    beam.style.width   = bW.toFixed(1) + 'px';
+    beam.style.opacity = bOp;
+    if (f >= 150) {
+      const intens = interpolate(f, [150, 200], [1, 1.6], { clamp: true });
+      beam.style.boxShadow = `0 0 ${(8 * intens).toFixed(0)}px rgba(197,160,89,${(0.4 * intens).toFixed(2)})`;
+    }
+    if (f >= 300) {
+      const pulse = 0.8 + 0.4 * Math.sin((f - 300) * 0.2);
+      beam.style.opacity = (parseFloat(bOp) * pulse).toFixed(3);
+    }
+  }
+
+  if (f >= 80) {
+    for (let i = 0; i < 20; i++) {
+      const sp = document.getElementById(`t13-spark-${i}`);
+      if (!sp) continue;
+      const rx = parseFloat(sp.dataset.rx);
+      const oy = parseFloat(sp.dataset.oy);
+      const flicker = Math.sin((f - 80) * 0.3 + i * 0.7);
+      const visible  = interpolate(f, [80, 110], [0, 1], { clamp: true }) * (0.5 + 0.5 * flicker);
+      sp.style.left  = ((rx + (f - 80) * 0.08) % 100) + '%';
+      sp.style.top   = `calc(50% + ${oy}px)`;
+      sp.style.opacity = Math.max(0, visible).toFixed(3);
+    }
+  }
+
+  const logo13 = document.getElementById('t13-logo');
+  if (logo13) logo13.style.opacity = interpolate(f, [120, 150], [0, 1], { clamp: true, easing: easeInOut });
+  const badge13 = document.getElementById('t13-badge');
+  if (badge13) badge13.style.opacity = interpolate(f, [130, 160], [0, 1], { clamp: true, easing: easeInOut });
+
+  const dp = interpolate(f, [150, 200], [0, 1], { clamp: true, easing: easeInOut }) * 10;
+  const pLE = document.getElementById('t13-photo-l-wrap');
+  const pRE = document.getElementById('t13-photo-r-wrap');
+  const fLE = document.getElementById('t13-frame-l');
+  const fRE = document.getElementById('t13-frame-r');
+  if (pLE) pLE.style.transform = `translateX(${dp.toFixed(2)}px)`;
+  if (pRE) pRE.style.transform = `translateX(${(-dp).toFixed(2)}px)`;
+  if (fLE) fLE.style.transform  = `translateX(${dp.toFixed(2)}px)`;
+  if (fRE) fRE.style.transform  = `translateX(${(-dp).toFixed(2)}px)`;
+
+  const hl13 = document.getElementById('t13-headline');
+  if (hl13) hl13.style.opacity = interpolate(f, [190, 230], [0, 1], { clamp: true, easing: easeInOut });
+  const sup13 = document.getElementById('t13-support');
+  if (sup13) sup13.style.opacity = interpolate(f, [230, 270], [0, 1], { clamp: true, easing: easeInOut });
+
+  const cta13 = document.getElementById('t13-cta');
+  if (cta13) {
+    cta13.style.opacity   = interpolate(f, [260, 295], [0, 1], { clamp: true, easing: easeInOut });
+    cta13.style.transform = `translateY(${interpolate(f, [260, 300], [8, 0], { clamp: true, easing: easeInOut }).toFixed(2)}px)`;
+  }
+}
+
+
+// ── Template 14: The Face Returns ────────────────────────────────────────────
+// Full-bleed photo from blur(30px) to sharp. Watching a face emerge from the
+// blur is the emotional core. Everything else is minimized. 300 frames / 10s.
+
+function initTemplate14(canvas) {
+  const AMBER = '#C5A059';
+  const photoUrl = getPhotoUrl();
+  const logoUrl  = getLogoUrl();
+
+  const prng = seededRand(7);
+  let particleHtml = '';
+  for (let i = 0; i < 18; i++) {
+    const x  = prng() * 260;
+    const y  = prng() * 564;
+    const sz = prng() * 3 + 1;
+    particleHtml += `<div id="t14-lp-${i}" data-by="${y.toFixed(1)}" style="position:absolute;left:${x.toFixed(1)}px;top:${y.toFixed(1)}px;width:${sz.toFixed(1)}px;height:${sz.toFixed(1)}px;border-radius:50%;background:rgba(197,160,89,0.6);opacity:0;pointer-events:none;"></div>`;
+  }
+
+  canvas.innerHTML = `
+    <div style="position:absolute;inset:0;background:#000;"></div>
+    <div id="t14-photo-wrap" style="position:absolute;inset:0;opacity:0;z-index:5;">
+      ${photoUrl
+        ? `<img id="t14-photo-img" src="${photoUrl}" style="width:100%;height:100%;object-fit:cover;filter:blur(30px);transform:scale(1.3);transform-origin:center center;">`
+        : `<div id="t14-photo-img" style="width:100%;height:100%;background:linear-gradient(160deg,${T.gradient_from},${T.gradient_to},${T.primary});filter:blur(30px);transform:scale(1.3);transform-origin:center center;"></div>`}
+    </div>
+    <div id="t14-overlay" style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.5) 0%,transparent 35%,transparent 55%,rgba(0,0,0,0.75) 100%);opacity:0;z-index:10;pointer-events:none;"></div>
+    <div id="t14-vignette" style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,transparent 25%,rgba(0,0,0,0.9) 100%);opacity:0;z-index:11;pointer-events:none;"></div>
+    <div id="t14-pulse" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:6px;height:6px;border-radius:50%;background:${AMBER};box-shadow:0 0 12px ${AMBER},0 0 30px rgba(197,160,89,0.4);opacity:0;z-index:30;pointer-events:none;"></div>
+    <div id="t14-logo" style="position:absolute;top:16px;left:50%;transform:translateX(-50%);width:72px;height:22px;display:flex;align-items:center;justify-content:center;opacity:0;z-index:40;">
+      ${logoUrl ? `<img src="${logoUrl}" style="max-height:20px;max-width:70px;object-fit:contain;filter:drop-shadow(0 1px 4px rgba(0,0,0,0.7)) brightness(0.85);">` : `<span style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:rgba(197,160,89,0.7);">${BRAND}</span>`}
+    </div>
+    <div id="t14-headline" style="position:absolute;bottom:130px;left:16px;right:16px;font-size:15px;font-weight:600;line-height:1.4;font-family:Georgia,serif;text-align:center;color:#efe7db;opacity:0;z-index:40;">${C.headline.split(' ').map(w => {
+      const isHl = C.highlight && w.replace(/[.,!?]/g,'') === C.highlight.replace(/[.,!?]/g,'');
+      return isHl ? `<span id="t14-hl-word" style="color:${AMBER};">${w}</span>` : w;
+    }).join(' ')}</div>
+    <div id="t14-support" style="position:absolute;bottom:96px;left:20px;right:20px;font-size:10px;color:rgba(239,231,219,0.6);line-height:1.6;text-align:center;font-family:Georgia,serif;opacity:0;z-index:40;">${C.support}</div>
+    <div id="t14-badge" style="position:absolute;top:44px;right:14px;background:rgba(197,160,89,0.15);border:1px solid rgba(197,160,89,0.35);color:rgba(197,160,89,0.85);padding:3px 8px;border-radius:4px;font-size:9px;font-weight:600;letter-spacing:0.5px;opacity:0;z-index:40;">${C.badge}</div>
+    <div id="t14-cta" style="position:absolute;bottom:26px;left:24px;right:24px;background:${T.cta_bg};color:${T.cta_text};padding:12px 20px;border-radius:999px;font-size:13px;font-weight:700;text-align:center;opacity:0;z-index:40;box-shadow:0 4px 24px rgba(197,160,89,0.3);">${C.cta}</div>
+    <div id="t14-particles" style="position:absolute;inset:0;z-index:35;pointer-events:none;">${particleHtml}</div>
+  `;
+}
+
+function renderTemplate14(f) {
+  const AMBER = '#C5A059';
+
+  const pulse14 = document.getElementById('t14-pulse');
+  if (pulse14) {
+    if (f < 15) {
+      pulse14.style.opacity   = interpolate(f, [0, 8], [0, 1], { clamp: true });
+      pulse14.style.transform = `translate(-50%,-50%) scale(${(0.7 + 0.6 * Math.sin(f * 0.6)).toFixed(3)})`;
+    } else {
+      pulse14.style.opacity   = interpolate(f, [15, 30], [1, 0], { clamp: true });
+      pulse14.style.transform = `translate(-50%,-50%) scale(${interpolate(f, [15, 30], [1, 6], { clamp: true, easing: easeOut }).toFixed(2)})`;
+    }
+  }
+
+  const photoWrap14 = document.getElementById('t14-photo-wrap');
+  if (photoWrap14) photoWrap14.style.opacity = interpolate(f, [15, 50], [0, 1], { clamp: true, easing: easeInOut });
+
+  const photoImg14 = document.getElementById('t14-photo-img');
+  if (photoImg14) {
+    const blurPx = interpolate(f, [40, 100], [30, 0], { clamp: true, easing: easeInOut });
+    const sc = f < 280
+      ? interpolate(f, [40, 100], [1.3, 1.0], { clamp: true, easing: easeInOut })
+      : interpolate(f, [280, 300], [1.0, 0.98], { clamp: true, easing: easeInOut });
+    photoImg14.style.filter    = `blur(${blurPx.toFixed(2)}px)`;
+    photoImg14.style.transform = `scale(${sc.toFixed(4)})`;
+  }
+
+  const overlay14 = document.getElementById('t14-overlay');
+  if (overlay14) overlay14.style.opacity = interpolate(f, [30, 70], [0, 1], { clamp: true, easing: easeInOut });
+
+  const logo14 = document.getElementById('t14-logo');
+  if (logo14) logo14.style.opacity = interpolate(f, [120, 160], [0, 0.75], { clamp: true, easing: easeInOut });
+
+  const hl14 = document.getElementById('t14-headline');
+  if (hl14) hl14.style.opacity = interpolate(f, [150, 185], [0, 1], { clamp: true, easing: easeInOut });
+
+  const hlWord14 = document.getElementById('t14-hl-word');
+  if (hlWord14 && f >= 180) {
+    const sa = interpolate(f, [180, 210], [0, 1], { clamp: true });
+    const so = Math.sin((f - 180) * 0.18) * sa;
+    const gs = (6 + so * 6).toFixed(1);
+    hlWord14.style.textShadow = `0 0 ${gs}px rgba(197,160,89,${(0.5 + so * 0.3).toFixed(2)}),0 0 ${(parseFloat(gs) * 2).toFixed(1)}px rgba(197,160,89,0.15)`;
+  }
+
+  const sup14 = document.getElementById('t14-support');
+  if (sup14) sup14.style.opacity = interpolate(f, [180, 220], [0, 1], { clamp: true, easing: easeInOut });
+
+  const badge14 = document.getElementById('t14-badge');
+  if (badge14) badge14.style.opacity = interpolate(f, [210, 245], [0, 1], { clamp: true, easing: easeInOut });
+
+  const cta14 = document.getElementById('t14-cta');
+  if (cta14) cta14.style.opacity = interpolate(f, [240, 278], [0, 1], { clamp: true, easing: easeInOut });
+
+  const vig14 = document.getElementById('t14-vignette');
+  if (vig14) vig14.style.opacity = interpolate(f, [90, 300], [0, 0.6], { clamp: true, easing: easeInOut });
+
+  if (f >= 280) {
+    for (let i = 0; i < 18; i++) {
+      const lp = document.getElementById(`t14-lp-${i}`);
+      if (!lp) continue;
+      const baseY  = parseFloat(lp.dataset.by);
+      const driftY = (f - 280) * (0.4 + (i % 3) * 0.2);
+      const flickOp = 0.3 + 0.4 * Math.sin((f - 280) * 0.25 + i * 0.8);
+      const appOp   = interpolate(f, [280, 295], [0, 1], { clamp: true });
+      lp.style.top     = ((baseY - driftY + 564) % 564) + 'px';
+      lp.style.opacity = (appOp * Math.max(0, flickOp)).toFixed(3);
+    }
+  }
+}
+
+
+// ── Template 15: Dust of Time ─────────────────────────────────────────────────
+// 50+ warm particles drift UPWARD, photo revealed underneath as dust lifts away
+
+const T15_PARTICLES = (() => {
+  const rng = seededRand(15);
+  return Array.from({ length: 55 }, (_, i) => ({
+    x:    rng() * 100,        // % across canvas
+    startY: 80 + rng() * 25,  // % down canvas (start near bottom)
+    size: 2 + rng() * 4,      // 2-6px
+    speed: 0.18 + rng() * 0.22, // % per frame upward
+    drift: (rng() - 0.5) * 0.12, // horizontal sway per frame
+    color: ['#C5A059','#D4A84B','#F5F0E0','#8B6F47','#E8C870','#BF9040'][Math.floor(rng() * 6)],
+    phase: rng() * Math.PI * 2, // sin-wave phase for gentle horizontal oscillation
+    opacity: 0.55 + rng() * 0.45,
+    delay: Math.floor(rng() * 40), // frame delay before particle appears
+  }));
+})();
+
+function initTemplate15(canvas) {
+  const words = C.headline.split(' ');
+  const hlIdx = words.findIndex(w => w.toLowerCase().includes(C.highlight.toLowerCase().split(' ')[0]));
+
+  canvas.innerHTML = `
+    <!-- Warm background -->
+    <div id="t15-bg" style="position:absolute;inset:0;background:linear-gradient(180deg,#1a1208 0%,#2a1e10 50%,#1a1208 100%);"></div>
+
+    <!-- Photo layer, revealed as particles lift -->
+    <div id="t15-photo-wrap" style="position:absolute;top:55px;left:16px;right:16px;height:200px;border-radius:10px;overflow:hidden;opacity:0;">
+      ${getPhotoUrl() ? `<img src="${getPhotoUrl()}" style="width:100%;height:100%;object-fit:cover;">` : `<div style="width:100%;height:100%;background:linear-gradient(135deg,${T.surface},${T.gradient_to});"></div>`}
+    </div>
+    <!-- Warm glow behind photo -->
+    <div id="t15-photo-glow" style="position:absolute;top:45px;left:6px;right:6px;height:220px;border-radius:16px;background:radial-gradient(ellipse,rgba(197,160,89,0.35) 0%,transparent 70%);opacity:0;pointer-events:none;"></div>
+
+    <!-- Particle container -->
+    <div id="t15-particles" style="position:absolute;inset:0;pointer-events:none;overflow:hidden;"></div>
+
+    <!-- Logo at bottom — grounded, memorial plaque feel -->
+    <div id="t15-logo" style="position:absolute;bottom:68px;left:50%;transform:translateX(-50%);opacity:0;display:flex;align-items:center;justify-content:center;height:28px;">
+      ${getLogoUrl() ? `<img src="${getLogoUrl()}" style="max-height:24px;max-width:110px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(197,160,89,0.5));">` : `<span style="font-size:11px;font-weight:800;letter-spacing:1.5px;color:#C5A059;">${BRAND}</span>`}
+    </div>
+
+    <!-- Badge near logo -->
+    <div id="t15-badge" style="position:absolute;bottom:98px;left:50%;transform:translateX(-50%);opacity:0;padding:3px 10px;background:${T.badge_bg};border-radius:20px;font-size:9px;font-weight:700;color:${T.badge_text};letter-spacing:0.5px;white-space:nowrap;">${C.badge}</div>
+
+    <!-- Headline — above photo, word by word -->
+    <div id="t15-headline" style="position:absolute;top:270px;left:16px;right:16px;font-size:15px;font-weight:800;color:#F5F0E0;line-height:1.4;text-align:center;">
+      ${words.map((w, i) => {
+        const isHl = i === hlIdx || (hlIdx >= 0 && C.highlight.includes(w));
+        return `<span id="t15-word-${i}" style="display:inline;opacity:0;${isHl ? `color:#D4A84B;text-shadow:0 0 12px rgba(212,168,75,0.7);` : ''}">${w}${i < words.length - 1 ? ' ' : ''}</span>`;
+      }).join('')}
+    </div>
+
+    <!-- Support text — italic, warm -->
+    <div id="t15-support" style="position:absolute;top:340px;left:20px;right:20px;font-size:10px;font-style:italic;color:rgba(245,240,224,0.75);line-height:1.6;text-align:center;opacity:0;">${C.support}</div>
+
+    <!-- CTA at very bottom -->
+    <div id="t15-cta" style="position:absolute;bottom:16px;left:20px;right:20px;padding:11px 16px;background:${T.cta_bg};border-radius:${T.chrome ? '8px' : '8px'};font-size:12px;font-weight:700;color:${T.cta_text};text-align:center;opacity:0;">${C.cta}</div>
+  `;
+
+  // Build particle DOM
+  const particleContainer = document.getElementById('t15-particles');
+  T15_PARTICLES.forEach((p, i) => {
+    const dot = document.createElement('div');
+    dot.id = `t15-p-${i}`;
+    dot.style.cssText = `position:absolute;width:${p.size}px;height:${p.size}px;border-radius:50%;background:${p.color};left:${p.x}%;bottom:${100 - p.startY}%;opacity:0;pointer-events:none;`;
+    particleContainer.appendChild(dot);
+  });
+}
+
+function renderTemplate15(frame) {
+  const f = frame;
+
+  // Animate particles upward
+  T15_PARTICLES.forEach((p, i) => {
+    const dot = document.getElementById(`t15-p-${i}`);
+    if (!dot) return;
+    const activeF = f - p.delay;
+    if (activeF < 0) { dot.style.opacity = '0'; return; }
+
+    // Y position drifts upward from startY
+    const yPct = p.startY - activeF * p.speed;
+    // Gentle horizontal oscillation
+    const xOffset = Math.sin(activeF * 0.07 + p.phase) * 1.8;
+    const xPct = p.x + activeF * p.drift + xOffset;
+
+    // Particle density decreases: dense 0-30, thinning 30-100
+    const densityFactor = f < 100 ? 1 : interpolate(f, [100, 200], [1, 0.3], { clamp: true });
+    // Individual particle fade based on how high it's traveled
+    const lifeFade = yPct < 10 ? interpolate(yPct, [10, 0], [1, 0], { clamp: true }) : 1;
+    const opacityVal = p.opacity * densityFactor * lifeFade * clamp(activeF / 5, 0, 1);
+
+    dot.style.opacity = opacityVal;
+    dot.style.left = `${clamp(xPct, -2, 102)}%`;
+    dot.style.bottom = `${clamp(100 - yPct, -5, 110)}%`;
+  });
+
+  // Photo reveal underneath (opacity rises as particles clear)
+  const photoWrap = document.getElementById('t15-photo-wrap');
+  if (photoWrap) {
+    const photoOpacity = interpolate(f, [20, 70], [0.4, 1], { clamp: true, easing: easeInOut });
+    photoWrap.style.opacity = photoOpacity;
+  }
+
+  // Warm glow around photo
+  const photoGlow = document.getElementById('t15-photo-glow');
+  if (photoGlow) {
+    photoGlow.style.opacity = interpolate(f, [60, 100], [0, 1], { clamp: true, easing: easeInOut });
+  }
+
+  // Logo at bottom (grounded)
+  const logo = document.getElementById('t15-logo');
+  if (logo) {
+    logo.style.opacity = interpolate(f, [90, 130], [0, 1], { clamp: true, easing: easeInOut });
+  }
+
+  // Headline words, 10-frame stagger
+  const words = C.headline.split(' ');
+  words.forEach((_, i) => {
+    const wordEl = document.getElementById(`t15-word-${i}`);
+    if (!wordEl) return;
+    const startF = 120 + i * 10;
+    wordEl.style.opacity = interpolate(f, [startF, startF + 14], [0, 1], { clamp: true, easing: easeInOut });
+  });
+
+  // Badge
+  const badge = document.getElementById('t15-badge');
+  if (badge) {
+    badge.style.opacity = interpolate(f, [150, 190], [0, 1], { clamp: true, easing: easeInOut });
+  }
+
+  // Support text
+  const support = document.getElementById('t15-support');
+  if (support) {
+    support.style.opacity = interpolate(f, [180, 220], [0, 1], { clamp: true, easing: easeInOut });
+  }
+
+  // CTA
+  const cta = document.getElementById('t15-cta');
+  if (cta) {
+    cta.style.opacity = interpolate(f, [210, 260], [0, 1], { clamp: true, easing: easeInOut });
+  }
+}
+
+
+// ── Template 16: The Warmth Returns ──────────────────────────────────────────
+// Black-and-white to full color spreading from center outward
+
+function initTemplate16(canvas) {
+  const words = C.headline.split(' ');
+  const hlIdx = words.findIndex(w => w.toLowerCase().includes(C.highlight.toLowerCase().split(' ')[0]));
+
+  canvas.innerHTML = `
+    <!-- Background -->
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,#1a1208 0%,#2a1e10 100%);"></div>
+
+    <!-- Photo frame border — transitions to golden -->
+    <div id="t16-photo-frame" style="position:absolute;top:50px;left:14px;right:14px;height:210px;border-radius:12px;border:2px solid rgba(180,160,120,0.3);padding:0;">
+      <!-- Color wash overlay: radial gradient from center, covers grayscale -->
+      <div id="t16-color-wash" style="position:absolute;inset:0;border-radius:10px;background:radial-gradient(circle at 50% 50%, transparent 0%, transparent 100%);z-index:2;pointer-events:none;mix-blend-mode:normal;opacity:0;"></div>
+      <!-- Photo, grayscale initially -->
+      <div id="t16-photo-inner" style="position:absolute;inset:0;border-radius:10px;overflow:hidden;filter:grayscale(1) sepia(0.3);">
+        ${getPhotoUrl() ? `<img src="${getPhotoUrl()}" style="width:100%;height:100%;object-fit:cover;">` : `<div style="width:100%;height:100%;background:linear-gradient(135deg,#444,#222);"></div>`}
+      </div>
+    </div>
+    <!-- Warm glow pulse (once, at full color) -->
+    <div id="t16-glow" style="position:absolute;top:40px;left:4px;right:4px;height:230px;border-radius:18px;box-shadow:0 0 0px rgba(197,160,89,0);pointer-events:none;"></div>
+
+    <!-- Logo at top, warm gold -->
+    <div id="t16-logo" style="position:absolute;top:12px;left:50%;transform:translateX(-50%);opacity:0;height:28px;display:flex;align-items:center;justify-content:center;">
+      ${getLogoUrl() ? `<img src="${getLogoUrl()}" style="max-height:24px;max-width:100px;object-fit:contain;filter:drop-shadow(0 0 4px rgba(197,160,89,0.6));">` : `<span style="font-size:11px;font-weight:800;letter-spacing:1.5px;color:#C5A059;">${BRAND}</span>`}
+    </div>
+
+    <!-- Headline below photo, word by word -->
+    <div id="t16-headline" style="position:absolute;top:276px;left:16px;right:16px;font-size:14px;font-weight:800;color:#F5F0E0;line-height:1.45;text-align:center;">
+      ${words.map((w, i) => {
+        const isHl = i === hlIdx || (hlIdx >= 0 && C.highlight.includes(w));
+        return `<span id="t16-word-${i}" style="display:inline;opacity:0;">${isHl
+          ? `<span style="background:rgba(212,168,75,0.25);color:#D4A84B;border-radius:4px;padding:0 3px;">${w}</span>`
+          : w}${i < words.length - 1 ? ' ' : ''}</span>`;
+      }).join('')}
+    </div>
+
+    <!-- Support text -->
+    <div id="t16-support" style="position:absolute;top:345px;left:20px;right:20px;font-size:10px;color:rgba(245,240,224,0.7);line-height:1.6;text-align:center;opacity:0;">${C.support}</div>
+
+    <!-- Badge pill -->
+    <div id="t16-badge" style="position:absolute;top:400px;left:50%;transform:translateX(-50%);opacity:0;padding:3px 12px;background:rgba(197,160,89,0.2);border:1px solid rgba(197,160,89,0.5);border-radius:20px;font-size:9px;font-weight:700;color:#D4A84B;letter-spacing:0.5px;white-space:nowrap;">${C.badge}</div>
+
+    <!-- CTA with warm gold background -->
+    <div id="t16-cta" style="position:absolute;bottom:16px;left:20px;right:20px;padding:11px 16px;background:${T.cta_bg};border-radius:8px;font-size:12px;font-weight:700;color:${T.cta_text};text-align:center;opacity:0;">${C.cta}</div>
+  `;
+}
+
+function renderTemplate16(frame) {
+  const f = frame;
+
+  // Grayscale decreases as color spreads (frame 30-90)
+  const colorP = interpolate(f, [30, 90], [0, 1], { clamp: true, easing: easeInOut });
+  const photoInner = document.getElementById('t16-photo-inner');
+  if (photoInner) {
+    const grayscale = 1 - colorP;
+    const sepia = (1 - colorP) * 0.3;
+    photoInner.style.filter = `grayscale(${grayscale}) sepia(${sepia})`;
+  }
+
+  // Frame border transitions from faded to golden
+  const photoFrame = document.getElementById('t16-photo-frame');
+  if (photoFrame) {
+    const borderAlpha = interpolate(f, [80, 120], [0.3, 1], { clamp: true });
+    photoFrame.style.borderColor = `rgba(212,168,75,${borderAlpha})`;
+    if (f >= 80 && f <= 120) {
+      photoFrame.style.boxShadow = `0 0 ${interpolate(f,[80,100],[0,12],[{clamp:true}])}px rgba(197,160,89,0.4)`;
+    }
+  }
+
+  // Glow pulse once at full color (frame 80-120)
+  const glowEl = document.getElementById('t16-glow');
+  if (glowEl) {
+    const glowPeak = interpolate(f, [80, 100], [0, 1], { clamp: true, easing: easeInOut });
+    const glowFade = f > 100 ? interpolate(f, [100, 130], [1, 0], { clamp: true, easing: easeOut }) : 1;
+    const glowIntensity = glowPeak * glowFade;
+    glowEl.style.boxShadow = `0 0 ${glowIntensity * 30}px rgba(197,160,89,${glowIntensity * 0.5})`;
+  }
+
+  // Warm pulsing glow on hold (frame 270-300), subtle 2% oscillation
+  if (f >= 270 && glowEl) {
+    const pulseAmt = Math.sin((f - 270) * 0.18) * 0.02 + 0.03;
+    glowEl.style.boxShadow = `0 0 ${pulseAmt * 400}px rgba(197,160,89,${pulseAmt * 8})`;
+  }
+
+  // Logo
+  const logo = document.getElementById('t16-logo');
+  if (logo) {
+    logo.style.opacity = interpolate(f, [110, 150], [0, 1], { clamp: true, easing: easeInOut });
+  }
+
+  // Headline words materialize slowly
+  const words = C.headline.split(' ');
+  words.forEach((_, i) => {
+    const wordEl = document.getElementById(`t16-word-${i}`);
+    if (!wordEl) return;
+    const startF = 140 + i * 12;
+    wordEl.style.opacity = interpolate(f, [startF, startF + 18], [0, 1], { clamp: true, easing: easeInOut });
+  });
+
+  // Support
+  const support = document.getElementById('t16-support');
+  if (support) {
+    support.style.opacity = interpolate(f, [170, 210], [0, 1], { clamp: true, easing: easeInOut });
+  }
+
+  // Badge
+  const badge = document.getElementById('t16-badge');
+  if (badge) {
+    badge.style.opacity = interpolate(f, [200, 240], [0, 1], { clamp: true, easing: easeInOut });
+  }
+
+  // CTA
+  const cta = document.getElementById('t16-cta');
+  if (cta) {
+    cta.style.opacity = interpolate(f, [230, 270], [0, 1], { clamp: true, easing: easeInOut });
+  }
+}
+
+
+// ── Template 17: Opening the Album ────────────────────────────────────────────
+// 3D album cover opens, photo slides into corner mounts, handwritten annotations
+
+function initTemplate17(canvas) {
+  const words = C.headline.split(' ');
+
+  canvas.innerHTML = `
+    <!-- Album page background (cream paper) -->
+    <div id="t17-page" style="position:absolute;inset:0;background:#F0E8D6;overflow:hidden;">
+      <!-- Subtle paper grain texture -->
+      <div style="position:absolute;inset:0;background:repeating-radial-gradient(circle at 2px 2px, rgba(0,0,0,0.025) 1px, transparent 1px) 0 0/6px 6px;pointer-events:none;"></div>
+      <!-- Thin page border -->
+      <div style="position:absolute;inset:6px;border:1px solid rgba(139,111,71,0.25);border-radius:4px;pointer-events:none;"></div>
+    </div>
+
+    <!-- Album cover — dark leather, overlays page, will rotate away -->
+    <div id="t17-cover-wrap" style="position:absolute;inset:0;perspective:700px;transform-style:preserve-3d;">
+      <div id="t17-cover" style="position:absolute;inset:0;background:linear-gradient(135deg,#2c1f0e 0%,#4a3018 40%,#2c1f0e 100%);transform-origin:left center;backface-visibility:hidden;transform-style:preserve-3d;">
+        <!-- Leather grain -->
+        <div style="position:absolute;inset:0;background:repeating-radial-gradient(circle at 1px 1px,rgba(255,255,255,0.03) 1px,transparent 1px) 0 0/4px 4px;pointer-events:none;"></div>
+        <!-- Brand name on cover -->
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;">
+          <div style="font-size:10px;letter-spacing:0.25em;color:rgba(197,160,89,0.7);text-transform:uppercase;font-weight:600;">Family Album</div>
+          <div style="width:40px;height:1px;background:rgba(197,160,89,0.4);"></div>
+          <div style="font-size:9px;letter-spacing:0.15em;color:rgba(197,160,89,0.5);text-transform:uppercase;">${BRAND}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Corner mounting brackets (4 triangular shapes) -->
+    <div id="t17-corner-tl" style="position:absolute;top:52px;left:16px;width:16px;height:16px;border-top:2px solid #8B6F47;border-left:2px solid #8B6F47;opacity:0;transform:scale(0.7);"></div>
+    <div id="t17-corner-tr" style="position:absolute;top:52px;right:16px;width:16px;height:16px;border-top:2px solid #8B6F47;border-right:2px solid #8B6F47;opacity:0;transform:scale(0.7);"></div>
+    <div id="t17-corner-bl" style="position:absolute;top:248px;left:16px;width:16px;height:16px;border-bottom:2px solid #8B6F47;border-left:2px solid #8B6F47;opacity:0;transform:scale(0.7);"></div>
+    <div id="t17-corner-br" style="position:absolute;top:248px;right:16px;width:16px;height:16px;border-bottom:2px solid #8B6F47;border-right:2px solid #8B6F47;opacity:0;transform:scale(0.7);"></div>
+
+    <!-- Photo on album page (slides in from right) -->
+    <div id="t17-photo-wrap" style="position:absolute;top:56px;left:20px;right:20px;height:196px;overflow:hidden;border-radius:2px;opacity:0;transform:translateX(100%);">
+      ${getPhotoUrl() ? `<img src="${getPhotoUrl()}" style="width:100%;height:100%;object-fit:cover;">` : `<div style="width:100%;height:100%;background:linear-gradient(135deg,${T.surface},${T.gradient_to});"></div>`}
+    </div>
+
+    <!-- Album page content — headlines in handwritten style -->
+    <div id="t17-headline" style="position:absolute;top:264px;left:20px;right:20px;font-size:14px;font-style:italic;font-weight:700;color:#4a3018;line-height:1.5;text-align:center;">
+      ${words.map((w, i) => `<span id="t17-word-${i}" style="display:inline;opacity:0;">${w}${i < words.length - 1 ? ' ' : ''}</span>`).join('')}
+    </div>
+
+    <!-- Caption / date annotation below headline -->
+    <div id="t17-support" style="position:absolute;top:328px;left:24px;right:24px;font-size:9px;font-style:italic;color:rgba(74,48,24,0.65);line-height:1.7;text-align:center;opacity:0;">${C.support}</div>
+
+    <!-- Badge as decorative stamp/sticker -->
+    <div id="t17-badge" style="position:absolute;top:378px;left:50%;transform:translateX(-50%) rotate(-2deg);opacity:0;padding:4px 12px;background:rgba(197,160,89,0.2);border:1px solid rgba(139,111,71,0.5);border-radius:4px;font-size:9px;font-weight:700;color:#8B6F47;letter-spacing:0.5px;white-space:nowrap;">${C.badge}</div>
+
+    <!-- Logo (subtle, on the page) -->
+    <div id="t17-logo" style="position:absolute;top:16px;left:50%;transform:translateX(-50%);opacity:0;height:24px;display:flex;align-items:center;justify-content:center;">
+      ${getLogoUrl() ? `<img src="${getLogoUrl()}" style="max-height:20px;max-width:90px;object-fit:contain;filter:sepia(0.5) saturate(0.7) brightness(0.6);">` : `<span style="font-size:10px;font-weight:700;letter-spacing:1px;color:#8B6F47;">${BRAND}</span>`}
+    </div>
+
+    <!-- CTA below album page area -->
+    <div id="t17-cta" style="position:absolute;bottom:16px;left:20px;right:20px;padding:11px 16px;background:${T.cta_bg};border-radius:8px;font-size:12px;font-weight:700;color:${T.cta_text};text-align:center;opacity:0;">${C.cta}</div>
+  `;
+}
+
+function renderTemplate17(frame) {
+  const f = frame;
+
+  // Album cover opens (rotateY from 0 to -90 deg over frames 20-60)
+  const coverEl = document.getElementById('t17-cover');
+  const coverWrap = document.getElementById('t17-cover-wrap');
+  if (coverEl) {
+    const openP = interpolate(f, [20, 60], [0, 1], { clamp: true, easing: easeInOut });
+    const rotY = interpolate(openP, [0, 1], [0, -90]);
+    coverEl.style.transform = `perspective(700px) rotateY(${rotY}deg)`;
+    // After fully open, hide cover
+    if (f > 70) coverEl.style.opacity = interpolate(f, [70, 85], [1, 0], { clamp: true });
+  }
+
+  // Corner mounting brackets appear
+  const corners = ['t17-corner-tl','t17-corner-tr','t17-corner-bl','t17-corner-br'];
+  const cornerDelays = [0, 6, 10, 16];
+  corners.forEach((id, i) => {
+    const c = document.getElementById(id);
+    if (!c) return;
+    const startF = 50 + cornerDelays[i];
+    const p = interpolate(f, [startF, startF + 20], [0, 1], { clamp: true, easing: easeInOut });
+    c.style.opacity = p;
+    c.style.transform = `scale(${interpolate(p, [0,1], [0.7, 1])})`;
+  });
+
+  // Photo slides in from right
+  const photoWrap = document.getElementById('t17-photo-wrap');
+  if (photoWrap) {
+    const slideP = interpolate(f, [80, 130], [0, 1], { clamp: true, easing: easeInOut });
+    const tx = interpolate(slideP, [0, 1], [100, 0]);
+    photoWrap.style.transform = `translateX(${tx}%)`;
+    photoWrap.style.opacity = clamp(slideP * 2, 0, 1);
+  }
+
+  // Logo on page
+  const logo = document.getElementById('t17-logo');
+  if (logo) {
+    logo.style.opacity = interpolate(f, [75, 110], [0, 1], { clamp: true, easing: easeInOut });
+  }
+
+  // Headline word by word (italic, handwritten style)
+  const words = C.headline.split(' ');
+  words.forEach((_, i) => {
+    const wordEl = document.getElementById(`t17-word-${i}`);
+    if (!wordEl) return;
+    const startF = 120 + i * 10;
+    wordEl.style.opacity = interpolate(f, [startF, startF + 16], [0, 1], { clamp: true, easing: easeInOut });
+  });
+
+  // Support / caption
+  const support = document.getElementById('t17-support');
+  if (support) {
+    support.style.opacity = interpolate(f, [150, 190], [0, 1], { clamp: true, easing: easeInOut });
+  }
+
+  // Badge stamp
+  const badge = document.getElementById('t17-badge');
+  if (badge) {
+    badge.style.opacity = interpolate(f, [180, 220], [0, 1], { clamp: true, easing: easeInOut });
+  }
+
+  // Album page zoom in gently (scale 1 -> 1.05 over frames 210-260)
+  const page = document.getElementById('t17-page');
+  if (page && f >= 210) {
+    const zoomP = interpolate(f, [210, 260], [1, 1.05], { clamp: true, easing: easeInOut });
+    page.style.transform = `scale(${zoomP})`;
+    page.style.transformOrigin = 'center 45%';
+  }
+  // Also zoom the photo and text content elements
+  ['t17-photo-wrap','t17-corner-tl','t17-corner-tr','t17-corner-bl','t17-corner-br','t17-headline','t17-support','t17-badge','t17-logo'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el && f >= 210) {
+      const zoomP = interpolate(f, [210, 260], [1, 1.05], { clamp: true, easing: easeInOut });
+      // Preserve existing transform by using transform-origin-agnostic approach
+      const base = el.dataset.baseTransform || el.style.transform.replace(/scale\([^)]*\)/g,'').trim();
+      el.dataset.baseTransform = base;
+      el.style.transform = `${base} scale(${zoomP})`.trim();
+      el.style.transformOrigin = 'center 45%';
+    }
+  });
+
+  // Subtle paper breathe on hold (very slight translateY oscillation)
+  if (f >= 290 && page) {
+    const breathe = Math.sin((f - 290) * 0.15) * 0.5;
+    const zoomP = 1.05;
+    page.style.transform = `scale(${zoomP}) translateY(${breathe}px)`;
+  }
+
+  // CTA
+  const cta = document.getElementById('t17-cta');
+  if (cta) {
+    cta.style.opacity = interpolate(f, [250, 290], [0, 1], { clamp: true, easing: easeInOut });
+  }
+}
+
+
+// ── Template 18: Face to Face ─────────────────────────────────────────────────
+// Horizontal sliver opens to reveal face, then slow zoom-out from close-up
+
+const T18_PARTICLES = (() => {
+  const rng = seededRand(18);
+  return Array.from({ length: 20 }, () => ({
+    x: 10 + rng() * 80,
+    y: 60 + rng() * 30,
+    size: 1.5 + rng() * 2.5,
+    vx: (rng() - 0.5) * 0.08,
+    vy: -0.06 - rng() * 0.08,
+    phase: rng() * Math.PI * 2,
+    color: ['rgba(197,160,89,0.6)','rgba(212,168,75,0.5)','rgba(245,240,224,0.4)'][Math.floor(rng() * 3)],
+  }));
+})();
+
+function initTemplate18(canvas) {
+  const words = C.headline.split(' ');
+  const hlIdx = words.findIndex(w => w.toLowerCase().includes(C.highlight.toLowerCase().split(' ')[0]));
+
+  canvas.innerHTML = `
+    <!-- Black background -->
+    <div style="position:absolute;inset:0;background:#000;"></div>
+
+    <!-- Photo — starts zoomed in (scale 1.5) and clips to a thin sliver -->
+    <div id="t18-photo-clip" style="position:absolute;inset:0;clip-path:inset(45% 0 45% 0);filter:blur(20px);transform:scale(1.5);transform-origin:center center;">
+      <div id="t18-photo-inner" style="position:absolute;inset:0;">
+        ${getPhotoUrl() ? `<img src="${getPhotoUrl()}" style="width:100%;height:100%;object-fit:cover;">` : `<div style="width:100%;height:100%;background:linear-gradient(135deg,${T.surface},${T.gradient_to});"></div>`}
+      </div>
+    </div>
+
+    <!-- Vignette overlay (deepens on hold) -->
+    <div id="t18-vignette" style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,transparent 45%,rgba(0,0,0,0.7) 100%);opacity:0;pointer-events:none;"></div>
+
+    <!-- Warm particles (appear in hold phase) -->
+    <div id="t18-particles" style="position:absolute;inset:0;pointer-events:none;overflow:hidden;"></div>
+
+    <!-- Logo at top — very small, respectful -->
+    <div id="t18-logo" style="position:absolute;top:14px;left:50%;transform:translateX(-50%);opacity:0;height:22px;display:flex;align-items:center;justify-content:center;">
+      ${getLogoUrl() ? `<img src="${getLogoUrl()}" style="max-height:18px;max-width:80px;object-fit:contain;filter:drop-shadow(0 0 3px rgba(197,160,89,0.4)) brightness(0.85);">` : `<span style="font-size:9px;font-weight:800;letter-spacing:1.5px;color:rgba(197,160,89,0.7);">${BRAND}</span>`}
+    </div>
+
+    <!-- Headline at bottom third -->
+    <div id="t18-headline" style="position:absolute;bottom:110px;left:16px;right:16px;font-size:14px;font-weight:800;color:#F5F0E0;line-height:1.45;text-align:center;">
+      ${words.map((w, i) => {
+        const isHl = i === hlIdx || (hlIdx >= 0 && C.highlight.includes(w));
+        return `<span id="t18-word-${i}" style="display:inline;opacity:0;">${w}${i < words.length - 1 ? ' ' : ''}</span>`;
+      }).join('')}
+      ${hlIdx >= 0 ? `<div id="t18-underline" style="margin-top:3px;height:2px;background:linear-gradient(90deg,transparent,#D4A84B,transparent);transform:scaleX(0);transform-origin:left;border-radius:1px;opacity:0;"></div>` : ''}
+    </div>
+
+    <!-- Support text -->
+    <div id="t18-support" style="position:absolute;bottom:70px;left:20px;right:20px;font-size:10px;color:rgba(245,240,224,0.7);line-height:1.6;text-align:center;opacity:0;">${C.support}</div>
+
+    <!-- CTA at bottom -->
+    <div id="t18-cta" style="position:absolute;bottom:16px;left:20px;right:20px;padding:10px 16px;background:${T.cta_bg};border-radius:8px;font-size:12px;font-weight:700;color:${T.cta_text};text-align:center;opacity:0;">${C.cta}</div>
+  `;
+
+  // Build warm particles
+  const particleContainer = document.getElementById('t18-particles');
+  T18_PARTICLES.forEach((p, i) => {
+    const dot = document.createElement('div');
+    dot.id = `t18-p-${i}`;
+    dot.style.cssText = `position:absolute;width:${p.size}px;height:${p.size}px;border-radius:50%;background:${p.color};left:${p.x}%;top:${p.y}%;opacity:0;pointer-events:none;`;
+    particleContainer.appendChild(dot);
+  });
+}
+
+function renderTemplate18(frame) {
+  const f = frame;
+
+  // Sliver expansion: clip-path inset(45% 0 45% 0) -> inset(0 0 0 0) over frames 15-50
+  const sliverP = interpolate(f, [15, 50], [0, 1], { clamp: true, easing: easeInOut });
+  const insetPct = interpolate(sliverP, [0, 1], [45, 0]);
+
+  // Blur decrease simultaneously
+  const blurVal = interpolate(f, [15, 50], [20, 0], { clamp: true, easing: easeInOut });
+
+  // Zoom-out from scale 1.5 to 1.0 over frames 70-120
+  const zoomP = interpolate(f, [70, 120], [1.5, 1.0], { clamp: true, easing: easeInOut });
+
+  const photoClip = document.getElementById('t18-photo-clip');
+  if (photoClip) {
+    photoClip.style.clipPath = `inset(${insetPct}% 0 ${insetPct}% 0)`;
+    photoClip.style.filter = `blur(${blurVal}px)`;
+    photoClip.style.transform = `scale(${zoomP})`;
+  }
+
+  // Initial black: photo invisible before frame 0 sliver opens
+  if (photoClip && f < 15) {
+    photoClip.style.clipPath = `inset(45% 0 45% 0)`;
+    photoClip.style.opacity = interpolate(f, [0, 8], [0, 1], { clamp: true });
+  }
+
+  // Vignette deepens on hold
+  const vignette = document.getElementById('t18-vignette');
+  if (vignette) {
+    vignette.style.opacity = interpolate(f, [240, 270], [0, 0.6], { clamp: true, easing: easeInOut });
+  }
+
+  // Warm particles drift in hold phase
+  if (f >= 240) {
+    T18_PARTICLES.forEach((p, i) => {
+      const dot = document.getElementById(`t18-p-${i}`);
+      if (!dot) return;
+      const activeF = f - 240;
+      const x = p.x + p.vx * activeF + Math.sin(activeF * 0.06 + p.phase) * 0.8;
+      const y = p.y + p.vy * activeF;
+      const opacity = clamp(activeF / 15, 0, 1) * (y < 5 ? clamp((y) / 5, 0, 1) : 1) * 0.7;
+      dot.style.left = `${x}%`;
+      dot.style.top = `${y}%`;
+      dot.style.opacity = opacity;
+    });
+  }
+
+  // Logo — very small at top, appears after zoom-out
+  const logo = document.getElementById('t18-logo');
+  if (logo) {
+    logo.style.opacity = interpolate(f, [110, 150], [0, 1], { clamp: true, easing: easeInOut });
+  }
+
+  // Headline words fade in
+  const words = C.headline.split(' ');
+  words.forEach((_, i) => {
+    const wordEl = document.getElementById(`t18-word-${i}`);
+    if (!wordEl) return;
+    const startF = 140 + i * 10;
+    wordEl.style.opacity = interpolate(f, [startF, startF + 16], [0, 1], { clamp: true, easing: easeInOut });
+  });
+
+  // Underline draws itself
+  const underline = document.getElementById('t18-underline');
+  if (underline) {
+    const drawP = interpolate(f, [165, 190], [0, 1], { clamp: true, easing: easeInOut });
+    underline.style.transform = `scaleX(${drawP})`;
+    underline.style.opacity = interpolate(f, [163, 168], [0, 1], { clamp: true });
+  }
+
+  // Support text
+  const support = document.getElementById('t18-support');
+  if (support) {
+    support.style.opacity = interpolate(f, [170, 210], [0, 1], { clamp: true, easing: easeInOut });
+  }
+
+  // CTA
+  const cta = document.getElementById('t18-cta');
+  if (cta) {
+    cta.style.opacity = interpolate(f, [200, 240], [0, 1], { clamp: true, easing: easeInOut });
+  }
+}
+
 
 // ─── POSTMESSAGE API (for iframe embedding in editor) ────────────────────────
 
@@ -3532,7 +4894,7 @@ window.addEventListener('message', (e) => {
 
   if (msg.type === 'switchTemplate') {
     const id = msg.templateId;
-    if (id >= 1 && id <= 10) {
+    if (id >= 1 && id <= 18) {
       document.querySelectorAll('.tmpl-tab').forEach(t => t.classList.remove('active'));
       const btn = document.querySelector(`.tmpl-tab[data-tmpl="${id}"]`);
       if (btn) btn.classList.add('active');
@@ -3544,6 +4906,86 @@ window.addEventListener('message', (e) => {
       applyLogoVisibility();
       setFrame(0);
       play();
+    }
+  }
+
+  if (msg.type === 'updateLayout') {
+    const L = msg.layout || {};
+    const canvas = document.getElementById('canvas');
+    if (!canvas) return;
+    const cw = canvas.clientWidth || 260;
+    const ch = canvas.clientHeight || 564;
+
+    // Apply position overrides to elements
+    const applyPos = (el, pos) => {
+      if (!el || !pos) return;
+      if (pos.x !== undefined) {
+        el.style.left = (pos.x / 100 * cw) + 'px';
+        el.style.transform = el.style.transform.replace(/translateX\([^)]*\)/g, '') || '';
+      }
+      if (pos.y !== undefined) {
+        el.style.top = (pos.y / 100 * ch) + 'px';
+      }
+      if (pos.scale !== undefined) {
+        const s = pos.scale / 100;
+        const existing = el.style.transform.replace(/scale\([^)]*\)/g, '');
+        el.style.transform = existing + ` scale(${s})`;
+      }
+    };
+
+    // Templates 1-5 JS refs
+    if (L.logo) {
+      applyPos(t1Els.logo, L.logo);
+      applyPos(t2Els.logo, L.logo);
+      applyPos(t3Els.logo, L.logo);
+      if (t4Els.masthead) applyPos(t4Els.masthead, L.logo);
+    }
+    if (L.badge) {
+      applyPos(t1Els.badge, L.badge);
+      applyPos(t2Els.badge, L.badge);
+      applyPos(t3Els.badge, L.badge);
+      if (t4Els.badgeSticker) applyPos(t4Els.badgeSticker, L.badge);
+    }
+    if (L.photo) {
+      applyPos(t1Els.polaroidWrap, L.photo);
+      if (t2Els.photoContainer) applyPos(t2Els.photoContainer, L.photo);
+      applyPos(t3Els.photo, L.photo);
+      applyPos(t4Els.photo, L.photo);
+    }
+    if (L.headline) {
+      applyPos(t1Els.headlineWrap, L.headline);
+      if (t2Els.headline) applyPos(t2Els.headline, L.headline);
+      if (t3Els.wordContainer) applyPos(t3Els.wordContainer, L.headline);
+      if (t4Els.headline) applyPos(t4Els.headline, L.headline);
+    }
+    if (L.support) {
+      applyPos(t1Els.support, L.support);
+      applyPos(t2Els.support, L.support);
+      if (t3Els.supportContainer) applyPos(t3Els.supportContainer, L.support);
+    }
+    if (L.cta) {
+      applyPos(t1Els.cta, L.cta);
+      applyPos(t2Els.cta, L.cta);
+      applyPos(t3Els.cta, L.cta);
+      applyPos(t4Els.cta, L.cta);
+    }
+
+    // Templates 6-10 ID-based
+    const idMap = {
+      logo: ['t6-logo','t6-logo-bottom','t7-logo-strip','t8-logo','t8-logo-bottom','t9-logo','t9-logo-bottom'],
+      badge: ['t6-badge','t7-badge-strip','t8-badge','t9-badge-wrap'],
+      photo: ['t6-photo-small','t8-photo','t9-photo-wrap'],
+      headline: ['t6-headline','t8-headline','t9-headline-wrap'],
+      support: ['t6-support','t8-support','t9-support-wrap'],
+      cta: ['t6-cta-wrap','t8-cta','t9-cta-wrap']
+    };
+    for (const [key, ids] of Object.entries(idMap)) {
+      if (L[key]) {
+        ids.forEach(id => {
+          const el = document.getElementById(id);
+          if (el) applyPos(el, L[key]);
+        });
+      }
     }
   }
 
@@ -3608,6 +5050,61 @@ window.addEventListener('message', (e) => {
       if (s.ctaFontSize) t3Els.cta.style.fontSize = s.ctaFontSize + 'px';
       if (s.ctaRadius !== undefined) t3Els.cta.style.borderRadius = s.ctaRadius + 'px';
     }
+
+    // Photo height (value is % of canvas height; canvas is ~564px tall)
+    if (s.photoHeight !== undefined) {
+      const h = (s.photoHeight / 100 * 564) + 'px';
+      // ID-based query for templates 6-10
+      canvas.querySelectorAll('[id*=photo], [id*=Photo]').forEach(el => {
+        el.style.height = h;
+      });
+      // JS-ref approach for templates 1-5
+      if (t2Els.photoContainer) t2Els.photoContainer.style.height = h;
+      if (t3Els.photo) t3Els.photo.style.height = h;
+      if (t4Els.photo) t4Els.photo.style.height = h;
+      // t1 polaroid: scale proportionally via width to preserve aspect ratio
+      if (t1Els.polaroidWrap) t1Els.polaroidWrap.style.height = h;
+    }
+
+    // Logo size (value in px)
+    if (s.logoSize !== undefined) {
+      // ID-based query for templates 6-10
+      canvas.querySelectorAll('[id*=logo], [id*=Logo]').forEach(el => {
+        const img = el.querySelector('img');
+        if (img) {
+          img.style.maxHeight = s.logoSize + 'px';
+          img.style.maxWidth = s.logoSize + 'px';
+        }
+      });
+      // JS-ref approach for templates 1-5
+      [t1Els.logo, t2Els.logo, t3Els.logo].forEach(el => {
+        if (el) {
+          const img = el.querySelector('img');
+          if (img) {
+            img.style.maxHeight = s.logoSize + 'px';
+            img.style.maxWidth = s.logoSize + 'px';
+          }
+          el.style.width = s.logoSize + 'px';
+        }
+      });
+    }
+
+    // Content padding (value in px)
+    if (s.contentPadding !== undefined) {
+      canvas.querySelectorAll('[id*=content], [id*=Content]').forEach(el => {
+        el.style.padding = s.contentPadding + 'px';
+      });
+    }
+
+    // Element gap (value in px)
+    if (s.elementGap !== undefined) {
+      canvas.querySelectorAll('[id*=content], [id*=Content], [id*=wrap], [id*=Wrap], [id*=container], [id*=Container]').forEach(el => {
+        const display = window.getComputedStyle(el).display;
+        if (display === 'flex' || display === 'grid') {
+          el.style.gap = s.elementGap + 'px';
+        }
+      });
+    }
   }
 
   if (msg.type === 'updateData') {
@@ -3645,7 +5142,9 @@ function applyLogoVisibility() {
     const logoIds = ['t1-logo','t2-logo','t3-logo','t4-masthead','t5-logoContainer',
                      't6-logo','t6-wm','t6-logo-bottom','t7-logo-strip',
                      't8-logo','t8-logo-bottom','t8-logo-ghost1','t8-logo-ghost2','t8-logo-ghost3',
-                     't9-logo','t9-logo-bottom','t10-logo-area'];
+                     't9-logo','t9-logo-bottom','t10-logo-area',
+                     't11-logo','t12-logo','t12-ornline','t13-logo','t14-logo',
+                     't15-logo','t16-logo','t17-logo','t18-logo'];
     const show = showLogo;
     logoIds.forEach(id => {
       const el = document.getElementById(id);

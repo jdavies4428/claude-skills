@@ -14,7 +14,7 @@ import { Template10Mosaic } from "./templates/Template10Mosaic";
 
 export const RemotionRoot: React.FC = () => (
   <>
-    <Folder name="Ad Reels">
+    <Folder name="Ad-Reels">
       <Composition
         id="PolaroidDrop"
         component={Template1Polaroid}
