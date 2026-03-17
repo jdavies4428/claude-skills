@@ -349,6 +349,7 @@
       <button class="tmpl-tab" data-tmpl="17">17 &middot; Opening Album</button>
       <button class="tmpl-tab" data-tmpl="18">18 &middot; Face to Face</button>
       <button class="tmpl-tab" data-tmpl="19">19 &middot; Triple</button>
+      <button class="tmpl-tab" data-tmpl="20">20 &middot; Time</button>
     </div>
   </div>
 
@@ -1026,6 +1027,38 @@ Object.assign(TEMPLATES, {
       { label: "CTA rises", start: 250, end: 290, color: "#C5A059" },
       { label: "Hold \u2014 warm float", start: 290, end: 330, color: "#8b7040" }
     ]
+  },
+  20: {
+    name: "The Passage of Time",
+    subtitle: "Dawn \u00b7 Dusk \u00b7 Restoration",
+    duration: 300,
+    fps: 30,
+    desc: "A sun arcs across the sky as time passes and the photo ages into ruin. At the darkest moment, a warm restoration light reverses everything \u2014 the photo is reborn. Emotional arc: had it, lost it, got it back.",
+    features: [
+      "Sun follows a semicircular arc path across the sky",
+      "8 clock tick marks along arc — passed marks turn gray",
+      "Sky gradient shifts from dawn amber to night black",
+      "Photo ages via sepia, grayscale, brightness, grain filters",
+      "5\u20138 seeded stars fade in at the emotional low point",
+      "Restoration glow expands from photo center outward",
+      "clip-path circle(0%\u2192150%) reveals restored photo beneath degraded layer",
+      "Sky warms back to amber as restoration completes",
+      "Headline fades in word-by-word in warm cream serif",
+      "12\u201315 amber hold particles drift upward throughout final act"
+    ],
+    packages: ["@remotion/core", "interpolate()", "filter:sepia/grayscale", "clip-path:circle", "easeInOut"],
+    scenes: [
+      { label: "Dawn — sun rises", start: 0, end: 40, color: "#C5A059" },
+      { label: "Day — photo vivid", start: 40, end: 65, color: "#a07030" },
+      { label: "Dusk — aging begins", start: 65, end: 90, color: "#8b7040" },
+      { label: "Night — fully degraded", start: 90, end: 130, color: "#333" },
+      { label: "Restoration dot appears", start: 130, end: 140, color: "#C5A059" },
+      { label: "Restoration expands", start: 140, end: 175, color: "#a07030" },
+      { label: "Logo + headline", start: 175, end: 215, color: "#C5A059" },
+      { label: "Badge + support", start: 210, end: 240, color: "#8b7040" },
+      { label: "CTA rises", start: 235, end: 255, color: "#C5A059" },
+      { label: "Hold \u2014 warmth breathes", start: 250, end: 300, color: "#a07030" }
+    ]
   }
 });
 
@@ -1175,6 +1208,7 @@ function renderTemplate(id, f) {
     case 17: renderTemplate17(f); break;
     case 18: renderTemplate18(f); break;
     case 19: renderTemplate19(f); break;
+    case 20: renderTemplate20(f); break;
   }
 }
 
@@ -1201,6 +1235,7 @@ function buildTemplate(id) {
     case 17: initTemplate17(canvas); break;
     case 18: initTemplate18(canvas); break;
     case 19: initTemplate19(canvas); break;
+    case 20: initTemplate20(canvas); break;
   }
 }
 
@@ -5049,6 +5084,383 @@ function renderTemplate19(f) {
   }
 }
 
+// ── Template 20: The Passage of Time ─────────────────────────────────────────
+// Sun arcs across sky, photo ages to ruin, restoration light reverses everything.
+// Emotional arc: had it → lost it → got it back.  300 frames / 10s.
+
+// Pre-computed seeded data — computed once at load time, never in render loop
+const T20_STARS = (() => {
+  const rng = seededRand(2042);
+  return Array.from({ length: 7 }, () => ({
+    x: 10 + rng() * 220,         // px across canvas
+    y: 15 + rng() * 140,          // px — top 30% sky area
+    size: 1.5 + rng() * 1.5,
+    baseOp: 0.2 + rng() * 0.25,
+    phase: rng() * Math.PI * 2,
+  }));
+})();
+
+const T20_HOLD_PARTICLES = (() => {
+  const rng = seededRand(2099);
+  return Array.from({ length: 14 }, () => ({
+    x: 5 + rng() * 90,
+    y: 20 + rng() * 70,
+    size: 1.5 + rng() * 2,
+    vx: (rng() - 0.5) * 0.06,
+    vy: -0.04 - rng() * 0.06,
+    phase: rng() * Math.PI * 2,
+    color: ['rgba(197,160,89,0.55)','rgba(212,168,75,0.5)','rgba(245,220,160,0.35)'][Math.floor(rng() * 3)],
+  }));
+})();
+
+// 8 clock tick marks positioned along the arc
+// arcX = interpolate(p,[0,1],[20,240]); arcY = 200 - sin(p*PI)*160
+const T20_TICKS = Array.from({ length: 8 }, (_, i) => {
+  const p = (i + 0.5) / 8;
+  const ax = 20 + p * 220;
+  const ay = 200 - Math.sin(p * Math.PI) * 160;
+  return { p, x: ax, y: ay };
+});
+
+function initTemplate20(canvas) {
+  const AMBER = '#C5A059';
+  const photoUrl = getPhotoUrl();
+  const logoUrl  = getLogoUrl();
+
+  // Word-by-word headline HTML
+  const words = C.headline.split(' ');
+  const hlIdx = words.findIndex(w =>
+    C.highlight && w.toLowerCase().replace(/[.,!?]/g,'').includes(C.highlight.toLowerCase().split(' ')[0])
+  );
+  const hlHtml = words.map((w, i) => {
+    const isHl = i === hlIdx;
+    return `<span id="t20-word-${i}" style="display:inline;opacity:0;">${
+      isHl
+        ? `<span style="background:rgba(197,160,89,0.28);color:#D4A84B;border-radius:4px;padding:1px 4px;">${w}</span>`
+        : w
+    }${i < words.length - 1 ? ' ' : ''}</span>`;
+  }).join('');
+
+  // Stars HTML
+  const starsHtml = T20_STARS.map((s, i) =>
+    `<div id="t20-star-${i}" style="position:absolute;left:${s.x.toFixed(1)}px;top:${s.y.toFixed(1)}px;width:${s.size.toFixed(1)}px;height:${s.size.toFixed(1)}px;border-radius:50%;background:#fff;opacity:0;pointer-events:none;"></div>`
+  ).join('');
+
+  // Clock tick marks HTML
+  const ticksHtml = T20_TICKS.map((t, i) =>
+    `<div id="t20-tick-${i}" style="position:absolute;left:${(t.x - 0.5).toFixed(1)}px;top:${(t.y - 2).toFixed(1)}px;width:1px;height:4px;background:#C5A059;opacity:0;transform:rotate(${(t.p * 180 - 90).toFixed(1)}deg);pointer-events:none;"></div>`
+  ).join('');
+
+  // Hold particles HTML
+  const holdPHtml = T20_HOLD_PARTICLES.map((p, i) =>
+    `<div id="t20-hp-${i}" style="position:absolute;width:${p.size.toFixed(1)}px;height:${p.size.toFixed(1)}px;border-radius:50%;background:${p.color};left:${p.x.toFixed(1)}%;top:${p.y.toFixed(1)}%;opacity:0;pointer-events:none;"></div>`
+  ).join('');
+
+  canvas.innerHTML = `
+    <!-- ── Act 1-2: Sky background gradient (changes with time) ── -->
+    <div id="t20-sky" style="position:absolute;left:0;right:0;top:0;height:40%;background:linear-gradient(180deg,#1a1a3a 0%,#C5A059 100%);z-index:1;"></div>
+
+    <!-- ── Bottom area (dark warm ground) ── -->
+    <div style="position:absolute;left:0;right:0;top:40%;bottom:0;background:#150d05;z-index:1;"></div>
+
+    <!-- ── Stars (fade in at night) ── -->
+    <div id="t20-stars-layer" style="position:absolute;inset:0;z-index:4;pointer-events:none;">${starsHtml}</div>
+
+    <!-- ── Clock tick marks along arc ── -->
+    <div id="t20-ticks-layer" style="position:absolute;inset:0;z-index:5;pointer-events:none;">${ticksHtml}</div>
+
+    <!-- ── Sun ── -->
+    <div id="t20-sun" style="position:absolute;width:40px;height:40px;border-radius:50%;background:radial-gradient(circle,#FFE55C 0%,#FFD700 50%,#FFA500 100%);box-shadow:0 0 30px rgba(255,215,0,0.6);left:0;top:0;z-index:6;transform:translate(-20px,-20px);pointer-events:none;"></div>
+
+    <!-- ── Photo wrap (degraded layer — always visible, filters applied) ── -->
+    <div id="t20-photo-degraded" style="position:absolute;top:140px;left:20px;right:20px;height:220px;border-radius:8px;overflow:hidden;border:2px solid rgba(197,160,89,0.3);z-index:10;opacity:0;">
+      ${photoUrl
+        ? `<img src="${photoUrl}" id="t20-photo-img-degraded" style="width:100%;height:100%;object-fit:cover;">`
+        : `<div style="width:100%;height:100%;background:linear-gradient(135deg,${T.gradient_from},${T.gradient_to});"></div>`}
+      <!-- Grain overlay on degraded photo -->
+      <div id="t20-grain" style="position:absolute;inset:0;background-image:repeating-radial-gradient(circle,transparent 1px,rgba(0,0,0,0.15) 2px);background-size:3px 3px;opacity:0;pointer-events:none;z-index:2;"></div>
+    </div>
+
+    <!-- ── Photo wrap (restored layer — clipped by expanding circle) ── -->
+    <div id="t20-photo-restored" style="position:absolute;top:140px;left:20px;right:20px;height:220px;border-radius:8px;overflow:hidden;border:2px solid rgba(197,160,89,0);clip-path:circle(0% at 50% 50%);z-index:11;pointer-events:none;">
+      ${photoUrl
+        ? `<img src="${photoUrl}" id="t20-photo-img-restored" style="width:100%;height:100%;object-fit:cover;">`
+        : `<div style="width:100%;height:100%;background:linear-gradient(135deg,${T.gradient_from},${T.gradient_to});"></div>`}
+    </div>
+
+    <!-- ── Restoration glow (central radial, scales up) ── -->
+    <div id="t20-restore-glow" style="position:absolute;top:140px;left:20px;right:20px;height:220px;border-radius:8px;overflow:hidden;z-index:12;pointer-events:none;opacity:0;">
+      <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(255,215,0,0.4) 0%,rgba(197,160,89,0.15) 40%,transparent 70%);transform:scale(0);transform-origin:50% 50%;" id="t20-restore-glow-inner"></div>
+    </div>
+
+    <!-- ── Restoration central dot (pulsing, appears at frame 130) ── -->
+    <div id="t20-restore-dot" style="position:absolute;top:248px;left:130px;width:8px;height:8px;border-radius:50%;background:#FFD700;box-shadow:0 0 12px rgba(255,215,0,0.9);transform:translate(-50%,-50%) scale(0);z-index:15;pointer-events:none;opacity:0;"></div>
+
+    <!-- ── Photo warm border glow (restoration complete) ── -->
+    <div id="t20-photo-border-glow" style="position:absolute;top:138px;left:18px;right:18px;height:224px;border-radius:9px;box-shadow:0 0 0px rgba(197,160,89,0);z-index:9;pointer-events:none;"></div>
+
+    <!-- ── Logo ── -->
+    <div id="t20-logo" style="position:absolute;top:148px;left:24px;width:60px;height:28px;display:flex;align-items:center;opacity:0;z-index:35;">
+      ${logoUrl ? `<img src="${logoUrl}" style="max-height:24px;max-width:58px;object-fit:contain;filter:drop-shadow(0 1px 6px rgba(0,0,0,0.6));">` : `<span style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:${AMBER};">${BRAND}</span>`}
+    </div>
+
+    <!-- ── Headline ── -->
+    <div id="t20-headline" style="position:absolute;top:380px;left:14px;right:14px;font-size:12px;font-weight:700;line-height:1.4;font-family:Georgia,serif;text-align:center;color:#efe7db;z-index:30;">${hlHtml}</div>
+
+    <!-- ── Badge ── -->
+    <div id="t20-badge" style="position:absolute;top:428px;left:50%;transform:translateX(-50%);background:${T.badge_bg};color:${T.badge_text};padding:4px 14px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:0.5px;white-space:nowrap;opacity:0;z-index:30;">${C.badge}</div>
+
+    <!-- ── Support text ── -->
+    <div id="t20-support" style="position:absolute;top:454px;left:18px;right:18px;font-size:10px;font-style:italic;color:rgba(239,231,219,0.72);line-height:1.5;text-align:center;opacity:0;z-index:30;">${C.support}</div>
+
+    <!-- ── CTA ── -->
+    <div id="t20-cta" style="position:absolute;top:495px;left:32px;right:32px;background:${T.cta_bg};color:${T.cta_text};padding:10px 16px;border-radius:999px;font-size:12px;font-weight:700;text-align:center;opacity:0;transform:translateY(10px);z-index:35;box-shadow:0 4px 24px rgba(197,160,89,0.3);">${C.cta}</div>
+
+    <!-- ── Hold particles layer ── -->
+    <div id="t20-hold-particles" style="position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:16;">${holdPHtml}</div>
+
+    <!-- ── Vignette ── -->
+    <div id="t20-vignette" style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,transparent 30%,rgba(0,0,0,0.7) 100%);opacity:0;pointer-events:none;z-index:38;"></div>
+  `;
+}
+
+function renderTemplate20(f) {
+  const AMBER = '#C5A059';
+
+  // ── Helper: compute sun arc position ────────────────────────────────────────
+  // arcProgress 0 = bottom-left, 1 = bottom-right. Sun travels semi-circle.
+  // At frame 0 → arcProgress ~0.05 (not exactly at edge, already rising slightly)
+  // At frame 130 → arcProgress = 1 (sun reaches bottom-right, dims)
+  const arcProgress = interpolate(f, [0, 130], [0.02, 1.0], { clamp: true });
+  const sunX = 20 + arcProgress * 220;          // px left-to-right
+  const sunY = 200 - Math.sin(arcProgress * Math.PI) * 160; // semicircle peak ~40px
+
+  // ── Sun element ─────────────────────────────────────────────────────────────
+  const sun = document.getElementById('t20-sun');
+  if (sun) {
+    sun.style.left = sunX.toFixed(1) + 'px';
+    sun.style.top  = sunY.toFixed(1) + 'px';
+
+    // Color/glow shifts: gold → dim gray as sun sets
+    // f=0..65: fully golden; f=65..130: dims to gray
+    const sunFade = interpolate(f, [65, 130], [0, 1], { clamp: true, easing: easeInOut });
+    const sunOp   = interpolate(sunFade, [0, 1], [1.0, 0.1]);
+    const glowR   = interpolate(sunFade, [0, 1], [30, 0]);
+    const glowAlpha = interpolate(sunFade, [0, 1], [0.6, 0]);
+
+    // Dawn: warm gold; dusk fades to orange; night: gray
+    // Piecewise: sunFade 0→0.5 = gold→orange, 0.5→1 = orange→gray
+    const sf1 = Math.min(1, sunFade * 2);          // 0→1 for first half
+    const sf2 = Math.max(0, sunFade * 2 - 1);      // 0→1 for second half
+    const rVal = Math.round(255 + sf2 * (100 - 255));
+    const gVal = Math.round(interpolate(sf1, [0, 1], [215, 120]) + sf2 * (100 - 120));
+    const bVal = Math.round(sf2 * 100);
+
+    sun.style.opacity   = sunOp.toFixed(3);
+    sun.style.boxShadow = `0 0 ${glowR.toFixed(1)}px rgba(${rVal},${gVal},${bVal},${glowAlpha.toFixed(3)})`;
+    sun.style.background= `radial-gradient(circle,rgba(${rVal+40},${gVal+20},${Math.max(0,bVal-10)},1) 0%,rgba(${rVal},${gVal},${bVal},1) 50%,rgba(${Math.max(0,rVal-60)},${Math.max(0,gVal-80)},${bVal},1) 100%)`;
+  }
+
+  // ── Sky gradient ─────────────────────────────────────────────────────────────
+  // Act 1 (0-40): dawn amber at horizon, deep blue at top
+  // Act 2 (40-90): dusk purple-gray replacing warm tones
+  // Act 3 (90-130): full night navy-to-black
+  // Act 4-5 (130-180): sky warms back toward amber at bottom
+  // Act 6 (180-300): fully warm again
+  const sky = document.getElementById('t20-sky');
+  if (sky) {
+    const nightP  = interpolate(f, [65, 130], [0, 1], { clamp: true, easing: easeInOut });
+    const restoreP= interpolate(f, [155, 185], [0, 1], { clamp: true, easing: easeInOut });
+
+    // Top color: deep blue → near-black → back to deep blue
+    const topR = Math.round(interpolate(nightP, [0, 1], [26, 10]) + restoreP * 16);
+    const topG = Math.round(interpolate(nightP, [0, 1], [26, 10]) + restoreP * 16);
+    const topB = Math.round(interpolate(nightP, [0, 1], [58, 26]) + restoreP * 32);
+
+    // Bottom (horizon) color: amber → purple-gray → black → amber
+    const duskP = interpolate(f, [40, 90], [0, 1], { clamp: true, easing: easeInOut });
+    const bR = Math.round(
+      interpolate(duskP, [0, 1], [197, 58]) * (1 - nightP) +
+      interpolate(restoreP, [0, 1], [20, 140]) * nightP
+    );
+    const bG = Math.round(
+      interpolate(duskP, [0, 1], [160, 42]) * (1 - nightP) +
+      interpolate(restoreP, [0, 1], [10, 90]) * nightP
+    );
+    const bB = Math.round(
+      interpolate(duskP, [0, 1], [89, 74]) * (1 - nightP) +
+      interpolate(restoreP, [0, 1], [10, 40]) * nightP
+    );
+
+    sky.style.background = `linear-gradient(180deg,rgb(${topR},${topG},${topB}) 0%,rgb(${bR},${bG},${bB}) 100%)`;
+  }
+
+  // ── Clock tick marks ─────────────────────────────────────────────────────────
+  // Fade in gradually (frames 5-60), change from amber → gray when sun passes
+  T20_TICKS.forEach((tick, i) => {
+    const tickEl = document.getElementById(`t20-tick-${i}`);
+    if (!tickEl) return;
+    const fadeIn  = interpolate(f, [5 + i * 5, 30 + i * 3], [0, 0.3], { clamp: true, easing: easeInOut });
+    const passed  = arcProgress > tick.p;
+    const nightFade = interpolate(f, [90, 130], [1, 0], { clamp: true, easing: easeInOut });
+    tickEl.style.opacity   = (fadeIn * nightFade).toFixed(3);
+    tickEl.style.background= passed ? '#888' : AMBER;
+  });
+
+  // ── Stars ────────────────────────────────────────────────────────────────────
+  // Fade in frames 95-110, fade out frames 170-185
+  T20_STARS.forEach((s, i) => {
+    const starEl = document.getElementById(`t20-star-${i}`);
+    if (!starEl) return;
+    const fadeIn  = interpolate(f, [95 + i * 2, 110 + i * 2], [0, s.baseOp], { clamp: true, easing: easeInOut });
+    const fadeOut = interpolate(f, [170, 185], [1, 0], { clamp: true, easing: easeInOut });
+    const twinkle = 1 + 0.15 * Math.sin(f * 0.12 + s.phase);
+    starEl.style.opacity = (fadeIn * fadeOut * twinkle).toFixed(3);
+  });
+
+  // ── Photo degraded layer (acts 1-4) ─────────────────────────────────────────
+  // Photo fades in at dawn (frames 5-25), then ages from frame 65
+  const photoDeg = document.getElementById('t20-photo-degraded');
+  const photoImgDeg = document.getElementById('t20-photo-img-degraded');
+  if (photoDeg) {
+    // Fade in on dawn, then fade out as restoration spreads
+    const fadeIn        = interpolate(f, [5, 25], [0, 1], { clamp: true, easing: easeInOut });
+    const restoreReveal = interpolate(f, [140, 175], [0, 1], { clamp: true, easing: easeInOut });
+    // After fade-in completes, opacity is 1 until restoration kicks in
+    const wrapOp = f < 25
+      ? fadeIn
+      : Math.max(0, 1 - restoreReveal * 0.92);
+    photoDeg.style.opacity = wrapOp.toFixed(3);
+
+    // Border: warm amber → gray as night falls, disappears at restoration
+    const borderFade  = interpolate(f, [65, 130], [0, 1], { clamp: true, easing: easeInOut });
+    const borderOp    = interpolate(borderFade, [0, 1], [0.3, 0.05]);
+    const restoreHide = interpolate(f, [140, 165], [1, 0], { clamp: true, easing: easeInOut });
+    photoDeg.style.borderColor = `rgba(${Math.round(197*(1-borderFade)+100*borderFade)},${Math.round(160*(1-borderFade)+100*borderFade)},${Math.round(89*(1-borderFade)+100*borderFade)},${(borderOp*restoreHide).toFixed(3)})`;
+  }
+
+  if (photoImgDeg) {
+    // Aging: starts at frame 65 (midpoint of day), fully degraded by frame 130
+    const ageP       = interpolate(f, [65, 130], [0, 1], { clamp: true, easing: easeInOut });
+    const sepia      = interpolate(ageP, [0, 1], [0, 0.8]);
+    const grayscale  = interpolate(ageP, [0, 1], [0, 0.5]);
+    const brightness = interpolate(ageP, [0, 1], [1.0, 0.5]);
+    const contrast   = interpolate(ageP, [0, 1], [1.0, 0.8]);
+    photoImgDeg.style.filter = `sepia(${sepia.toFixed(3)}) grayscale(${grayscale.toFixed(3)}) brightness(${brightness.toFixed(3)}) contrast(${contrast.toFixed(3)})`;
+  }
+
+  // ── Grain overlay on degraded photo ─────────────────────────────────────────
+  // Fades in frames 65-130 (max 0.6), fades out frames 130-175
+  const grain = document.getElementById('t20-grain');
+  if (grain) {
+    const grainIn  = interpolate(f, [65, 130], [0, 0.6], { clamp: true, easing: easeInOut });
+    const grainOut = interpolate(f, [130, 175], [0, 1],   { clamp: true, easing: easeInOut });
+    grain.style.opacity = Math.max(0, grainIn * (1 - grainOut)).toFixed(3);
+  }
+
+  // ── Restoration dot (frames 130-150) ────────────────────────────────────────
+  const dot = document.getElementById('t20-restore-dot');
+  if (dot) {
+    const dotIn  = interpolate(f, [130, 140], [0, 1], { clamp: true, easing: easeInOut });
+    const dotOut = interpolate(f, [145, 160], [0, 1], { clamp: true, easing: easeInOut });
+    const pulse  = 1 + 0.3 * Math.sin(Math.max(0, f - 130) * 0.5);
+    const scale  = dotIn * (1 - dotOut) * pulse;
+    dot.style.opacity   = Math.min(dotIn, 1 - dotOut).toFixed(3);
+    dot.style.transform = `translate(-50%,-50%) scale(${scale.toFixed(3)})`;
+  }
+
+  // ── Restoration glow radial (frames 135-165) ─────────────────────────────────
+  const restGlow      = document.getElementById('t20-restore-glow');
+  const restGlowInner = document.getElementById('t20-restore-glow-inner');
+  if (restGlow && restGlowInner) {
+    const glowIn  = interpolate(f, [135, 165], [0, 1], { clamp: true, easing: easeInOut });
+    const glowOut = interpolate(f, [165, 185], [0, 1], { clamp: true, easing: easeInOut });
+    restGlow.style.opacity          = Math.max(0, glowIn - glowOut * 0.8).toFixed(3);
+    restGlowInner.style.transform   = `scale(${interpolate(glowIn, [0, 1], [0, 3]).toFixed(3)})`;
+  }
+
+  // ── Restored photo (clip-path circle expands frames 140-175) ────────────────
+  const photoRestored = document.getElementById('t20-photo-restored');
+  if (photoRestored) {
+    const circleP   = interpolate(f, [140, 175], [0, 1], { clamp: true, easing: easeInOut });
+    const circlePct = interpolate(circleP, [0, 1], [0, 150]);
+    photoRestored.style.clipPath = `circle(${circlePct.toFixed(1)}% at 50% 50%)`;
+
+    // Border warms up as restoration spreads
+    const borderOp = interpolate(f, [155, 180], [0, 0.5], { clamp: true, easing: easeInOut });
+    photoRestored.style.borderColor = `rgba(197,160,89,${borderOp.toFixed(3)})`;
+  }
+
+  // ── Photo border glow (frames 160-300) ───────────────────────────────────────
+  const borderGlow = document.getElementById('t20-photo-border-glow');
+  if (borderGlow) {
+    const glowP = interpolate(f, [160, 185], [0, 1], { clamp: true, easing: easeInOut });
+    // Pulse on hold
+    const pulse = f >= 250 ? 1 + 0.15 * Math.sin((f - 250) * 0.08) : 1;
+    const spread = interpolate(glowP * pulse, [0, 1], [0, 8]);
+    const alpha  = interpolate(glowP * pulse, [0, 1], [0, 0.35]);
+    borderGlow.style.boxShadow = `0 0 ${spread.toFixed(1)}px rgba(197,160,89,${alpha.toFixed(3)})`;
+  }
+
+  // ── Logo (frames 175-195, gentle fade) ───────────────────────────────────────
+  const logo20 = document.getElementById('t20-logo');
+  if (logo20) {
+    logo20.style.opacity = interpolate(f, [175, 195], [0, 1], { clamp: true, easing: easeInOut }).toFixed(3);
+  }
+
+  // ── Headline words (frames 185-215, stagger per word) ────────────────────────
+  C.headline.split(' ').forEach((_, i) => {
+    const wordEl = document.getElementById(`t20-word-${i}`);
+    if (!wordEl) return;
+    const startW = 185 + i * 8;
+    wordEl.style.opacity = interpolate(f, [startW, startW + 14], [0, 1], { clamp: true, easing: easeInOut }).toFixed(3);
+  });
+
+  // ── Badge (frames 210-230) ────────────────────────────────────────────────────
+  const badge20 = document.getElementById('t20-badge');
+  if (badge20) {
+    badge20.style.opacity = interpolate(f, [210, 228], [0, 1], { clamp: true, easing: easeInOut }).toFixed(3);
+  }
+
+  // ── Support text (frames 220-240) ─────────────────────────────────────────────
+  const sup20 = document.getElementById('t20-support');
+  if (sup20) {
+    sup20.style.opacity = interpolate(f, [220, 240], [0, 1], { clamp: true, easing: easeInOut }).toFixed(3);
+  }
+
+  // ── CTA (frames 235-252, gentle rise) ────────────────────────────────────────
+  const cta20 = document.getElementById('t20-cta');
+  if (cta20) {
+    const ctaOp = interpolate(f, [235, 252], [0, 1], { clamp: true, easing: easeInOut });
+    const ctaY  = interpolate(f, [235, 255], [10, 0], { clamp: true, easing: easeInOut });
+    cta20.style.opacity   = ctaOp.toFixed(3);
+    cta20.style.transform = `translateY(${ctaY.toFixed(2)}px)`;
+  }
+
+  // ── Hold: warm particles drift upward (frames 250+) ──────────────────────────
+  if (f >= 250) {
+    T20_HOLD_PARTICLES.forEach((p, i) => {
+      const hpEl = document.getElementById(`t20-hp-${i}`);
+      if (!hpEl) return;
+      const af   = f - 250;
+      const x    = p.x + p.vx * af + Math.sin(af * 0.05 + p.phase) * 0.8;
+      const y    = p.y + p.vy * af;
+      const gone = y < -2;
+      const fadeIn = clamp(af / 14, 0, 1);
+      hpEl.style.left    = `${x.toFixed(2)}%`;
+      hpEl.style.top     = `${y.toFixed(2)}%`;
+      hpEl.style.opacity = gone ? '0' : (fadeIn * 0.7).toFixed(3);
+    });
+  }
+
+  // ── Vignette deepens gently on hold (frames 250-300) ─────────────────────────
+  const vig20 = document.getElementById('t20-vignette');
+  if (vig20) {
+    vig20.style.opacity = interpolate(f, [250, 285], [0, 0.5], { clamp: true, easing: easeInOut }).toFixed(3);
+  }
+}
+
+
 // ─── POSTMESSAGE API (for iframe embedding in editor) ────────────────────────
 
 const isEmbedded = window.parent !== window;
@@ -5059,7 +5471,7 @@ window.addEventListener('message', (e) => {
 
   if (msg.type === 'switchTemplate') {
     const id = msg.templateId;
-    if (id >= 1 && id <= 19) {
+    if (id >= 1 && id <= 20) {
       document.querySelectorAll('.tmpl-tab').forEach(t => t.classList.remove('active'));
       const btn = document.querySelector(`.tmpl-tab[data-tmpl="${id}"]`);
       if (btn) btn.classList.add('active');
@@ -5323,7 +5735,7 @@ function applyLogoVisibility() {
                      't8-logo','t8-logo-bottom','t8-logo-ghost1','t8-logo-ghost2','t8-logo-ghost3',
                      't9-logo','t9-logo-bottom','t10-logo-area',
                      't11-logo','t12-logo','t12-ornline','t13-logo','t14-logo',
-                     't15-logo','t16-logo','t17-logo','t18-logo','t19-logo'];
+                     't15-logo','t16-logo','t17-logo','t18-logo','t19-logo','t20-logo'];
     const show = showLogo;
     logoIds.forEach(id => {
       const el = document.getElementById(id);
