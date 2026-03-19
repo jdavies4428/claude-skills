@@ -34,7 +34,7 @@ function buildLines(text: string, wordsPerLine = 3): string[] {
   return lines;
 }
 
-export const Template9Film: React.FC<AdReelProps> = ({
+export const Template8Film: React.FC<AdReelProps> = ({
   copy,
   designTokens: T,
   assets,

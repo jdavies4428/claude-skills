@@ -15,7 +15,7 @@ const PARTICLES = Array.from({ length: 54 }, (_, index) => ({
   opacity: seededRandom(index * 37 + 3) * 0.5 + 0.15,
 }));
 
-export const Template15DustOfTime: React.FC<AdReelProps> = ({
+export const Template13DustOfTime: React.FC<AdReelProps> = ({
   copy,
   designTokens: dt,
   assets,

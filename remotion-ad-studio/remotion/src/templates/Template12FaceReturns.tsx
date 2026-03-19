@@ -7,7 +7,7 @@ import { AdCta } from "../components/AdCta";
 import { splitHighlight } from "../helpers";
 import type { AdReelProps } from "../schema";
 
-export const Template14FaceReturns: React.FC<AdReelProps> = ({
+export const Template12FaceReturns: React.FC<AdReelProps> = ({
   copy,
   designTokens: dt,
   assets,

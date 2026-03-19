@@ -6,7 +6,7 @@ import { AdBadge } from "../components/AdBadge";
 import { AdCta } from "../components/AdCta";
 import type { AdReelProps } from "../schema";
 
-export const Template16WarmthReturns: React.FC<AdReelProps> = ({
+export const Template14WarmthReturns: React.FC<AdReelProps> = ({
   copy,
   designTokens: dt,
   assets,

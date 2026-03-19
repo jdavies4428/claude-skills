@@ -11,17 +11,17 @@ import { Template4Magazine } from "./templates/Template4Magazine";
 import { Template5Glitch } from "./templates/Template5Glitch";
 import { Template6Peel } from "./templates/Template6Peel";
 import { Template7Blinds } from "./templates/Template7Blinds";
-import { Template9Film } from "./templates/Template9Film";
-import { Template11MemoryReturns } from "./templates/Template11MemoryReturns";
-import { Template12LegacyUnlocked } from "./templates/Template12LegacyUnlocked";
-import { Template13ThroughGenerations } from "./templates/Template13ThroughGenerations";
-import { Template14FaceReturns } from "./templates/Template14FaceReturns";
-import { Template15DustOfTime } from "./templates/Template15DustOfTime";
-import { Template16WarmthReturns } from "./templates/Template16WarmthReturns";
-import { Template17OpeningAlbum } from "./templates/Template17OpeningAlbum";
-import { Template18FaceToFace } from "./templates/Template18FaceToFace";
-import { Template19TripleRestore } from "./templates/Template19TripleRestore";
-import { Template20PassageOfTime } from "./templates/Template20PassageOfTime";
+import { Template8Film } from "./templates/Template8Film";
+import { Template9MemoryReturns } from "./templates/Template9MemoryReturns";
+import { Template10LegacyUnlocked } from "./templates/Template10LegacyUnlocked";
+import { Template11ThroughGenerations } from "./templates/Template11ThroughGenerations";
+import { Template12FaceReturns } from "./templates/Template12FaceReturns";
+import { Template13DustOfTime } from "./templates/Template13DustOfTime";
+import { Template14WarmthReturns } from "./templates/Template14WarmthReturns";
+import { Template15OpeningAlbum } from "./templates/Template15OpeningAlbum";
+import { Template16FaceToFace } from "./templates/Template16FaceToFace";
+import { Template17TripleRestore } from "./templates/Template17TripleRestore";
+import { Template18PassageOfTime } from "./templates/Template18PassageOfTime";
 
 export const RemotionRoot: React.FC = () => (
   <>
@@ -98,7 +98,7 @@ export const RemotionRoot: React.FC = () => (
       />
       <Composition
         id="Filmstrip"
-        component={Template9Film}
+        component={Template8Film}
         durationInFrames={270}
         fps={30}
         width={1080}
@@ -108,7 +108,7 @@ export const RemotionRoot: React.FC = () => (
       />
       <Composition
         id="MemoryReturns"
-        component={Template11MemoryReturns}
+        component={Template9MemoryReturns}
         durationInFrames={300}
         fps={30}
         width={1080}
@@ -118,7 +118,7 @@ export const RemotionRoot: React.FC = () => (
       />
       <Composition
         id="LegacyUnlocked"
-        component={Template12LegacyUnlocked}
+        component={Template10LegacyUnlocked}
         durationInFrames={270}
         fps={30}
         width={1080}
@@ -128,7 +128,7 @@ export const RemotionRoot: React.FC = () => (
       />
       <Composition
         id="ThroughGenerations"
-        component={Template13ThroughGenerations}
+        component={Template11ThroughGenerations}
         durationInFrames={330}
         fps={30}
         width={1080}
@@ -138,7 +138,7 @@ export const RemotionRoot: React.FC = () => (
       />
       <Composition
         id="FaceReturns"
-        component={Template14FaceReturns}
+        component={Template12FaceReturns}
         durationInFrames={300}
         fps={30}
         width={1080}
@@ -148,7 +148,7 @@ export const RemotionRoot: React.FC = () => (
       />
       <Composition
         id="DustOfTime"
-        component={Template15DustOfTime}
+        component={Template13DustOfTime}
         durationInFrames={300}
         fps={30}
         width={1080}
@@ -158,7 +158,7 @@ export const RemotionRoot: React.FC = () => (
       />
       <Composition
         id="WarmthReturns"
-        component={Template16WarmthReturns}
+        component={Template14WarmthReturns}
         durationInFrames={300}
         fps={30}
         width={1080}
@@ -168,7 +168,7 @@ export const RemotionRoot: React.FC = () => (
       />
       <Composition
         id="OpeningTheAlbum"
-        component={Template17OpeningAlbum}
+        component={Template15OpeningAlbum}
         durationInFrames={330}
         fps={30}
         width={1080}
@@ -178,7 +178,7 @@ export const RemotionRoot: React.FC = () => (
       />
       <Composition
         id="FaceToFace"
-        component={Template18FaceToFace}
+        component={Template16FaceToFace}
         durationInFrames={270}
         fps={30}
         width={1080}
@@ -188,7 +188,7 @@ export const RemotionRoot: React.FC = () => (
       />
       <Composition
         id="TripleRestore"
-        component={Template19TripleRestore}
+        component={Template17TripleRestore}
         durationInFrames={330}
         fps={30}
         width={1080}
@@ -198,7 +198,7 @@ export const RemotionRoot: React.FC = () => (
       />
       <Composition
         id="PassageOfTime"
-        component={Template20PassageOfTime}
+        component={Template18PassageOfTime}
         durationInFrames={360}
         fps={30}
         width={1080}

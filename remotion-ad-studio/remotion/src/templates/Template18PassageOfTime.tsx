@@ -69,7 +69,7 @@ function lerpColor(a: string, b: string, t: number): string {
   return `rgb(${r},${g},${bv})`;
 }
 
-export const Template20PassageOfTime: React.FC<AdReelProps> = ({
+export const Template18PassageOfTime: React.FC<AdReelProps> = ({
   copy,
   designTokens: dt,
   assets,

@@ -16,7 +16,7 @@ const DUST = Array.from({ length: 35 }, (_, index) => ({
   opacity: seededRandom(index * 23 + 5) * 0.45 + 0.2,
 }));
 
-export const Template11MemoryReturns: React.FC<AdReelProps> = ({
+export const Template9MemoryReturns: React.FC<AdReelProps> = ({
   copy,
   designTokens: dt,
   assets,

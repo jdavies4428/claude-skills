@@ -45,7 +45,7 @@ const SPARKLES = Array.from({ length: 20 }, (_, i) => ({
   opacity: 0.6 + seededRandom(i * 37 + 11) * 0.2,
 }));
 
-export const Template19TripleRestore: React.FC<AdReelProps> = ({
+export const Template17TripleRestore: React.FC<AdReelProps> = ({
   copy,
   designTokens: dt,
   assets,

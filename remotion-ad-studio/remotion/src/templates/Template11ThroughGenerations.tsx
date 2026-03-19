@@ -13,7 +13,7 @@ const SPARKS = Array.from({ length: 20 }, (_, index) => ({
   size: seededRandom(index * 3 + 17) * 6 + 2,
 }));
 
-export const Template13ThroughGenerations: React.FC<AdReelProps> = ({
+export const Template11ThroughGenerations: React.FC<AdReelProps> = ({
   copy,
   designTokens: dt,
   assets,

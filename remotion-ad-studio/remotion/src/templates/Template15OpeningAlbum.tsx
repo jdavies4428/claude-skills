@@ -5,7 +5,7 @@ import { AdPhoto } from "../components/AdPhoto";
 import { AdCta } from "../components/AdCta";
 import type { AdReelProps } from "../schema";
 
-export const Template17OpeningAlbum: React.FC<AdReelProps> = ({
+export const Template15OpeningAlbum: React.FC<AdReelProps> = ({
   copy,
   designTokens: dt,
   assets,

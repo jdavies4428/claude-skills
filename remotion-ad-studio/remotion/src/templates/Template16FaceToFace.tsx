@@ -16,7 +16,7 @@ const PARTICLES = Array.from({ length: 20 }, (_, index) => ({
   color: ["rgba(197,160,89,0.6)", "rgba(212,168,75,0.5)", "rgba(245,240,224,0.4)"][index % 3],
 }));
 
-export const Template18FaceToFace: React.FC<AdReelProps> = ({
+export const Template16FaceToFace: React.FC<AdReelProps> = ({
   copy,
   designTokens: dt,
   assets,

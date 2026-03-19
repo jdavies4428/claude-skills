@@ -11,7 +11,7 @@ const FRAGMENTS = Array.from({ length: 8 }, (_, index) => ({
   size: seededRandom(index * 13 + 17) * 16 + 10,
 }));
 
-export const Template12LegacyUnlocked: React.FC<AdReelProps> = ({
+export const Template10LegacyUnlocked: React.FC<AdReelProps> = ({
   copy,
   designTokens: dt,
   assets,
