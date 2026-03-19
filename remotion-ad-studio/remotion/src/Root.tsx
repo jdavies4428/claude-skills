@@ -12,7 +12,6 @@ import { Template5Glitch } from "./templates/Template5Glitch";
 import { Template6Peel } from "./templates/Template6Peel";
 import { Template7Blinds } from "./templates/Template7Blinds";
 import { Template9Film } from "./templates/Template9Film";
-import { Template10Mosaic } from "./templates/Template10Mosaic";
 import { Template11MemoryReturns } from "./templates/Template11MemoryReturns";
 import { Template12LegacyUnlocked } from "./templates/Template12LegacyUnlocked";
 import { Template13ThroughGenerations } from "./templates/Template13ThroughGenerations";
@@ -100,16 +99,6 @@ export const RemotionRoot: React.FC = () => (
       <Composition
         id="Filmstrip"
         component={Template9Film}
-        durationInFrames={270}
-        fps={30}
-        width={1080}
-        height={1920}
-        schema={AdReelSchema}
-        defaultProps={DEFAULT_PROPS}
-      />
-      <Composition
-        id="MosaicAssemble"
-        component={Template10Mosaic}
         durationInFrames={270}
         fps={30}
         width={1080}
