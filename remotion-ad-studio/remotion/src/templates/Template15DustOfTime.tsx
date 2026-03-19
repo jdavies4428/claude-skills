@@ -30,7 +30,7 @@ export const Template15DustOfTime: React.FC<AdReelProps> = ({
   const ctaOpacity = interpolate(frame, [210, 260], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
   return (
-    <AbsoluteFill style={{ background: "radial-gradient(ellipse at 50% 35%, #2a1a0a 0%, #120902 60%, #080401 100%)", fontFamily: "Georgia, serif", color: "#efe7db" }}>
+    <AbsoluteFill style={{ background: "radial-gradient(ellipse at 50% 35%, #2a1a0a 0%, #120902 60%, #080401 100%)", fontFamily: "Playfair Display, serif", color: "#efe7db" }}>
       <div style={{ position: "absolute", top: 140, left: 72, right: 72, height: 710, opacity: revealOpacity }}>
         <div style={{ position: "absolute", inset: -12, borderRadius: 28, boxShadow: `0 0 46px rgba(197,160,89,${glowOpacity * 0.45})`, opacity: glowOpacity }} />
         <AdPhoto photoUrl={assets.afterPhotoUrl} fallbackGradient={`linear-gradient(135deg, ${dt.gradient_from}, ${dt.gradient_to})`} style={{ width: "100%", height: "100%", borderRadius: 24 }} />

@@ -243,7 +243,7 @@ export const Template8Orbit: React.FC<AdReelProps> = ({
       style={{
         background: `radial-gradient(ellipse at 50% 50%, ${T.gradient_to} 0%, ${T.gradient_from} 70%)`,
         overflow: "hidden",
-        fontFamily: "sans-serif",
+        fontFamily: "Playfair Display, serif",
       }}
     >
       {/* Star field */}

@@ -33,7 +33,7 @@ export const Template18FaceToFace: React.FC<AdReelProps> = ({
   const highlightIndex = copy.highlight ? copy.headline.toLowerCase().indexOf(copy.highlight.toLowerCase()) : -1;
 
   return (
-    <AbsoluteFill style={{ background: "#000", color: "#F5F0E0", fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
+    <AbsoluteFill style={{ background: "#000", color: "#F5F0E0", fontFamily: "Playfair Display, serif" }}>
       <div style={{ position: "absolute", inset: 0, clipPath: `inset(${sliver}% 0 ${sliver}% 0)`, filter: `blur(${blurPx}px)`, transform: `scale(${scale})`, transformOrigin: "center center", opacity: frame < 15 ? interpolate(frame, [0, 8], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }) : 1 }}>
         <AdPhoto photoUrl={assets.afterPhotoUrl} fallbackGradient={`linear-gradient(135deg, ${dt.surface}, ${dt.gradient_to})`} style={{ width: "100%", height: "100%" }} />
       </div>

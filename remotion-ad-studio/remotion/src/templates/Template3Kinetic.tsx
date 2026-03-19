@@ -103,7 +103,7 @@ export const Template3Kinetic: React.FC<AdReelProps> = ({
   const floatY = frame >= 230 ? Math.sin((frame - 230) * 0.15) * 3 : 0;
 
   return (
-    <AbsoluteFill style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
+    <AbsoluteFill style={{ fontFamily: "Playfair Display, serif" }}>
       {/* Background with hue pulse */}
       <div
         style={{

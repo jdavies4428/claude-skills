@@ -27,7 +27,7 @@ export const Template16WarmthReturns: React.FC<AdReelProps> = ({
   const ctaOpacity = interpolate(frame, [230, 270], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
   return (
-    <AbsoluteFill style={{ background: "linear-gradient(180deg,#1a1208 0%,#2a1e10 100%)", fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", color: "#F5F0E0" }}>
+    <AbsoluteFill style={{ background: "linear-gradient(180deg,#1a1208 0%,#2a1e10 100%)", fontFamily: "Playfair Display, serif", color: "#F5F0E0" }}>
       <div style={{ position: "absolute", top: 150, left: 60, right: 60, height: 720 }}>
         <div
           style={{

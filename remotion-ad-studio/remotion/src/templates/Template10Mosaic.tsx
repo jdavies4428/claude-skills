@@ -437,7 +437,7 @@ export const Template10Mosaic: React.FC<AdReelProps> = ({
       style={{
         background: T.gradient_from,
         overflow: "hidden",
-        fontFamily: "sans-serif",
+        fontFamily: "Playfair Display, serif",
       }}
     >
       {/* Grid layer */}

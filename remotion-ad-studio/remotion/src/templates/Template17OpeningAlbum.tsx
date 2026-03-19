@@ -24,7 +24,7 @@ export const Template17OpeningAlbum: React.FC<AdReelProps> = ({
   const breathe = frame >= 290 ? Math.sin((frame - 290) * 0.15) * 0.5 : 0;
 
   return (
-    <AbsoluteFill style={{ background: "#F0E8D6", overflow: "hidden", fontFamily: "Georgia, serif", color: "#4a3018" }}>
+    <AbsoluteFill style={{ background: "#F0E8D6", overflow: "hidden", fontFamily: "Playfair Display, serif", color: "#4a3018" }}>
       <div style={{ position: "absolute", inset: 0, background: "repeating-radial-gradient(circle at 2px 2px, rgba(0,0,0,0.025) 1px, transparent 1px) 0 0 / 6px 6px" }} />
       <div style={{ position: "absolute", inset: 16, border: "2px solid rgba(139,111,71,0.25)", borderRadius: 10 }} />
 

@@ -32,7 +32,7 @@ export const Template12LegacyUnlocked: React.FC<AdReelProps> = ({
   const ctaOpacity = interpolate(frame, [220, 255], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
   return (
-    <AbsoluteFill style={{ fontFamily: "Georgia, serif", color: "#efe7db", background: "radial-gradient(ellipse at 50% 45%, #251508 0%, #120a03 65%, #080401 100%)" }}>
+    <AbsoluteFill style={{ fontFamily: "Playfair Display, serif", color: "#efe7db", background: "radial-gradient(ellipse at 50% 45%, #251508 0%, #120a03 65%, #080401 100%)" }}>
       <div style={{ position: "absolute", inset: 40, border: `2px solid rgba(197,160,89,${frameOpacity})`, borderRadius: 18, boxShadow: `0 0 ${frameOpacity * 18}px rgba(197,160,89,${frameOpacity * 0.24})` }} />
 
       <div

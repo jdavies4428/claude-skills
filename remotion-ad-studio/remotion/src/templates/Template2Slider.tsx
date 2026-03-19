@@ -109,7 +109,7 @@ export const Template2Slider: React.FC<AdReelProps> = ({
   const headlineWords = copy.headline.split(" ");
 
   return (
-    <AbsoluteFill style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
+    <AbsoluteFill style={{ fontFamily: "Playfair Display, serif" }}>
       {/* Background */}
       <AdBackground
         gradientFrom={dt.gradient_from}

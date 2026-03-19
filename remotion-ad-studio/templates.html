@@ -63,17 +63,20 @@
     overflow-x: auto;
     flex: 1;
     min-width: 0;
-    scrollbar-width: none;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) transparent;
   }
-  .template-tabs::-webkit-scrollbar { display: none; }
+  .template-tabs::-webkit-scrollbar { height: 3px; }
+  .template-tabs::-webkit-scrollbar-track { background: transparent; }
+  .template-tabs::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
 
   .tmpl-tab {
-    padding: 5px 14px;
+    padding: 4px 8px;
     border-radius: 6px;
     border: 1px solid var(--border);
     background: transparent;
     color: var(--text-muted);
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.15s ease;
@@ -1267,6 +1270,7 @@ function img(src, styles = {}) {
 
 // Resolve asset URLs — prefer brandContext.brandAssetUrls (public), fall back to assets
 function getLogoUrl() {
+  if (useBrandName) return ''; // force text fallback when brand name toggle is on
   return AD.brandContext?.brandAssetUrls?.logoUrl || AD.assets?.logoUrl || '';
 }
 function getPhotoUrl() {
@@ -5199,9 +5203,12 @@ function initTemplate20(canvas) {
     <!-- ── Photo warm border glow (restoration complete) ── -->
     <div id="t20-photo-border-glow" style="position:absolute;top:138px;left:18px;right:18px;height:224px;border-radius:9px;box-shadow:0 0 0px rgba(197,160,89,0);z-index:9;pointer-events:none;"></div>
 
-    <!-- ── Logo ── -->
-    <div id="t20-logo" style="position:absolute;top:148px;left:24px;width:60px;height:28px;display:flex;align-items:center;opacity:0;z-index:35;">
-      ${logoUrl ? `<img src="${logoUrl}" style="max-height:24px;max-width:58px;object-fit:contain;filter:drop-shadow(0 1px 6px rgba(0,0,0,0.6));">` : `<span style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:${AMBER};">${BRAND}</span>`}
+    <!-- ── Tagline (appears after sun sets) ── -->
+    <div id="t20-tagline" style="position:absolute;top:65px;left:20px;right:20px;text-align:center;font-size:13px;font-weight:600;font-style:italic;font-family:Georgia,serif;color:rgba(239,231,219,0.85);letter-spacing:0.02em;opacity:0;z-index:35;">Time fades, memories shouldn't</div>
+
+    <!-- ── Logo (replaces tagline after pause) ── -->
+    <div id="t20-logo" style="position:absolute;top:63px;left:50%;transform:translateX(-50%);height:32px;display:flex;align-items:center;justify-content:center;opacity:0;z-index:36;">
+      ${logoUrl ? `<img src="${logoUrl}" style="max-height:28px;max-width:100px;object-fit:contain;filter:drop-shadow(0 1px 6px rgba(0,0,0,0.6));">` : `<span style="font-size:11px;font-weight:700;letter-spacing:1.5px;color:${AMBER};">${BRAND}</span>`}
     </div>
 
     <!-- ── Headline ── -->
@@ -5402,10 +5409,18 @@ function renderTemplate20(f) {
     borderGlow.style.boxShadow = `0 0 ${spread.toFixed(1)}px rgba(197,160,89,${alpha.toFixed(3)})`;
   }
 
-  // ── Logo (frames 175-195, gentle fade) ───────────────────────────────────────
+  // ── Tagline "Time fades, memories shouldn't" (frames 100-125, fades out 125-140) ──
+  const tagline20 = document.getElementById('t20-tagline');
+  if (tagline20) {
+    const tagIn = interpolate(f, [100, 115], [0, 1], { clamp: true, easing: easeInOut });
+    const tagOut = interpolate(f, [128, 140], [1, 0], { clamp: true, easing: easeInOut });
+    tagline20.style.opacity = (tagIn * tagOut).toFixed(3);
+  }
+
+  // ── Logo (replaces tagline, frames 142-160, same position) ──────────────────
   const logo20 = document.getElementById('t20-logo');
   if (logo20) {
-    logo20.style.opacity = interpolate(f, [175, 195], [0, 1], { clamp: true, easing: easeInOut }).toFixed(3);
+    logo20.style.opacity = interpolate(f, [142, 160], [0, 1], { clamp: true, easing: easeInOut }).toFixed(3);
   }
 
   // ── Headline words (frames 185-215, stagger per word) ────────────────────────
@@ -5487,6 +5502,9 @@ window.addEventListener('message', (e) => {
   }
 
   if (msg.type === 'updateLayout') {
+    // Disabled — layout overrides were breaking template positioning.
+    // Layout values are captured in the JSON export instead.
+    return;
     const L = msg.layout || {};
     const canvas = document.getElementById('canvas');
     if (!canvas) return;
@@ -5570,9 +5588,9 @@ window.addEventListener('message', (e) => {
   }
 
   if (msg.type === 'updateStyle') {
-    // Apply style overrides via CSS on the current template's elements
-    const s = msg.style || {};
-    const canvas = document.getElementById('canvas');
+    // Disabled — style overrides were breaking template layouts.
+    // Style values are captured in the JSON export instead.
+    return;
     if (!canvas) return;
 
     // Headline font size & weight & transform
@@ -5697,13 +5715,13 @@ window.addEventListener('message', (e) => {
     Object.assign(T, AD.designTokens);
     Object.assign(C, AD.copy);
     Object.assign(B, AD.brandContext);
-    // Rebuild current template with new data
+    // Update data and rebuild — but preserve current frame position (no restart)
     const wasPlaying = isPlaying;
     const currentF = frame;
     pause();
     buildTemplate(currentTemplate);
     applyLogoVisibility();
-    setFrame(0);
+    setFrame(currentF);  // resume at same frame, don't restart
     if (wasPlaying) play();
   }
 

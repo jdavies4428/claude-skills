@@ -203,7 +203,7 @@ export const Template9Film: React.FC<AdReelProps> = ({
       style={{
         background: T.gradient_from,
         overflow: "hidden",
-        fontFamily: "sans-serif",
+        fontFamily: "Playfair Display, serif",
       }}
     >
       {/* Film grain overlay */}
@@ -701,7 +701,7 @@ export const Template9Film: React.FC<AdReelProps> = ({
               fontWeight: 900,
               color: "#fff",
               opacity: countFlicker,
-              fontFamily: "serif",
+              fontFamily: "Playfair Display, serif",
             }}
           >
             {countNum}

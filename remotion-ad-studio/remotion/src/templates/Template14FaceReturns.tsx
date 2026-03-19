@@ -27,7 +27,7 @@ export const Template14FaceReturns: React.FC<AdReelProps> = ({
   const segments = splitHighlight(copy.headline, copy.highlight);
 
   return (
-    <AbsoluteFill style={{ background: "#000", color: "#F5F0E0", fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
+    <AbsoluteFill style={{ background: "#000", color: "#F5F0E0", fontFamily: "Playfair Display, serif" }}>
       <div
         style={{
           position: "absolute",

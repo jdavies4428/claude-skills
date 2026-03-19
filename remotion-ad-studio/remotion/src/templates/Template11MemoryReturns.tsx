@@ -36,7 +36,7 @@ export const Template11MemoryReturns: React.FC<AdReelProps> = ({
   const segments = splitHighlight(copy.headline, copy.highlight);
 
   return (
-    <AbsoluteFill style={{ fontFamily: "Georgia, serif", color: "#efe7db" }}>
+    <AbsoluteFill style={{ fontFamily: "Playfair Display, serif", color: "#efe7db" }}>
       <AdBackground gradientFrom="#150d05" gradientTo="#0a0603" angle="180deg" />
       <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at 50% 35%, rgba(42,26,10,0.95) 0%, transparent 55%)" }} />
       <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at 50% 40%, transparent 32%, rgba(0,0,0,0.85) 100%)", opacity: vignetteOpacity }} />

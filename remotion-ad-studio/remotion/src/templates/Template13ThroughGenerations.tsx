@@ -34,7 +34,7 @@ export const Template13ThroughGenerations: React.FC<AdReelProps> = ({
   const rightPhoto = assets.afterPhotoUrl;
 
   return (
-    <AbsoluteFill style={{ fontFamily: "Georgia, serif", color: "#efe7db", background: "radial-gradient(ellipse at 50% 40%, #1e1105 0%, #0d0802 60%, #050302 100%)" }}>
+    <AbsoluteFill style={{ fontFamily: "Playfair Display, serif", color: "#efe7db", background: "radial-gradient(ellipse at 50% 40%, #1e1105 0%, #0d0802 60%, #050302 100%)" }}>
       <div style={{ position: "absolute", top: 72, left: 48, width: 410, height: 620, borderRadius: 24, border: `3px solid rgba(197,160,89,${interpolate(frame, [0, 30], [0, 0.45], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })})`, transform: `translateX(${drift}px)` }} />
       <div style={{ position: "absolute", top: 72, right: 48, width: 410, height: 620, borderRadius: 24, border: `3px solid rgba(197,160,89,${interpolate(frame, [0, 30], [0, 0.45], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })})`, transform: `translateX(${-drift}px)` }} />
 
